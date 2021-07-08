@@ -1,0 +1,21 @@
+{
+  "name": "spinning-jenny",
+  "description": "",
+  "author": "Erik Grimmbråten <79856585+grimmbraten@users.noreply.github.com>",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">= 8.5.0"
+  },
+  "main": "main.js",
+  "bin": {
+    "sj": "main.js"
+  },
+  "license": "MIT",
+  "repository": "git@github.com:grimmbraten/spinning-jenny.git",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "json-file-plus": "^3.3.1",
+    "ora": "^5.4.1",
+    "shelljs": "^0.8.4"
+  }
+}

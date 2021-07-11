@@ -15,7 +15,7 @@ const resolve = (spinner, target, cleanup, install) => {
       await file.save();
 
       shell.exec(
-        `yarn --cwd ${dir} install`,
+        `yarn --cwd ${target || process.cwd()} install`,
         {
           silent: true
         },

@@ -14,7 +14,13 @@ const resolve = (spinner, target, cleanup, install) => {
       await file.set({ resolutions });
       await file.save();
 
-      audit(spinner, target, name, install);
+      shell.exec(
+        `yarn --cwd ${dir} install`,
+        {
+          silent: true
+        },
+        () => audit(spinner, target, name, install)
+      );
     });
   }
 };

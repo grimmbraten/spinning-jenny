@@ -8,7 +8,8 @@
   },
   "main": "main.js",
   "bin": {
-    "sj": "main.js"
+    "spin": "main.js",
+    "spinning-jenny": "main.js"
   },
   "license": "MIT",
   "repository": "git@github.com:grimmbraten/spinning-jenny.git",

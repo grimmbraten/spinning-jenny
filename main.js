@@ -1,10 +1,8 @@
 #!/usr/bin/env node
 
-const shell = require("shelljs");
-
 require("colors");
 const ora = require("ora");
-const { audit } = require("./shell");
+const { test, audit } = require("./shell");
 const { fix, summary } = require("./callback");
 
 const Flags = {
@@ -30,12 +28,7 @@ inputs.forEach((input, i) => {
       index = i + 1;
       const path = inputs[index];
 
-      if (!path) {
-        error = true;
-        return spinner.fail("no path provided");
-      }
-
-      if (!shell.test("-e", path)) {
+      if (!test("-e", path)) {
         error = true;
         return spinner.fail("invalid path provided");
       }
@@ -45,17 +38,19 @@ inputs.forEach((input, i) => {
   }
 
   if (!callback) {
-    if (Flags.audit.includes(inputs[0])) {
+    if (Flags.audit.includes(input)) {
       callback = summary;
-    } else if (Flags.fix.includes(inputs[0])) {
+    } else if (Flags.fix.includes(input)) {
       callback = fix;
+    } else if (Flags.upgrade.includes(input)) {
+      //TODO assign callback
     }
   }
 });
 
 if (error) return;
 
-const test = target ? ` in (${target})`.gray : "";
-spinner.text = "scanning package.json file" + test;
+const inDir = target ? ` in (${target})`.gray : "";
+spinner.text = "scanning package.json file" + inDir;
 
-//if (callback) audit(callback, spinner, undefined, "--json");
+if (callback) audit(callback, spinner, target, "--json");

@@ -1,11 +1,12 @@
 const path = require("path");
 const shell = require("shelljs");
 const package = require("json-file-plus");
+const { parseJson } = require("./helpers");
 
 const resolve = (spinner, target, cleanup, install) => {
   const name = path.join(target || process.cwd(), "package.json");
 
-  if (!cleanup) audit(spinner, name, install);
+  if (!cleanup) audit(spinner, target, name, install);
   else {
     package(name, async (err, file) => {
       if (err) return console.error(err);
@@ -13,19 +14,20 @@ const resolve = (spinner, target, cleanup, install) => {
       await file.set({ resolutions });
       await file.save();
 
-      audit(spinner, name, install);
+      audit(spinner, target, name, install);
     });
   }
 };
 
-const audit = (spinner, target = process.cwd(), name, install) =>
+const audit = (spinner, target, name, install) => {
   shell.exec(
-    `yarn --cwd ${target} audit --json`,
+    `yarn --cwd ${target || process.cwd()} audit --json`,
     {
       silent: true
     },
     (_, stdout) => callback(stdout, spinner, name, install)
   );
+};
 
 const callback = (response, spinner, name, install) => {
   package(name, async (err, file) => {
@@ -41,7 +43,7 @@ const callback = (response, spinner, name, install) => {
 
     spinner.succeed(`scanned ${data.totalDependencies} dependencies`);
 
-    const resolutionSpinner = ora("building resolutions").start();
+    spinner.start("building resolutions");
 
     const advisories = json.filter(data => data.type === "auditAdvisory");
 
@@ -72,16 +74,14 @@ const callback = (response, spinner, name, install) => {
     });
 
     if (Object.keys(fixes).length > 0) {
-      resolutionSpinner.succeed(
-        `built ${Object.keys(fixes).length} resolutions`
-      );
+      spinner.succeed(`built ${Object.keys(fixes).length} resolutions`);
 
-      const saveSpinner = ora("saving changes").start();
+      spinner.start("saving changes");
 
       await file.set({ resolutions: fixes });
       await file.save();
 
-      saveSpinner.succeed(`saved package.json`);
+      spinner.succeed(`saved package.json`);
 
       if (install)
         await shell.exec(
@@ -95,9 +95,7 @@ const callback = (response, spinner, name, install) => {
       await file.set({ resolutions: old });
       await file.save();
 
-      resolutionSpinner.fail(
-        "something went wrong, reverting any temporary changes"
-      );
+      spinner.fail("something went wrong, reverting any temporary changes");
     }
   });
 };

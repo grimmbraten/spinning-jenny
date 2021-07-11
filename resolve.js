@@ -4,38 +4,37 @@ const package = require("json-file-plus");
 const { parseJson } = require("./helpers");
 
 const resolve = (spinner, target, cleanup, install) => {
-  const name = path.join(target || process.cwd(), "package.json");
+  const name = path.join(target, "package.json");
 
-  if (!cleanup) audit(spinner, target, name, install);
+  if (!cleanup) audit(spinner, target, name, cleanup, install);
   else {
     package(name, async (err, file) => {
       if (err) return console.error(err);
 
-      await file.set({ resolutions });
+      spinner.start("removing resolutions");
+
+      const count = await file.get("resolutions");
+      await file.set({ resolutions: [] });
       await file.save();
 
-      shell.exec(
-        `yarn --cwd ${target || process.cwd()} install`,
-        {
-          silent: true
-        },
-        () => audit(spinner, target, name, install)
-      );
+      spinner.succeed(`removed ${Object.keys(count).length} resolutions`);
+
+      audit(spinner, target, name, cleanup, install);
     });
   }
 };
 
-const audit = (spinner, target, name, install) => {
+const audit = (spinner, target, name, cleanup, install) => {
   shell.exec(
-    `yarn --cwd ${target || process.cwd()} audit --json`,
+    `yarn --cwd ${target} audit --json`,
     {
       silent: true
     },
-    (_, stdout) => callback(stdout, spinner, name, install)
+    (_, stdout) => callback(stdout, spinner, target, name, cleanup, install)
   );
 };
 
-const callback = (response, spinner, name, install) => {
+const callback = (response, spinner, target, name, cleanup, install) => {
   package(name, async (err, file) => {
     if (err) return console.error(err);
 
@@ -49,7 +48,7 @@ const callback = (response, spinner, name, install) => {
 
     spinner.succeed(`scanned ${data.totalDependencies} dependencies`);
 
-    spinner.start("building resolutions");
+    spinner.start("adding resolutions");
 
     const advisories = json.filter(data => data.type === "auditAdvisory");
 
@@ -80,28 +79,28 @@ const callback = (response, spinner, name, install) => {
     });
 
     if (Object.keys(fixes).length > 0) {
-      spinner.succeed(`built ${Object.keys(fixes).length} resolutions`);
-
-      spinner.start("saving changes");
-
       await file.set({ resolutions: fixes });
       await file.save();
 
-      spinner.succeed(`saved package.json`);
+      spinner.succeed(`added ${Object.keys(fixes).length} resolutions`);
 
-      if (install)
+      if (install) {
+        spinner.start("installing packages");
         await shell.exec(
-          `yarn --cwd ${dir} upgrade ${range}`,
+          `yarn --cwd ${target} install`,
           {
             silent: true
           },
-          (_, stdout) => callback(stdout, spinner)
+          () => spinner.succeed("installed packages")
         );
+      }
     } else {
-      await file.set({ resolutions: old });
-      await file.save();
+      if (cleanup) {
+        await file.set({ resolutions: old });
+        await file.save();
+      }
 
-      spinner.fail("something went wrong, reverting any temporary changes");
+      spinner.fail("no vulnerabilities found");
     }
   });
 };

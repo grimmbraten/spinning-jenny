@@ -67,7 +67,7 @@ inputs.forEach((input, i) => {
 
 if (error) return;
 
-const inDir = target ? ` in (${target})`.gray : "";
-spinner.text = "scanning package.json file" + inDir;
+const hint = target ? ` in (${target})`.gray : "";
+spinner.text = "scanning package.json file" + hint;
 
-if (service) service(spinner, target, cleanup, install);
+if (service) service(spinner, target || process.cwd(), cleanup, install);

@@ -2,7 +2,7 @@ require("colors");
 const shell = require("shelljs");
 const { parseJson } = require("./helpers");
 
-const audit = (spinner, target = process.cwd()) =>
+const audit = (spinner, target) =>
   shell.exec(
     `yarn --cwd ${target} audit --json`,
     {

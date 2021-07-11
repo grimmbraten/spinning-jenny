@@ -11,13 +11,12 @@ const resolve = (spinner, target, cleanup, install) => {
     package(name, async (err, file) => {
       if (err) return console.error(err);
 
-      spinner.start("removing resolutions");
-
       const count = await file.get("resolutions");
+
+      spinner.text = `removing ${Object.keys(count).length} resolutions`;
+
       await file.set({ resolutions: [] });
       await file.save();
-
-      spinner.succeed(`removed ${Object.keys(count).length} resolutions`);
 
       audit(spinner, target, name, cleanup, install);
     });
@@ -46,13 +45,7 @@ const callback = (response, spinner, target, name, cleanup, install) => {
       (a, b) => a + b
     );
 
-    spinner.succeed(`scanned ${data.totalDependencies} dependencies`);
-
-    spinner.start("adding resolutions");
-
-    const advisories = json.filter(data => data.type === "auditAdvisory");
-
-    if (advisories.length === 0)
+    if (vulnerabilities.length === 0)
       return spinner.fail("no vulnerabilities found");
 
     const resolutions = json
@@ -70,6 +63,10 @@ const callback = (response, spinner, target, name, cleanup, install) => {
       .filter(data => data)
       .filter(({ patched }) => patched !== "<0.0.0");
 
+    spinner.text = `adding ${resolutions.length} resolutions`;
+
+    if (resolutions.length === 0) return spinner.fail("no resolutions found");
+
     const old = await file.get("resolutions");
 
     let fixes = {};
@@ -82,8 +79,6 @@ const callback = (response, spinner, target, name, cleanup, install) => {
       await file.set({ resolutions: fixes });
       await file.save();
 
-      spinner.succeed(`added ${Object.keys(fixes).length} resolutions`);
-
       if (install) {
         spinner.start("installing packages");
         await shell.exec(
@@ -93,7 +88,7 @@ const callback = (response, spinner, target, name, cleanup, install) => {
           },
           () => spinner.succeed("installed packages")
         );
-      }
+      } else spinner.succeed(`completed successfully`);
     } else {
       if (cleanup) {
         await file.set({ resolutions: old });

@@ -5,7 +5,8 @@ const package = require("json-file-plus");
 const resolve = (spinner, target, cleanup, install) => {
   const name = path.join(target || process.cwd(), "package.json");
 
-  if (cleanup) {
+  if (!cleanup) audit(spinner, name, install);
+  else {
     package(name, async (err, file) => {
       if (err) return console.error(err);
 
@@ -14,7 +15,7 @@ const resolve = (spinner, target, cleanup, install) => {
 
       audit(spinner, name, install);
     });
-  } else audit(spinner, name, install);
+  }
 };
 
 const audit = (spinner, target = process.cwd(), name, install) =>

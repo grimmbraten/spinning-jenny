@@ -1,81 +1,61 @@
 #!/usr/bin/env node
 
-const ora = require("ora");
-const path = require("path");
 const shell = require("shelljs");
-const jsonFile = require("json-file-plus");
+
+require("colors");
+const ora = require("ora");
+const { audit } = require("./shell");
+const { fix, summary } = require("./callback");
+
+const Flags = {
+  fix: ["--fix", "-f"],
+  path: ["--path", "-p"],
+  audit: ["--audit", "-a"],
+  revert: ["--revert", "-r"],
+  upgrade: ["--upgrade", "-u"]
+};
 
 const spinner = ora("starting service").start();
 
-const [, , ...input] = process.argv;
+const [, , ...inputs] = process.argv;
 
-const dir = process.cwd();
+let error;
+let index;
+let target;
+let callback;
 
-const fileName = path.join(dir, "package.json");
+inputs.forEach((input, i) => {
+  if (!target && index !== i) {
+    if (Flags.path.includes(input)) {
+      index = i + 1;
+      const path = inputs[index];
 
-const audit = async () =>
-  shell.exec(`yarn --cwd ${dir} audit --json`, {
-    silent: true
-  }).stdout;
+      if (!path) {
+        error = true;
+        return spinner.fail("no path provided");
+      }
 
-const scan = async () => {
-  const response = await audit();
-  const json = response
-    .split(/\r?\n/)
-    .map(step => (step ? JSON.parse(step) : undefined))
-    .filter(data => data);
+      if (!shell.test("-e", path)) {
+        error = true;
+        return spinner.fail("invalid path provided");
+      }
 
-  const summary = json.filter(data => data.type === "auditSummary")[0];
-  const vulnerabilities = Object.values(summary.data.vulnerabilities).reduce(
-    (a, b) => a + b
-  );
+      target = path;
+    }
+  }
 
-  //const advisories = json.filter(data => data.type === "auditAdvisory");
+  if (!callback) {
+    if (Flags.audit.includes(inputs[0])) {
+      callback = summary;
+    } else if (Flags.fix.includes(inputs[0])) {
+      callback = fix;
+    }
+  }
+});
 
-  console.log(summary);
-};
+if (error) return;
 
-scan();
+const test = target ? ` in (${target})`.gray : "";
+spinner.text = "scanning package.json file" + test;
 
-const run = async () => {
-  const resolutions = json.map(({ data, type }) => {
-    if (type === "auditAdvisory")
-      return {
-        title: data.advisory.title,
-        module: data.advisory.module_name,
-        version: data.advisory.vulnerable_versions,
-        patched: data.advisory.patched_versions,
-        severity: data.advisory.severity,
-        url: data.advisory.url
-      };
-  });
-
-  return resolutions;
-};
-
-const service = async () => {
-  const modules = await run();
-
-  jsonFile(fileName, async (err, file) => {
-    if (err) console.error(err);
-
-    const resolutions = await file.get("resolutions");
-
-    const tmp = resolutions || {};
-
-    /* console.log(tmp);
-    console.log(modules); */
-
-    modules.forEach(({ module, patched }) => {
-      resolutions[module] = patched;
-    });
-
-    console.log(resolutions);
-
-    await file.set({ resolutions });
-
-    await file.save();
-  });
-};
-
-//service();
+//if (callback) audit(callback, spinner, undefined, "--json");

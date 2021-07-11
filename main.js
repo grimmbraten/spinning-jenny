@@ -2,15 +2,18 @@
 
 require("colors");
 const ora = require("ora");
-const { test, audit } = require("./shell");
-const { fix, summary } = require("./callback");
+const { test } = require("./shell");
+const { audit } = require("./audit");
+const { resolve } = require("./resolve");
 
 const Flags = {
   fix: ["--fix", "-f"],
   path: ["--path", "-p"],
   audit: ["--audit", "-a"],
   revert: ["--revert", "-r"],
-  upgrade: ["--upgrade", "-u"]
+  upgrade: ["--upgrade", "-u"],
+  cleanup: ["--cleanup", "-c"],
+  install: ["--install", "-i"]
 };
 
 const spinner = ora("starting service").start();
@@ -20,7 +23,9 @@ const [, , ...inputs] = process.argv;
 let error;
 let index;
 let target;
-let callback;
+let cleanup;
+let install;
+let service;
 
 inputs.forEach((input, i) => {
   if (!target && index !== i) {
@@ -37,13 +42,25 @@ inputs.forEach((input, i) => {
     }
   }
 
-  if (!callback) {
+  if (!cleanup) {
+    if (Flags.cleanup.includes(input)) {
+      cleanup = true;
+    }
+  }
+
+  if (!install) {
+    if (Flags.install.includes(input)) {
+      install = true;
+    }
+  }
+
+  if (!service) {
     if (Flags.audit.includes(input)) {
-      callback = summary;
+      service = audit;
     } else if (Flags.fix.includes(input)) {
-      callback = fix;
+      service = resolve;
     } else if (Flags.upgrade.includes(input)) {
-      //TODO assign callback
+      //callback = upgrade;
     }
   }
 });
@@ -53,4 +70,4 @@ if (error) return;
 const inDir = target ? ` in (${target})`.gray : "";
 spinner.text = "scanning package.json file" + inDir;
 
-if (callback) audit(callback, spinner, target, "--json");
+if (service) service(spinner, target, cleanup, install);

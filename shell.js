@@ -1,11 +1,18 @@
 const shell = require("shelljs");
 
-const audit = async (
-  callback,
-  spinner,
-  dir = "~/Documents/github/react-fusion" /* process.cwd() */,
-  options = ""
-) =>
+//NOTE range can be --caret or --tilde
+const upgrade = async (callback, spinner, range = "") =>
+  shell.exec(
+    `yarn --cwd ${dir} upgrade ${range}`,
+    {
+      silent: true
+    },
+    (_, stdout) => callback(stdout, spinner)
+  );
+
+const test = (option, value) => shell.test(option, value);
+
+const audit = async (callback, spinner, dir = process.cwd(), options = "") =>
   shell.exec(
     `yarn --cwd ${dir} audit ${options}`,
     {
@@ -15,5 +22,7 @@ const audit = async (
   );
 
 module.exports = {
-  audit
+  test,
+  audit,
+  upgrade
 };

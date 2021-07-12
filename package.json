@@ -6,7 +6,6 @@
   "engines": {
     "node": ">= 8.5.0"
   },
-  "main": "main.js",
   "bin": {
     "spin": "main.js",
     "spinning-jenny": "main.js"

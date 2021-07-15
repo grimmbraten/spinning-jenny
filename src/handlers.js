@@ -1,10 +1,10 @@
 require("colors");
 
 const path = require("path");
-const package = require("json-file-plus");
+const json = require("json-file-plus");
 const { parseJson } = require("./helpers");
 
-const summary = (response, spinner, hint, target, teardown) => {
+const summary = (response, spinner, hint, target) => {
   const json = parseJson(response);
   const { data } = json.filter(data => data.type === "auditSummary")[0];
 
@@ -43,12 +43,12 @@ const summary = (response, spinner, hint, target, teardown) => {
   );
 };
 
-const twist = (response, spinner, hint, target, teardown) => {
+const twist = (response, spinner, hint, target) => {
   const name = path.join(target, "package.json");
 
   spinner.text = "locating package.json file";
 
-  package(name, async (err, file) => {
+  json(name, async (err, file) => {
     if (err) return spinner.fail(`could not find ${name}`);
 
     const json = parseJson(response);

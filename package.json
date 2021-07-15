@@ -7,8 +7,8 @@
     "node": ">= 8.5.0"
   },
   "bin": {
-    "spin": "main.js",
-    "spinning-jenny": "main.js"
+    "spin": "src/main.js",
+    "spinning-jenny": "src/main.js"
   },
   "license": "MIT",
   "keywords": [

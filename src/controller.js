@@ -8,18 +8,17 @@ const Flags = {
   install: ["--install", "-i"]
 };
 
-const { test, audit, upgrade, install } = require("./shell");
-const { twist, summary } = require("./callback");
-const { removeResolutions } = require("./helpers");
+const { twist, summary } = require("./handlers");
+const { dry, test, audit, upgrade, install } = require("./compilers");
 
-const controller = (spinner, inputs) => {
+const controller = inputs => {
   let error;
   let index;
   let target;
-  let service;
-  let teardown;
-  let callback;
-  let preparatory;
+  let handler;
+  let compiler;
+  let teardown = [];
+  let preparatory = [];
 
   inputs.forEach((input, i) => {
     if (!target && index !== i) {
@@ -34,35 +33,28 @@ const controller = (spinner, inputs) => {
       }
     }
 
-    if (!preparatory) {
-      if (Flags.dry.includes(input)) {
-        preparatory = removeResolutions;
-      }
-    }
+    if (!compiler) {
+      if (Flags.dry.includes(input)) preparatory.push(dry);
+      if (Flags.install.includes(input)) preparatory.push(install);
+      if (Flags.upgrade.includes(input)) preparatory.push(upgrade);
 
-    if (!teardown) {
-      if (Flags.install.includes(input)) {
-        teardown = install;
-      }
-    }
-
-    if (!service) {
       if (Flags.audit.includes(input)) {
-        service = audit;
-        callback = summary;
+        compiler = audit;
+        handler = summary;
       } else if (Flags.twist.includes(input)) {
-        service = audit;
-        callback = twist;
-      } else if (Flags.upgrade.includes(input)) {
-        service = upgrade;
-        callback = undefined;
+        compiler = audit;
+        handler = twist;
       }
+    } else {
+      if (Flags.dry.includes(input)) teardown.push(dry);
+      if (Flags.install.includes(input)) teardown.push(install);
+      if (Flags.upgrade.includes(input)) teardown.push(upgrade);
     }
   });
 
   return {
-    service,
-    callback,
+    compiler,
+    handler,
     target: target || process.cwd(),
     preparatory,
     teardown,

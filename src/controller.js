@@ -17,6 +17,7 @@ const controller = inputs => {
   let target;
   let handler;
   let compiler;
+  let hint = "";
   let teardown = [];
   let preparatory = [];
 
@@ -27,8 +28,10 @@ const controller = inputs => {
         const path = inputs[index];
 
         if (path) {
-          if (test("-e", path)) target = path;
-          else error = `"${path}" is not a valid path`;
+          if (test("-e", path)) {
+            target = path;
+            hint = ` in (${target})`.gray;
+          } else error = `"${path}" is not a valid path`;
         } else error = "no path provided";
       }
     }
@@ -53,6 +56,7 @@ const controller = inputs => {
   });
 
   return {
+    hint,
     compiler,
     handler,
     target: target || process.cwd(),

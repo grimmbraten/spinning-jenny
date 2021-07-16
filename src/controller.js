@@ -8,7 +8,7 @@ const Flags = {
   install: ["--install", "-i"]
 };
 
-const { twist, summary } = require("./handlers");
+const { twist, report } = require("./handlers");
 const { dry, test, audit, upgrade, install } = require("./compilers");
 
 const controller = inputs => {
@@ -30,9 +30,9 @@ const controller = inputs => {
         if (path) {
           if (test("-e", path)) {
             target = path;
-            hint = ` in (${target})`.gray;
+            hint = ` in ${target}`.gray;
           } else error = `"${path}" is not a valid path`;
-        } else error = "no path provided";
+        } else error = "please provide a path after passed flag";
       }
     }
 
@@ -43,7 +43,7 @@ const controller = inputs => {
 
       if (Flags.audit.includes(input)) {
         compiler = audit;
-        handler = summary;
+        handler = report;
       } else if (Flags.twist.includes(input)) {
         compiler = audit;
         handler = twist;

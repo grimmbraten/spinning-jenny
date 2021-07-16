@@ -2,44 +2,37 @@ require("colors");
 
 const path = require("path");
 const json = require("json-file-plus");
-const { parseJson } = require("./helpers");
+const { parseJson, extractAuditSummary } = require("./helpers");
 
-const summary = (response, spinner, hint, target) => {
+const report = (response, spinner, hint) => {
   const json = parseJson(response);
-  const { data } = json.filter(data => data.type === "auditSummary")[0];
+  const { data } = extractAuditSummary(json);
 
   const vulnerabilities = Object.values(data.vulnerabilities).reduce(
     (a, b) => a + b
   );
 
   if (vulnerabilities === 0)
-    return spinner.succeed(
-      "no vulnerabilities found" +
-        hint +
-        "\n\n " +
-        `  ${data.totalDependencies} dependencies scanned  `.bgGray.white
-    );
+    return spinner.succeed("package.json has no vulnerabilities" + hint);
 
   const {
     vulnerabilities: { critical, high, moderate, low, info }
   } = data;
 
-  const criticalCount = critical
+  const criticalBadge = critical
     ? ` ${critical} critical `.bgMagenta.white
     : "";
-  const highCount = high ? " " + ` ${high} high `.bgRed.white : "";
-  const moderateCount = moderate
+  const highBadge = high ? " " + ` ${high} high `.bgRed.white : "";
+  const moderateBadge = moderate
     ? " " + `  ${moderate} moderate  `.bgYellow.black
     : "";
-  const lowCount = low ? " " + `  ${low} low  `.bgGreen.black : "";
-  const infoCount = info ? " " + `  ${info} info  `.bgBlue.white : "";
+  const lowBadge = low ? " " + `  ${low} low  `.bgGreen.black : "";
+  const infoBadge = info ? " " + `  ${info} info  `.bgBlue.white : "";
 
-  spinner.fail(
-    `${vulnerabilities} vulnerabilities found` +
+  spinner.warn(
+    `found ${vulnerabilities} vulnerabilities` +
       hint +
-      `\n\n${criticalCount}${highCount}${moderateCount}${lowCount}${infoCount}` +
-      " " +
-      `  ${data.totalDependencies} dependencies scanned  `.bgGray.white
+      `\n\n${criticalBadge}${highBadge}${moderateBadge}${lowBadge}${infoBadge}`
   );
 };
 
@@ -52,7 +45,7 @@ const twist = (response, spinner, hint, target) => {
     if (err) return spinner.fail(`could not find ${name}`);
 
     const json = parseJson(response);
-    const { data } = json.filter(data => data.type === "auditSummary")[0];
+    const { data } = extractAuditSummary(json);
 
     const vulnerabilities = Object.values(data.vulnerabilities).reduce(
       (a, b) => a + b
@@ -100,5 +93,5 @@ const twist = (response, spinner, hint, target) => {
 
 module.exports = {
   twist,
-  summary
+  report
 };

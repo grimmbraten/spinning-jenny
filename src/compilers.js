@@ -52,10 +52,10 @@ const audit = (spinner, hint, target) => {
       {
         silent: true
       },
-      (code, stdout) => {
-        if (code !== 0) {
+      (_, stdout, stderr) => {
+        if (stderr) {
           spinner.fail("scan failed" + hint);
-          return reject(new Error(stdout));
+          reject(new Error(stderr));
         }
 
         spinner.succeed(
@@ -77,10 +77,10 @@ const upgrade = (spinner, hint, target) => {
       {
         silent: true
       },
-      (code, stdout) => {
-        if (code !== 0) {
+      (_, stdout, stderr) => {
+        if (stderr) {
           spinner.fail("upgrade failed" + hint);
-          return reject(new Error(stdout));
+          reject(new Error(stderr));
         }
 
         spinner.succeed("upgrades packages" + hint);
@@ -99,10 +99,10 @@ const install = (spinner, hint, target) => {
       {
         silent: true
       },
-      (code, stdout) => {
-        if (code !== 0) {
+      (_, stdout, stderr) => {
+        if (stderr) {
           spinner.fail("installation failed" + hint);
-          return reject(new Error(stdout));
+          reject(new Error(stderr));
         }
 
         spinner.succeed("installed successfully" + hint);

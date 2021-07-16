@@ -1,6 +1,11 @@
 const path = require("path");
 const shell = require("shelljs");
 const json = require("json-file-plus");
+const {
+  parseJson,
+  resolutionCount,
+  scannedDependencies
+} = require("./helpers");
 
 const dry = (spinner, hint, target) => {
   const name = path.join(target, "package.json");
@@ -12,21 +17,24 @@ const dry = (spinner, hint, target) => {
       if (err) return reject(new Error(err));
 
       const resolutions = await file.get("resolutions");
+
       if (!resolutions) {
-        spinner.fail("no resolutions found" + hint);
+        spinner.fail("package.json does not include any resolutions" + hint);
         return resolve();
       }
 
-      await file.set({ resolutions: [] });
+      await file.remove("resolutions");
 
       file
         .save()
         .then(() => {
-          spinner.succeed("removed resolutions" + hint);
+          spinner.succeed(
+            `removed ${resolutionCount(resolutions)} resolutions` + hint
+          );
           resolve();
         })
         .catch(err => {
-          spinner.fail("could not remove resolutions" + hint);
+          spinner.fail("remove resolutions failed" + hint);
           reject(new Error(err));
         });
     });
@@ -50,7 +58,10 @@ const audit = (spinner, hint, target) => {
           return reject(new Error(stdout));
         }
 
-        spinner.succeed("scan completed" + hint);
+        spinner.succeed(
+          `scanned ${scannedDependencies(parseJson(stdout))} dependencies` +
+            hint
+        );
         return resolve(stdout);
       }
     );
@@ -90,11 +101,11 @@ const install = (spinner, hint, target) => {
       },
       (code, stdout) => {
         if (code !== 0) {
-          spinner.fail("install failed" + hint);
+          spinner.fail("installation failed" + hint);
           return reject(new Error(stdout));
         }
 
-        spinner.succeed("installed packages" + hint);
+        spinner.succeed("installed successfully" + hint);
         return resolve(stdout);
       }
     );

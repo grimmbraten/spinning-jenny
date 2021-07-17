@@ -3,13 +3,16 @@
 require("colors");
 const ora = require("ora");
 
+const config = require("./config");
 const { controller } = require("./controller");
 
+let label;
 let promises = [];
 const [, , ...inputs] = process.argv;
 
 (async () => {
-  let label;
+  if (inputs[0] === "config") return config(inputs);
+
   const spinner = ora();
 
   const { preparatory, compiler, teardown, target, handler, error, hint } =

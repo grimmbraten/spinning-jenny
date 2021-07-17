@@ -19,8 +19,12 @@ const scannedDependencies = json =>
 
 const resolutionCount = resolutions => Object.entries(resolutions).length;
 
+const isBooleanInput = value =>
+  value === "true" ? true : value === "false" ? false : undefined;
+
 module.exports = {
   parseJson,
+  isBooleanInput,
   resolutionCount,
   extractAuditSummary,
   scannedDependencies,

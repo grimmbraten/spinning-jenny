@@ -7,6 +7,13 @@ const parseJson = json =>
 const extractAuditSummary = json =>
   json.filter(data => data.type === "auditSummary")[0];
 
+const extractUpgradeOutcome = json => {
+  const outcome = json.filter(data => data.type === "success")[1].data;
+  if (!outcome) return;
+
+  return outcome.replace(".", "").replace("S", "s");
+};
+
 const scannedDependencies = json =>
   json.filter(data => data.type === "auditSummary")[0].data.totalDependencies;
 
@@ -16,5 +23,6 @@ module.exports = {
   parseJson,
   resolutionCount,
   extractAuditSummary,
-  scannedDependencies
+  scannedDependencies,
+  extractUpgradeOutcome
 };

@@ -9,6 +9,7 @@ let promises = [];
 const [, , ...inputs] = process.argv;
 
 (async () => {
+  let label;
   const spinner = ora();
 
   const { preparatory, compiler, teardown, target, handler, error, hint } =
@@ -16,22 +17,32 @@ const [, , ...inputs] = process.argv;
 
   if (error) return spinner.fail(error);
 
-  preparatory.forEach(async action => {
-    promises.push(action(spinner, hint, target));
-  });
+  if (preparatory) {
+    label = hint || " preparatory".gray;
 
-  await Promise.all(promises);
-  promises = [];
+    preparatory.forEach(async action => {
+      promises.push(action(spinner, label, target));
+    });
 
-  const response = await compiler(spinner, hint, target);
+    await Promise.all(promises);
+    promises = [];
+  }
 
+  label = hint || " main".gray;
+
+  if (!compiler) return;
+  const response = await compiler(spinner, label, target);
   if (!response) return spinner.fail("something went wrong, sorry about that");
 
-  teardown.forEach(action => {
-    promises.push(action(spinner, hint, target));
-  });
+  if (!handler) return spinner.fail("something went wrong, sorry about that");
+  handler(response, spinner, label, target);
 
-  await Promise.all(promises);
+  if (teardown) {
+    label = hint || " teardown".gray;
+    teardown.forEach(action => {
+      promises.push(action(spinner, label, target));
+    });
 
-  handler && handler(response, spinner, hint, target);
+    await Promise.all(promises);
+  }
 })();

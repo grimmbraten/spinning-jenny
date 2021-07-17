@@ -4,7 +4,8 @@ const json = require("json-file-plus");
 const {
   parseJson,
   resolutionCount,
-  scannedDependencies
+  scannedDependencies,
+  extractUpgradeOutcome
 } = require("./helpers");
 
 const dry = (spinner, hint, target) => {
@@ -73,7 +74,7 @@ const upgrade = (spinner, hint, target) => {
 
   return new Promise(function (resolve, reject) {
     shell.exec(
-      `yarn --cwd ${target} upgrade`,
+      `yarn --cwd ${target} upgrade --json`,
       {
         silent: true
       },
@@ -83,7 +84,14 @@ const upgrade = (spinner, hint, target) => {
           reject(new Error(stderr));
         }
 
-        spinner.succeed("upgrades packages" + hint);
+        const outcome = extractUpgradeOutcome(parseJson(stdout));
+
+        if (!outcome) {
+          spinner.fail("upgrade failed");
+          return resolve(stdout);
+        }
+
+        spinner.succeed(outcome + hint);
         return resolve(stdout);
       }
     );

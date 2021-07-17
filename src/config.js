@@ -1,5 +1,6 @@
 const path = require("path");
 const json = require("json-file-plus");
+const { isBooleanInput } = require("./handlers");
 
 const Flags = {
   steps: ["--steps", "-s"], // boolean: display steps as hints (true)
@@ -18,11 +19,35 @@ module.exports = inputs => {
 
     inputs.forEach(async (input, index) => {
       if (Flags.verbose.includes(input)) {
-        const value = inputs[index + 1];
+        const value = isBooleanInput(inputs[index + 1]);
+        if (value === undefined) return;
+
+        await file.set({ verbose: value });
+      } else if (Flags.frozen.includes(input)) {
+        const value = isBooleanInput(inputs[index + 1]);
+        if (value === undefined) return;
+
+        await file.set({ frozen: value });
+      } else if (Flags.backup.includes(input)) {
+        const value = isBooleanInput(inputs[index + 1]);
+        if (value === undefined) return;
+
+        await file.set({ backup: value });
+      } else if (Flags.steps.includes(input)) {
+        const value = isBooleanInput(inputs[index + 1]);
+        if (value === undefined) return;
+
+        await file.set({ steps: value });
+      } else if (Flags.pattern.includes(input)) {
+        let value = inputs[index + 1];
         if (!value) return;
 
-        if (value === "true") await file.set({ verbose: true });
-        else if (value === "false") await file.set({ verbose: false });
+        value = value.replace("-", "");
+
+        const allowed = ["exact", "caret", "tilde"];
+        if (!allowed.includes(value))
+          return console.log("invalid pattern value");
+        await file.set({ pattern: `--${value}` });
       }
     });
 

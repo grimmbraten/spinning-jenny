@@ -1,0 +1,7 @@
+{
+  "steps": true,
+  "pattern": "--caret",
+  "backup": false,
+  "frozen": false,
+  "verbose": true
+}

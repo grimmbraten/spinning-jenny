@@ -3,17 +3,20 @@
 require("colors");
 const ora = require("ora");
 
-const config = require("./config");
 const { controller } = require("./controller");
+const { editConfig, loadConfig } = require("./config");
 
 let label;
 let promises = [];
 const [, , ...inputs] = process.argv;
 
 (async () => {
-  if (inputs[0] === "config") return config(inputs);
-
   const spinner = ora();
+  if (inputs[0] === "config") return editConfig(inputs, spinner);
+
+  const config = await loadConfig();
+
+  !config.verbose && spinner.start("working");
 
   const { preparatory, compiler, teardown, target, handler, error, hint } =
     controller(inputs);
@@ -34,11 +37,11 @@ const [, , ...inputs] = process.argv;
   label = hint || " main".gray;
 
   if (!compiler) return;
-  const response = await compiler(spinner, label, target);
+  const response = await compiler(spinner, label, target, config);
   if (!response) return spinner.fail("something went wrong, sorry about that");
 
   if (!handler) return spinner.fail("something went wrong, sorry about that");
-  handler(response, spinner, label, target);
+  handler(response, spinner, label, target, config);
 
   if (teardown) {
     label = hint || " teardown".gray;
@@ -47,5 +50,7 @@ const [, , ...inputs] = process.argv;
     });
 
     await Promise.all(promises);
+
+    if (!verbose) spinner.succeed("done");
   }
 })();

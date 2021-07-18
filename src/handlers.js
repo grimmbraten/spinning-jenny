@@ -4,7 +4,7 @@ const path = require("path");
 const json = require("json-file-plus");
 const { parseJson, extractAuditSummary } = require("./helpers");
 
-const report = (response, spinner, hint) => {
+const report = (response, spinner, hint, { verbose }) => {
   const json = parseJson(response);
   const { data } = extractAuditSummary(json);
 
@@ -13,7 +13,9 @@ const report = (response, spinner, hint) => {
   );
 
   if (vulnerabilities === 0)
-    return spinner.succeed("package.json has no vulnerabilities" + hint);
+    return (
+      verbose && spinner.succeed("package.json has no vulnerabilities" + hint)
+    );
 
   const {
     vulnerabilities: { critical, high, moderate, low, info }
@@ -29,20 +31,21 @@ const report = (response, spinner, hint) => {
   const lowBadge = low ? " " + `  ${low} low  `.bgGreen.black : "";
   const infoBadge = info ? " " + `  ${info} info  `.bgBlue.white : "";
 
-  spinner.warn(
-    `found ${vulnerabilities} vulnerabilities` +
-      hint +
-      `\n\n${criticalBadge}${highBadge}${moderateBadge}${lowBadge}${infoBadge}`
-  );
+  verbose &&
+    spinner.warn(
+      `found ${vulnerabilities} vulnerabilities` +
+        hint +
+        `\n\n${criticalBadge}${highBadge}${moderateBadge}${lowBadge}${infoBadge}`
+    );
 };
 
-const twist = (response, spinner, hint, target) => {
+const twist = (response, spinner, hint, target, { verbose }) => {
   const name = path.join(target, "package.json");
 
-  spinner.text = "locating package.json file";
+  if (verbose) spinner.text = "locating package.json file";
 
   json(name, async (err, file) => {
-    if (err) return spinner.fail(`could not find ${name}`);
+    if (err) return verbose && spinner.fail(`could not find ${name}`);
 
     const json = parseJson(response);
     const { data } = extractAuditSummary(json);
@@ -52,7 +55,7 @@ const twist = (response, spinner, hint, target) => {
     );
 
     if (vulnerabilities === 0)
-      return spinner.fail("no vulnerabilities found" + hint);
+      return verbose && spinner.fail("no vulnerabilities found" + hint);
 
     const resolutions = json
       .map(({ data, type }) => {
@@ -69,10 +72,10 @@ const twist = (response, spinner, hint, target) => {
       .filter(data => data)
       .filter(({ patched }) => patched !== "<0.0.0");
 
-    spinner.text = `building resolutions`;
+    if (verbose) spinner.text = `building resolutions`;
 
     if (resolutions.length === 0)
-      return spinner.fail("failed to build resolutions");
+      return verbose && spinner.fail("failed to build resolutions");
 
     //TODO: add a save option in a settings file
     //const old = await file.get("resolutions");
@@ -86,8 +89,7 @@ const twist = (response, spinner, hint, target) => {
     await file.set({ resolutions: modules });
     await file.save();
 
-    if (!teardown) spinner.succeed(`twisted yarn successfully`);
-    else teardown(spinner, hint, target);
+    verbose && spinner.succeed(`twisted yarn successfully`);
   });
 };
 

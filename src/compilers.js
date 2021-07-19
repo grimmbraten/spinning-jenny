@@ -72,12 +72,12 @@ const audit = (spinner, hint, target, { verbose }) => {
   });
 };
 
-const upgrade = (spinner, hint, target, { verbose }) => {
+const upgrade = (spinner, hint, target, { verbose, pattern }) => {
   verbose && spinner.start("upgrading packages" + hint);
 
   return new Promise(function (resolve, reject) {
     shell.exec(
-      `yarn --cwd ${target} upgrade --json`,
+      `yarn --cwd ${target} upgrade ${pattern} --json`,
       {
         silent: true
       },

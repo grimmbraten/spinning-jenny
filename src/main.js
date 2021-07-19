@@ -19,12 +19,12 @@ const [, , ...inputs] = process.argv;
   !config.verbose && spinner.start("working");
 
   const { preparatory, compiler, teardown, target, handler, error, hint } =
-    controller(inputs);
+    controller(inputs, config);
 
   if (error) return spinner.fail(error);
 
   if (preparatory) {
-    label = hint || " preparatory".gray;
+    label = hint + config.steps ? " [preparatory]".gray : "";
 
     preparatory.forEach(async action => {
       promises.push(action(spinner, label, target));
@@ -34,7 +34,7 @@ const [, , ...inputs] = process.argv;
     promises = [];
   }
 
-  label = hint || " main".gray;
+  label = hint + config.steps ? " [main]".gray : "";
 
   if (!compiler) return;
   const response = await compiler(spinner, label, target, config);
@@ -44,7 +44,7 @@ const [, , ...inputs] = process.argv;
   handler(response, spinner, label, target, config);
 
   if (teardown) {
-    label = hint || " teardown".gray;
+    label = hint ? config.steps ? " [teardown]".gray : "";
     teardown.forEach(action => {
       promises.push(action(spinner, label, target));
     });

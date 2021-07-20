@@ -1,7 +1,7 @@
 {
   "steps": true,
   "pattern": "--caret",
-  "backup": false,
+  "backup": true,
   "frozen": false,
   "verbose": true
 }

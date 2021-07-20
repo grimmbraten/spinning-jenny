@@ -54,6 +54,6 @@ const [, , ...inputs] = process.argv;
 
     await Promise.all(promises);
 
-    if (!verbose) spinner.succeed("done");
+    if (!config.verbose) spinner.succeed("done");
   }
 })();

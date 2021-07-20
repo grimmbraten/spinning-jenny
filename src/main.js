@@ -3,6 +3,7 @@
 require("colors");
 const ora = require("ora");
 
+const { backup } = require("./compilers");
 const { controller } = require("./controller");
 const { editConfig, loadConfig } = require("./config");
 
@@ -22,6 +23,8 @@ const [, , ...inputs] = process.argv;
     controller(inputs, config);
 
   if (error) return spinner.fail(error);
+
+  if (config.backup) await backup(spinner, hint, target, config);
 
   if (preparatory) {
     label = hint + config.steps ? " [preparatory]".gray : "";
@@ -44,7 +47,7 @@ const [, , ...inputs] = process.argv;
   handler(response, spinner, label, target, config);
 
   if (teardown) {
-    label = hint ? config.steps ? " [teardown]".gray : "";
+    label = hint + config.steps ? " [teardown]".gray : "";
     teardown.forEach(action => {
       promises.push(action(spinner, label, target));
     });

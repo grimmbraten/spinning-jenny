@@ -123,10 +123,60 @@ const install = (spinner, hint, target, { verbose }) => {
   });
 };
 
+const backup = (spinner, hint, target, { verbose }) => {
+  let backup = {};
+  const name = path.join("./src", ".backups.json");
+
+  return new Promise(function (resolve, reject) {
+    json(name, async (err, file) => {
+      if (err) return reject();
+
+      verbose && spinner.start("backing up resolutions" + hint);
+
+      const resolutions = await file.get("resolutions");
+
+      const dir = target.split("/").pop();
+
+      backup[dir] = resolutions;
+
+      await file.set(backup);
+      await file.save();
+
+      verbose && spinner.succeed("saved resolutions" + hint);
+
+      resolve();
+    });
+  });
+};
+
+const revert = (spinner, hint, target, { verbose }) => {
+  const package = path.join(target, "package.json");
+  const backups = path.join("./src", ".backups.json");
+
+  json(backups, async (err, file) => {
+    if (err) return reject();
+
+    verbose && spinner.start("reverting resolutions" + hint);
+
+    const dir = target.split("/").pop();
+
+    const backup = await file.get(dir);
+
+    await file.set({ resolutions: backup });
+    await file.save();
+
+    verbose && spinner.succeed("reverted resolutions" + hint);
+
+    resolve();
+  });
+};
+
 module.exports = {
   dry,
   test,
   audit,
+  backup,
+  revert,
   upgrade,
   install
 };

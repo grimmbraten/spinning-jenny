@@ -24,32 +24,35 @@ const [, , ...inputs] = process.argv;
 
   if (error) return spinner.fail(error);
 
+  config.steps.total =
+    preparatory.length + teardown.length + (compiler ? 1 : 0);
+
+  config["getSteps"] = () =>
+    config.label
+      ? `[${config.steps.completed + 1}/${config.steps.total}] `.gray
+      : "";
+
   if (config.backup) await backup(spinner, hint, target, config);
 
   if (preparatory) {
-    label = hint + config.steps ? " [preparatory]".gray : "";
-
     preparatory.forEach(async action => {
-      promises.push(action(spinner, label, target));
+      promises.push(action(spinner, hint, target, config));
     });
 
     await Promise.all(promises);
     promises = [];
   }
 
-  label = hint + config.steps ? " [main]".gray : "";
-
   if (!compiler) return;
-  const response = await compiler(spinner, label, target, config);
+  const response = await compiler(spinner, hint, target, config);
   if (!response) return spinner.fail("something went wrong, sorry about that");
 
   if (!handler) return spinner.fail("something went wrong, sorry about that");
   handler(response, spinner, label, target, config);
 
   if (teardown) {
-    label = hint + config.steps ? " [teardown]".gray : "";
     teardown.forEach(action => {
-      promises.push(action(spinner, label, target));
+      promises.push(action(spinner, hint, target, config));
     });
 
     await Promise.all(promises);

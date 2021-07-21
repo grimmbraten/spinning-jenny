@@ -1,18 +1,16 @@
 require("colors");
-const { write, parseJson, extractAuditSummary } = require("./helpers");
+const { sum, write, parseJson, extractAuditSummary } = require("./helpers");
 
-const report = (response, spinner, hint, { verbose }) => {
+const report = (response, spinner, hint, target, { verbose }) => {
   const json = parseJson(response);
   const { data } = extractAuditSummary(json);
+  const vulnerabilities = sum(data.vulnerabilities);
 
-  const vulnerabilities = Object.values(data.vulnerabilities).reduce(
-    (a, b) => a + b
-  );
-
-  if (vulnerabilities === 0)
+  if (vulnerabilities === 0) {
     return (
       verbose && spinner.succeed("package.json has no vulnerabilities" + hint)
     );
+  }
 
   const {
     vulnerabilities: { critical, high, moderate, low, info }
@@ -36,14 +34,11 @@ const report = (response, spinner, hint, { verbose }) => {
     );
 };
 
-const twist = (response, spinner, hint, target, { verbose }) => {
+const twist = async (response, spinner, hint, target, { verbose }) => {
   let modules = {};
   const json = parseJson(response);
   const { data } = extractAuditSummary(json);
-
-  const vulnerabilities = Object.values(data.vulnerabilities).reduce(
-    (a, b) => a + b
-  );
+  const vulnerabilities = sum(data.vulnerabilities);
 
   if (vulnerabilities === 0)
     return verbose && spinner.fail("no vulnerabilities found" + hint);

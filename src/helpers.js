@@ -1,3 +1,6 @@
+const path = require("path");
+const json = require("json-file-plus");
+
 const parseJson = json =>
   json
     .split(/\r?\n/)
@@ -22,7 +25,23 @@ const resolutionCount = resolutions => Object.entries(resolutions).length;
 const isBooleanInput = value =>
   value === "true" ? true : value === "false" ? false : undefined;
 
+const read = async (dir, file, property) =>
+  await json(path.join(dir, file), async (err, json) => {
+    if (err) return console.error(`could not find ${dir}/${file}`);
+    return await json.get(property);
+  });
+
+const write = async (dir, file, property) =>
+  await json(path.join(dir, file), async (err, json) => {
+    if (err) return console.error(`could not find ${dir}/${file}`);
+    await json.set(property);
+    await json.save();
+    return true;
+  });
+
 module.exports = {
+  read,
+  write,
   parseJson,
   isBooleanInput,
   resolutionCount,

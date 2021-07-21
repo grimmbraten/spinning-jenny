@@ -1,48 +1,39 @@
-const path = require("path");
 const shell = require("shelljs");
-const json = require("json-file-plus");
+
 const {
+  read,
+  remove,
   parseJson,
   resolutionCount,
   scannedDependencies,
   extractUpgradeOutcome
 } = require("./helpers");
 
-const dry = (spinner, hint, target, { verbose }) => {
-  const name = path.join(target, "package.json");
-
-  return new Promise(function (resolve, reject) {
+const dry = (spinner, hint, target, { verbose }) =>
+  new Promise(function (resolve, reject) {
     verbose && spinner.start("removing resolutions" + hint);
 
-    json(name, async (err, file) => {
-      if (err) return reject();
+    const resolutions = await read(target, "package.json", "resolutions");
 
-      const resolutions = await file.get("resolutions");
+    if (!resolutions) {
+      verbose &&
+        spinner.fail("package.json does not include any resolutions" + hint);
+      return resolve();
+    }
 
-      if (!resolutions) {
-        verbose &&
-          spinner.fail("package.json does not include any resolutions" + hint);
-        return resolve();
-      }
+    const success = await remove(target, "package.json", "resolutions");
 
-      await file.remove("resolutions");
-
-      file
-        .save()
-        .then(() => {
-          verbose &&
-            spinner.succeed(
-              `removed ${resolutionCount(resolutions)} resolutions` + hint
-            );
-          resolve();
-        })
-        .catch(err => {
-          verbose && spinner.fail("remove resolutions failed" + hint);
-          reject();
-        });
-    });
+    if (success) {
+      verbose &&
+        spinner.succeed(
+          `removed ${resolutionCount(resolutions)} resolutions` + hint
+        );
+      resolve();
+    } else {
+      verbose && spinner.fail("remove resolutions failed" + hint);
+      reject();
+    }
   });
-};
 
 const test = (option, value) => shell.test(option, value);
 
@@ -125,50 +116,36 @@ const install = (spinner, hint, target, { verbose }) => {
 
 const backup = (spinner, hint, target, { verbose }) => {
   let backup = {};
-  const name = path.join("./src", ".backups.json");
 
   return new Promise(function (resolve, reject) {
-    json(name, async (err, file) => {
-      if (err) return reject();
+    verbose && spinner.start("backing up resolutions" + hint);
 
-      verbose && spinner.start("backing up resolutions" + hint);
+    const resolutions = await read(target, "package.json", "resolutions");
 
-      const resolutions = await file.get("resolutions");
+    const dir = target.split("/").pop();
 
-      const dir = target.split("/").pop();
+    backup[dir] = resolutions;
 
-      backup[dir] = resolutions;
+    await write("./src", ".backups.json", backup);
 
-      await file.set(backup);
-      await file.save();
+    verbose && spinner.succeed("saved resolutions" + hint);
 
-      verbose && spinner.succeed("saved resolutions" + hint);
-
-      resolve();
-    });
+    resolve();
   });
 };
 
 const revert = (spinner, hint, target, { verbose }) => {
-  const package = path.join(target, "package.json");
-  const backups = path.join("./src", ".backups.json");
+  verbose && spinner.start("reverting resolutions" + hint);
 
-  json(backups, async (err, file) => {
-    if (err) return reject();
+  const dir = target.split("/").pop();
 
-    verbose && spinner.start("reverting resolutions" + hint);
+  const backup = await read("./src", ".backups.json", dir);
 
-    const dir = target.split("/").pop();
+  await write(target, "package.json", { resolutions: backup });
 
-    const backup = await file.get(dir);
+  verbose && spinner.succeed("reverted resolutions" + hint);
 
-    await file.set({ resolutions: backup });
-    await file.save();
-
-    verbose && spinner.succeed("reverted resolutions" + hint);
-
-    resolve();
-  });
+  resolve();
 };
 
 module.exports = {

@@ -150,21 +150,27 @@ const backup = async (spinner, hint, target, { verbose }) => {
 
   await write("./src", ".backups.json", backup);
 
-  verbose && spinner.succeed("created backup of resolutions" + hint);
+  verbose && spinner.info("created backup of resolutions" + hint);
 };
 
-const revert = async (spinner, hint, target, { verbose }) => {
-  verbose && spinner.start("reverting resolutions" + hint);
+const revert = async (spinner, hint, target, { label, verbose, ...config }) => {
+  const step = config.getSteps();
+  label && config.steps.completed++;
+
+  verbose && spinner.start(step + "reverting resolutions" + hint);
 
   const dir = target.split("/").pop();
 
   const backup = await read("./src", ".backups.json", dir);
 
+  if (!backup) {
+    verbose && spinner.fail(step + "found no resolution backup" + hint);
+    return;
+  }
+
   await write(target, "package.json", { resolutions: backup });
 
-  verbose && spinner.succeed("reverted resolutions" + hint);
-
-  resolve();
+  verbose && spinner.succeed(step + "reverted resolutions" + hint);
 };
 
 module.exports = {

@@ -1,3 +1,4 @@
+require("colors");
 const shell = require("shelljs");
 
 const {
@@ -10,15 +11,20 @@ const {
   extractUpgradeOutcome
 } = require("./helpers");
 
-const dry = (spinner, hint, target, { verbose }) =>
+const dry = (spinner, hint, target, { label, verbose, ...config }) =>
   new Promise(async function (resolve, reject) {
-    verbose && spinner.start("removing resolutions" + hint);
+    const step = config.getSteps();
+    label && config.steps.completed++;
+
+    verbose && spinner.start(step + "removing resolutions" + hint);
 
     const resolutions = await read(target, "package.json", "resolutions");
 
     if (!resolutions) {
       verbose &&
-        spinner.fail("package.json does not include any resolutions" + hint);
+        spinner.fail(
+          step + "package.json does not include any resolutions" + hint
+        );
       return resolve();
     }
 
@@ -27,19 +33,22 @@ const dry = (spinner, hint, target, { verbose }) =>
     if (success) {
       verbose &&
         spinner.succeed(
-          `removed ${resolutionCount(resolutions)} resolutions` + hint
+          step + `removed ${resolutionCount(resolutions)} resolutions` + hint
         );
       resolve();
     } else {
-      verbose && spinner.fail("remove resolutions failed" + hint);
+      verbose && spinner.fail(step + "remove resolutions failed" + hint);
       reject();
     }
   });
 
 const test = (option, value) => shell.test(option, value);
 
-const audit = (spinner, hint, target, { verbose }) => {
-  verbose && spinner.start("scanning for vulnerabilities" + hint);
+const audit = (spinner, hint, target, { label, verbose, ...config }) => {
+  const step = config.getSteps();
+  label && config.steps.completed++;
+
+  verbose && spinner.start(step + "scanning for vulnerabilities" + hint);
 
   return new Promise(function (resolve, reject) {
     shell.exec(
@@ -49,13 +58,14 @@ const audit = (spinner, hint, target, { verbose }) => {
       },
       (_, stdout, stderr) => {
         if (stderr) {
-          verbose && spinner.fail("scan failed" + hint);
+          verbose && spinner.fail(step + "scan failed" + hint);
           reject(stderr);
         }
 
         verbose &&
           spinner.succeed(
-            `scanned ${scannedDependencies(parseJson(stdout))} dependencies` +
+            step +
+              `scanned ${scannedDependencies(parseJson(stdout))} dependencies` +
               hint
           );
         return resolve(stdout);
@@ -64,8 +74,16 @@ const audit = (spinner, hint, target, { verbose }) => {
   });
 };
 
-const upgrade = (spinner, hint, target, { verbose, pattern }) => {
-  verbose && spinner.start("upgrading packages" + hint);
+const upgrade = (
+  spinner,
+  hint,
+  target,
+  { label, verbose, pattern, ...config }
+) => {
+  const step = config.getSteps();
+  label && config.steps.completed++;
+
+  verbose && spinner.start(step + "upgrading packages" + hint);
 
   return new Promise(function (resolve, reject) {
     shell.exec(
@@ -75,26 +93,29 @@ const upgrade = (spinner, hint, target, { verbose, pattern }) => {
       },
       (_, stdout, stderr) => {
         if (stderr) {
-          verbose && spinner.fail("upgrade failed" + hint);
+          verbose && spinner.fail(step + "upgrade failed" + hint);
           reject(stderr);
         }
 
         const outcome = extractUpgradeOutcome(parseJson(stdout));
 
         if (!outcome) {
-          verbose && spinner.fail("upgrade failed");
+          verbose && spinner.fail(step + "upgrade failed");
           return resolve(stdout);
         }
 
-        verbose && spinner.succeed(outcome + hint);
+        verbose && spinner.succeed(step + outcome + hint);
         return resolve(stdout);
       }
     );
   });
 };
 
-const install = (spinner, hint, target, { verbose }) => {
-  verbose && spinner.start("install packages" + hint);
+const install = (spinner, hint, target, { label, verbose, ...config }) => {
+  const step = config.getSteps();
+  label && config.steps.completed++;
+
+  verbose && spinner.start(step + "install packages" + hint);
 
   return new Promise(function (resolve, reject) {
     shell.exec(
@@ -104,11 +125,11 @@ const install = (spinner, hint, target, { verbose }) => {
       },
       (_, stdout, stderr) => {
         if (stderr) {
-          verbose && spinner.fail("installation failed" + hint);
+          verbose && spinner.fail(step + "installation failed" + hint);
           reject(stderr);
         }
 
-        verbose && spinner.succeed("installed successfully" + hint);
+        verbose && spinner.succeed(step + "installed successfully" + hint);
         return resolve(stdout);
       }
     );
@@ -129,7 +150,7 @@ const backup = async (spinner, hint, target, { verbose }) => {
 
   await write("./src", ".backups.json", backup);
 
-  verbose && spinner.succeed("saved resolutions" + hint);
+  verbose && spinner.succeed("created backup of resolutions" + hint);
 };
 
 const revert = async (spinner, hint, target, { verbose }) => {

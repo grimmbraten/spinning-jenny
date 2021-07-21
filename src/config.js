@@ -1,7 +1,7 @@
 const { read, write, isBooleanInput } = require("./helpers");
 
 const Flags = {
-  steps: ["--steps", "steps", "-s"], // boolean: display steps as hints (true)
+  label: ["--label", "label", "-l"], // boolean: display label before printout (true)
   pattern: ["--pattern", "pattern", "-p"], // string: what pattern jenny is allowed to upgrade packages to (--caret) [--caret, --tilde, --exact]
   backup: ["--backup", "backup", "-b"], // boolean: save previous resolutions object (true)
   frozen: ["--frozen", "frozen", "-f"], // boolean: prevent jenny from modifying the yarn.lock file (false)
@@ -11,7 +11,10 @@ const Flags = {
 const configDir = "./src";
 const configFile = ".config.json";
 
-const loadConfig = async () => await read(configDir, configFile);
+const loadConfig = async () => ({
+  steps: { total: 0, completed: 0 },
+  ...(await read(configDir, configFile))
+});
 
 const editConfig = async (inputs, spinner) => {
   let config = await loadConfig();
@@ -47,13 +50,13 @@ const editConfig = async (inputs, spinner) => {
 
       config.backup = value;
       spinner.succeed("changed backup to " + value);
-    } else if (Flags.steps.includes(input)) {
+    } else if (Flags.label.includes(input)) {
       const value = isBooleanInput(inputs[index + 1]);
       if (value === undefined)
-        return spinner.fail("steps can only be set to true / false");
+        return spinner.fail("label can only be set to true / false");
 
-      config.steps = value;
-      spinner.succeed("changed steps to " + value);
+      config.label = value;
+      spinner.succeed("changed label to " + value);
     } else if (Flags.pattern.includes(input)) {
       spinner.start("changing upgrade pattern");
 

@@ -3,6 +3,7 @@
 require("colors");
 const ora = require("ora");
 
+const { read } = require("./helpers");
 const { backup } = require("./compilers");
 const { controller } = require("./controller");
 const { editConfig, loadConfig } = require("./config");
@@ -12,6 +13,8 @@ const [, , ...inputs] = process.argv;
 (async () => {
   const spinner = ora();
   if (inputs[0] === "config") return editConfig(inputs, spinner);
+  else if (inputs[0] === "backups")
+    return console.log(await read("./src", ".backups.json"));
 
   const config = await loadConfig();
 

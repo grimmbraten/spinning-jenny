@@ -35,12 +35,12 @@ const [, , ...inputs] = process.argv;
   if (config.backup) await backup(spinner, hint, target, config);
 
   if (preparatory) {
-    preparatory.forEach(async action => {
-      promises.push(action(spinner, hint, target, config));
-    });
-
-    await Promise.all(promises);
-    promises = [];
+    const resolve = Promise.resolve(null);
+    await preparatory.reduce(
+      (promise, action) =>
+        promise.then(() => action(spinner, hint, target, config)),
+      resolve
+    );
   }
 
   if (!compiler) return;
@@ -48,14 +48,15 @@ const [, , ...inputs] = process.argv;
   if (!response) return spinner.fail("something went wrong, sorry about that");
 
   if (!handler) return spinner.fail("something went wrong, sorry about that");
-  handler(response, spinner, label, target, config);
+  handler(response, spinner, hint, target, config);
 
   if (teardown) {
-    teardown.forEach(action => {
-      promises.push(action(spinner, hint, target, config));
-    });
-
-    await Promise.all(promises);
+    const resolve = Promise.resolve(null);
+    await teardown.reduce(
+      (promise, action) =>
+        promise.then(() => action(spinner, hint, target, config)),
+      resolve
+    );
 
     if (!config.verbose) spinner.succeed("done");
   }

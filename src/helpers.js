@@ -1,6 +1,8 @@
 const path = require("path");
 const json = require("json-file-plus");
 
+const sum = collection => Object.values(collection).reduce((a, b) => a + b);
+
 const parseJson = json =>
   json
     .split(/\r?\n/)
@@ -25,29 +27,36 @@ const resolutionCount = resolutions => Object.entries(resolutions).length;
 const isBooleanInput = value =>
   value === "true" ? true : value === "false" ? false : undefined;
 
-const read = async (dir, file, property) =>
-  await json(path.join(dir, file), async (err, json) => {
-    if (err) return console.error(`could not find ${dir}/${file}`);
-    return property ? await json.get(property) : json.get();
+const read = (dir, file, property) =>
+  new Promise(async (resolve, reject) => {
+    await json(path.join(dir, file), (err, json) => {
+      if (err) reject(err);
+      resolve(property ? json.get(property) : json.get());
+    });
   });
 
-const write = async (dir, file, property) =>
-  await json(path.join(dir, file), async (err, json) => {
-    if (err) return console.error(`could not find ${dir}/${file}`);
-    await json.set(property);
-    await json.save();
-    return true;
+const write = (dir, file, property) =>
+  new Promise(async (resolve, reject) => {
+    await json(path.join(dir, file), (err, json) => {
+      if (err) reject(err);
+      json.set(property);
+      json.save();
+      resolve(true);
+    });
   });
 
-const remove = async (dir, file, property) =>
-  await json(path.join(dir, file), async (err, json) => {
-    if (err) return console.error(`could not find ${dir}/${file}`);
-    await json.remove(property);
-    await json.save();
-    return true;
+const remove = (dir, file, property) =>
+  new Promise(async (resolve, reject) => {
+    await json(path.join(dir, file), (err, json) => {
+      if (err) reject(err);
+      json.remove(property);
+      json.save();
+      resolve(true);
+    });
   });
 
 module.exports = {
+  sum,
   read,
   write,
   remove,

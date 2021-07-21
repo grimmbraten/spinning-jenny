@@ -146,7 +146,7 @@ const backup = async (spinner, hint, target, { verbose }) => {
 
   const dir = target.split("/").pop();
 
-  backup[dir] = resolutions;
+  backup[dir] = { resolutions, date: new Date().toString() };
 
   await write("./src", ".backups.json", backup);
 
@@ -161,14 +161,14 @@ const revert = async (spinner, hint, target, { label, verbose, ...config }) => {
 
   const dir = target.split("/").pop();
 
-  const backup = await read("./src", ".backups.json", dir);
+  const { resolutions } = await read("./src", ".backups.json", dir);
 
-  if (!backup) {
+  if (!resolutions) {
     verbose && spinner.fail(step + "found no resolution backup" + hint);
     return;
   }
 
-  await write(target, "package.json", { resolutions: backup });
+  await write(target, "package.json", { resolutions });
 
   verbose && spinner.succeed(step + "reverted resolutions" + hint);
 };

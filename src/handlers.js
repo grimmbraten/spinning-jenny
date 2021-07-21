@@ -1,8 +1,5 @@
 require("colors");
-
-const path = require("path");
-const json = require("json-file-plus");
-const { parseJson, extractAuditSummary } = require("./helpers");
+const { write, parseJson, extractAuditSummary } = require("./helpers");
 
 const report = (response, spinner, hint, { verbose }) => {
   const json = parseJson(response);
@@ -40,57 +37,44 @@ const report = (response, spinner, hint, { verbose }) => {
 };
 
 const twist = (response, spinner, hint, target, { verbose }) => {
-  const name = path.join(target, "package.json");
+  let modules = {};
+  const json = parseJson(response);
+  const { data } = extractAuditSummary(json);
 
-  if (verbose) spinner.text = "locating package.json file";
+  const vulnerabilities = Object.values(data.vulnerabilities).reduce(
+    (a, b) => a + b
+  );
 
-  json(name, async (err, file) => {
-    if (err) return verbose && spinner.fail(`could not find ${name}`);
+  if (vulnerabilities === 0)
+    return verbose && spinner.fail("no vulnerabilities found" + hint);
 
-    const json = parseJson(response);
-    const { data } = extractAuditSummary(json);
+  const resolutions = json
+    .map(({ data, type }) => {
+      if (type === "auditAdvisory")
+        return {
+          title: data.advisory.title,
+          module: data.advisory.module_name,
+          version: data.advisory.vulnerable_versions,
+          patched: data.advisory.patched_versions,
+          severity: data.advisory.severity,
+          url: data.advisory.url
+        };
+    })
+    .filter(data => data)
+    .filter(({ patched }) => patched !== "<0.0.0");
 
-    const vulnerabilities = Object.values(data.vulnerabilities).reduce(
-      (a, b) => a + b
-    );
+  if (verbose) spinner.text = `building resolutions`;
 
-    if (vulnerabilities === 0)
-      return verbose && spinner.fail("no vulnerabilities found" + hint);
+  if (resolutions.length === 0)
+    return verbose && spinner.fail("failed to build resolutions");
 
-    const resolutions = json
-      .map(({ data, type }) => {
-        if (type === "auditAdvisory")
-          return {
-            title: data.advisory.title,
-            module: data.advisory.module_name,
-            version: data.advisory.vulnerable_versions,
-            patched: data.advisory.patched_versions,
-            severity: data.advisory.severity,
-            url: data.advisory.url
-          };
-      })
-      .filter(data => data)
-      .filter(({ patched }) => patched !== "<0.0.0");
-
-    if (verbose) spinner.text = `building resolutions`;
-
-    if (resolutions.length === 0)
-      return verbose && spinner.fail("failed to build resolutions");
-
-    //TODO: add a save option in a settings file
-    //const old = await file.get("resolutions");
-
-    let modules = {};
-
-    resolutions.forEach(({ module, patched }) => {
-      modules[module] = patched;
-    });
-
-    await file.set({ resolutions: modules });
-    await file.save();
-
-    verbose && spinner.succeed(`twisted yarn successfully`);
+  resolutions.forEach(({ module, patched }) => {
+    modules[module] = patched;
   });
+
+  await write(target, "package.json", { resolutions: modules });
+
+  verbose && spinner.succeed(`twisted yarn successfully`);
 };
 
 module.exports = {

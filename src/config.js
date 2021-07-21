@@ -33,7 +33,7 @@ const editConfig = async (inputs, spinner) => {
         return spinner.fail("verbose can only be set to true / false");
 
       config.verbose = value;
-      spinner.succeed("changed verbose to " + value);
+      spinner.info("changed verbose to " + value);
     } else if (Flags.frozen.includes(input)) {
       spinner.start("changing frozen mode");
 
@@ -42,21 +42,21 @@ const editConfig = async (inputs, spinner) => {
         return spinner.fail("frozen can only be set to true / false");
 
       config.frozen = value;
-      spinner.succeed("changed frozen to " + value);
+      spinner.info("changed frozen to " + value);
     } else if (Flags.backup.includes(input)) {
       const value = isBooleanInput(inputs[index + 1]);
       if (value === undefined)
         return spinner.fail("frozen can only be set to true / false");
 
       config.backup = value;
-      spinner.succeed("changed backup to " + value);
+      spinner.info("changed backup to " + value);
     } else if (Flags.label.includes(input)) {
       const value = isBooleanInput(inputs[index + 1]);
       if (value === undefined)
         return spinner.fail("label can only be set to true / false");
 
       config.label = value;
-      spinner.succeed("changed label to " + value);
+      spinner.info("changed label to " + value);
     } else if (Flags.pattern.includes(input)) {
       spinner.start("changing upgrade pattern");
 
@@ -72,7 +72,7 @@ const editConfig = async (inputs, spinner) => {
         );
 
       config.pattern = value;
-      spinner.succeed("changed pattern to ", value);
+      spinner.info("changed pattern to ", value);
     }
   });
 

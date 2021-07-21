@@ -28,7 +28,7 @@ const isBooleanInput = value =>
 const read = async (dir, file, property) =>
   await json(path.join(dir, file), async (err, json) => {
     if (err) return console.error(`could not find ${dir}/${file}`);
-    return await json.get(property);
+    return property ? await json.get(property) : json.get();
   });
 
 const write = async (dir, file, property) =>
@@ -39,9 +39,18 @@ const write = async (dir, file, property) =>
     return true;
   });
 
+const remove = async (dir, file, property) =>
+  await json(path.join(dir, file), async (err, json) => {
+    if (err) return console.error(`could not find ${dir}/${file}`);
+    await json.remove(property);
+    await json.save();
+    return true;
+  });
+
 module.exports = {
   read,
   write,
+  remove,
   parseJson,
   isBooleanInput,
   resolutionCount,

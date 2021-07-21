@@ -11,17 +11,17 @@ const Flags = {
 const configDir = "./src";
 const configFile = ".config.json";
 
-const loadConfig = async () => {
-  const { data } = await read(configDir, configFile);
-  return data;
-};
+const loadConfig = async () => await read(configDir, configFile);
 
-const editConfig = (inputs, spinner) => {
-  if (inputs.length === 1)
-    return console.log(await read(configDir, configFile));
+const editConfig = async (inputs, spinner) => {
+  let config = await loadConfig();
+
+  if (inputs.length === 1) return console.log(config);
   inputs.shift();
 
-  inputs.forEach(async (input, index) => {
+  inputs.forEach((input, index) => {
+    if (index % 2 === 1) return;
+
     if (Flags.verbose.includes(input)) {
       spinner.start("changing verbose mode");
 
@@ -29,7 +29,7 @@ const editConfig = (inputs, spinner) => {
       if (value === undefined)
         return spinner.fail("verbose can only be set to true / false");
 
-      await write(configDir, configFile, { verbose: value });
+      config.verbose = value;
       spinner.succeed("changed verbose to " + value);
     } else if (Flags.frozen.includes(input)) {
       spinner.start("changing frozen mode");
@@ -38,19 +38,21 @@ const editConfig = (inputs, spinner) => {
       if (value === undefined)
         return spinner.fail("frozen can only be set to true / false");
 
-      await write(configDir, configFile, { frozen: value });
+      config.frozen = value;
       spinner.succeed("changed frozen to " + value);
     } else if (Flags.backup.includes(input)) {
       const value = isBooleanInput(inputs[index + 1]);
-      if (value === undefined) return;
+      if (value === undefined)
+        return spinner.fail("frozen can only be set to true / false");
 
-      await write(configDir, configFile, { backup: value });
+      config.backup = value;
+      spinner.succeed("changed backup to " + value);
     } else if (Flags.steps.includes(input)) {
       const value = isBooleanInput(inputs[index + 1]);
       if (value === undefined)
         return spinner.fail("steps can only be set to true / false");
 
-      await write(configDir, configFile, { steps: value });
+      config.steps = value;
       spinner.succeed("changed steps to " + value);
     } else if (Flags.pattern.includes(input)) {
       spinner.start("changing upgrade pattern");
@@ -65,10 +67,13 @@ const editConfig = (inputs, spinner) => {
         return spinner.fail(
           "pattern can only be set to exact, tilde, or caret"
         );
-      await write(configDir, configFile, { pattern: `--${value}` });
+
+      config.pattern = value;
       spinner.succeed("changed pattern to ", value);
     }
   });
+
+  await write(configDir, configFile, config);
 };
 
 module.exports = {

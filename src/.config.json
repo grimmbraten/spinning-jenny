@@ -1,5 +1,5 @@
 {
-  "steps": true,
+  "label": true,
   "pattern": "--caret",
   "backup": true,
   "frozen": false,

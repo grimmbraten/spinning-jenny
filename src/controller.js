@@ -9,7 +9,7 @@ const Flags = {
 };
 
 const { twist, report } = require("./handlers");
-const { dry, test, audit, upgrade, install } = require("./compilers");
+const { dry, revert, test, audit, upgrade, install } = require("./compilers");
 
 const controller = (inputs, { frozen }) => {
   let error;
@@ -38,14 +38,14 @@ const controller = (inputs, { frozen }) => {
 
     if (!compiler) {
       if (Flags.dry.includes(input)) preparatory.push(dry);
-      if (Flags.install.includes(input)) {
+      else if (Flags.revert.includes(input)) preparatory.push(revert);
+      else if (Flags.install.includes(input)) {
         if (frozen)
           return console.log(
             "--install is not allowed if frozen is set to true"
           );
         preparatory.push(install);
-      }
-      if (Flags.upgrade.includes(input)) {
+      } else if (Flags.upgrade.includes(input)) {
         if (frozen)
           return console.log(
             "--upgrade is not allowed if frozen is set to true"
@@ -62,14 +62,14 @@ const controller = (inputs, { frozen }) => {
       }
     } else {
       if (Flags.dry.includes(input)) teardown.push(dry);
-      if (Flags.install.includes(input)) {
+      else if (Flags.revert.includes(input)) teardown.push(revert);
+      else if (Flags.install.includes(input)) {
         if (frozen)
           return console.log(
             "--install is not allowed if frozen is set to true"
           );
         teardown.push(install);
-      }
-      if (Flags.upgrade.includes(input)) {
+      } else if (Flags.upgrade.includes(input)) {
         if (frozen)
           return console.log(
             "--upgrade is not allowed if frozen is set to true"

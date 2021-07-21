@@ -7,8 +7,6 @@ const { backup } = require("./compilers");
 const { controller } = require("./controller");
 const { editConfig, loadConfig } = require("./config");
 
-let label;
-let promises = [];
 const [, , ...inputs] = process.argv;
 
 (async () => {

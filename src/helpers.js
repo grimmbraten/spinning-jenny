@@ -29,28 +29,28 @@ const isBooleanInput = value =>
 
 const read = (dir, file, property) =>
   new Promise(async (resolve, reject) => {
-    await json(path.join(dir, file), (err, json) => {
+    await json(path.join(dir, file), async (err, json) => {
       if (err) reject(err);
-      resolve(property ? json.get(property) : json.get());
+      resolve(property ? await json.get(property) : await json.get());
     });
   });
 
 const write = (dir, file, property) =>
   new Promise(async (resolve, reject) => {
-    await json(path.join(dir, file), (err, json) => {
+    await json(path.join(dir, file), async (err, json) => {
       if (err) reject(err);
-      json.set(property);
-      json.save();
+      await json.set(property);
+      await json.save();
       resolve(true);
     });
   });
 
 const remove = (dir, file, property) =>
   new Promise(async (resolve, reject) => {
-    await json(path.join(dir, file), (err, json) => {
+    await json(path.join(dir, file), async (err, json) => {
       if (err) reject(err);
-      json.remove(property);
-      json.save();
+      await json.remove(property);
+      await json.save();
       resolve(true);
     });
   });

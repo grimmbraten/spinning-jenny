@@ -2,6 +2,7 @@ const shell = require("shelljs");
 
 const {
   read,
+  write,
   remove,
   parseJson,
   resolutionCount,
@@ -10,7 +11,7 @@ const {
 } = require("./helpers");
 
 const dry = (spinner, hint, target, { verbose }) =>
-  new Promise(function (resolve, reject) {
+  new Promise(async function (resolve, reject) {
     verbose && spinner.start("removing resolutions" + hint);
 
     const resolutions = await read(target, "package.json", "resolutions");
@@ -49,7 +50,7 @@ const audit = (spinner, hint, target, { verbose }) => {
       (_, stdout, stderr) => {
         if (stderr) {
           verbose && spinner.fail("scan failed" + hint);
-          reject();
+          reject(stderr);
         }
 
         verbose &&
@@ -75,7 +76,7 @@ const upgrade = (spinner, hint, target, { verbose, pattern }) => {
       (_, stdout, stderr) => {
         if (stderr) {
           verbose && spinner.fail("upgrade failed" + hint);
-          reject();
+          reject(stderr);
         }
 
         const outcome = extractUpgradeOutcome(parseJson(stdout));
@@ -104,7 +105,7 @@ const install = (spinner, hint, target, { verbose }) => {
       (_, stdout, stderr) => {
         if (stderr) {
           verbose && spinner.fail("installation failed" + hint);
-          reject();
+          reject(stderr);
         }
 
         verbose && spinner.succeed("installed successfully" + hint);
@@ -114,27 +115,24 @@ const install = (spinner, hint, target, { verbose }) => {
   });
 };
 
-const backup = (spinner, hint, target, { verbose }) => {
+const backup = async (spinner, hint, target, { verbose }) => {
   let backup = {};
 
-  return new Promise(function (resolve, reject) {
-    verbose && spinner.start("backing up resolutions" + hint);
+  const resolutions = await read(target, "package.json", "resolutions");
+  if (!resolutions) return;
 
-    const resolutions = await read(target, "package.json", "resolutions");
+  verbose && spinner.start("backing up resolutions" + hint);
 
-    const dir = target.split("/").pop();
+  const dir = target.split("/").pop();
 
-    backup[dir] = resolutions;
+  backup[dir] = resolutions;
 
-    await write("./src", ".backups.json", backup);
+  await write("./src", ".backups.json", backup);
 
-    verbose && spinner.succeed("saved resolutions" + hint);
-
-    resolve();
-  });
+  verbose && spinner.succeed("saved resolutions" + hint);
 };
 
-const revert = (spinner, hint, target, { verbose }) => {
+const revert = async (spinner, hint, target, { verbose }) => {
   verbose && spinner.start("reverting resolutions" + hint);
 
   const dir = target.split("/").pop();

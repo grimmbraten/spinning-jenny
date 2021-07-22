@@ -3,6 +3,13 @@ const json = require("json-file-plus");
 
 const sum = collection => Object.values(collection).reduce((a, b) => a + b);
 
+const colorVariable = value =>
+  typeof value === "string"
+    ? `${value}`.gray
+    : value
+    ? `${value}`.green
+    : `${value}`.red;
+
 const parseJson = json =>
   json
     .split(/\r?\n/)
@@ -61,6 +68,7 @@ module.exports = {
   write,
   remove,
   parseJson,
+  colorVariable,
   isBooleanInput,
   resolutionCount,
   extractAuditSummary,

@@ -1,5 +1,38 @@
 require("colors");
-const { sum, write, parseJson, extractAuditSummary } = require("./helpers");
+const {
+  sum,
+  read,
+  write,
+  parseJson,
+  colorVariable,
+  extractAuditSummary
+} = require("./helpers");
+
+const backups = async () => {
+  const backups = await read("./src", ".backups.json");
+
+  Object.keys(backups).forEach(key => {
+    console.log(
+      `\n${key}`.blue +
+        ` (${Object.entries(backups[key].resolutions).length} resolutions)` +
+        `\n${backups[key].date}`.gray
+    );
+  });
+};
+
+const configuration = config => {
+  const keys = Object.keys(config).filter(key => key !== "steps");
+
+  console.log();
+  keys.forEach(key => {
+    console.log(`${key}: ` + colorVariable(config[key]));
+  });
+
+  console.log(
+    "\nfor more information, please refer to the documentation\nhttps://github.com/grimmbraten/spinning-jenny"
+      .gray
+  );
+};
 
 const report = (response, spinner, hint, target, { verbose }) => {
   const json = parseJson(response);
@@ -74,5 +107,7 @@ const twist = async (response, spinner, hint, target, { verbose }) => {
 
 module.exports = {
   twist,
-  report
+  report,
+  backups,
+  configuration
 };

@@ -5,7 +5,9 @@ const Flags = {
   audit: ["--audit", "-a"],
   revert: ["--revert", "-r"],
   upgrade: ["--upgrade", "-u"],
-  install: ["--install", "-i"]
+  install: ["--install", "-i"],
+  config: ["--config", "-c"],
+  backups: ["--backup", "-b"]
 };
 
 const { twist, report, backups, configuration } = require("./handlers");
@@ -22,8 +24,8 @@ const controller = (inputs, { frozen }) => {
   let teardown = [];
   let preparatory = [];
 
-  if (inputs[0] === "config") info = configuration;
-  else if (inputs[0] === "backups") info = backups;
+  if (Flags.config.includes(inputs[0])) info = configuration;
+  else if (Flags.backups.includes(inputs[0])) info = backups;
 
   if (!info) {
     inputs.forEach((input, i) => {

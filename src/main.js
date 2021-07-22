@@ -12,18 +12,22 @@ const [, , ...inputs] = process.argv;
 
 (async () => {
   const spinner = ora();
-  if (inputs[0] === "config") return editConfig(inputs, spinner);
-  else if (inputs[0] === "backups")
-    return console.log(await read("./src", ".backups.json"));
 
   const config = await loadConfig();
 
-  !config.verbose && spinner.start("working");
-
-  const { preparatory, compiler, teardown, target, handler, error, hint } =
-    controller(inputs, config);
+  const {
+    preparatory,
+    compiler,
+    teardown,
+    target,
+    handler,
+    info,
+    error,
+    hint
+  } = controller(inputs, config);
 
   if (error) return spinner.fail(error);
+  else if (info) return info(config);
 
   config.steps.total =
     preparatory.length + teardown.length + (compiler ? 1 : 0);
@@ -32,6 +36,8 @@ const [, , ...inputs] = process.argv;
     config.label
       ? `[${config.steps.completed + 1}/${config.steps.total}] `.gray
       : "";
+
+  !config.verbose && spinner.start("working");
 
   if (config.backup) await backup(spinner, hint, target, config);
 

@@ -1,11 +1,11 @@
 const { read, write, isBooleanInput } = require("./helpers");
 
 const Flags = {
-  label: ["--label", "label", "-l"], // boolean: display label before printout (true)
-  pattern: ["--pattern", "pattern", "-p"], // string: what pattern jenny is allowed to upgrade packages to (--caret) [--caret, --tilde, --exact]
-  backup: ["--backup", "backup", "-b"], // boolean: save previous resolutions object (true)
-  frozen: ["--frozen", "frozen", "-f"], // boolean: prevent jenny from modifying the yarn.lock file (false)
-  verbose: ["--verbose", "verbose", "-v"] // boolean: print out step messages (true)
+  label: ["--label", "label", "-l"],
+  pattern: ["--pattern", "pattern", "-p"],
+  backup: ["--backup", "backup", "-b"],
+  frozen: ["--frozen", "frozen", "-f"],
+  verbose: ["--verbose", "verbose", "-v"]
 };
 
 const configDir = "./src";

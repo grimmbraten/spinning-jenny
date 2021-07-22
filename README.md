@@ -78,6 +78,16 @@ Flags defined after the main flag will be interpreted as teardown events. This m
 
 Addon flags can be defined anywhere without changing the behavior. This is because spinning jenny starts by searching for addon flags and interprets them before any other flags, even if the addon flag is defined last.
 
+### Configurations
+
+| Name    | Type    | Default | Description                                     |
+| ------- | ------- | ------- | ----------------------------------------------- |
+| label   | Boolean | true    | display step labels before messages (true)      |
+| pattern | String  | --caret | upgrade restriction (--caret, --tilde, --exact) |
+| backup  | Boolean | true    | create resolutions backups                      |
+| frozen  | Boolean | false   | prevent modifications to yarn.lock              |
+| verbose | Boolean | true    | display individual steps                        |
+
 ## Uninstall
 
 ```bash

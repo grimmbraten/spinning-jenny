@@ -16,11 +16,13 @@ const loadConfig = async () => ({
   ...(await read(configDir, configFile))
 });
 
-const editConfig = async (inputs, spinner) => {
+const editConfig = async (spinner, inputs) => {
   let config = await loadConfig();
 
-  if (inputs.length === 1) return console.log(config);
+  if (inputs.length === 1) return config;
   inputs.shift();
+
+  delete config.steps;
 
   inputs.forEach((input, index) => {
     if (index % 2 === 1) return;

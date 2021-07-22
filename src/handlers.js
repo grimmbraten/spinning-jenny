@@ -7,8 +7,9 @@ const {
   colorVariable,
   extractAuditSummary
 } = require("./helpers");
+const { editConfig } = require("./config");
 
-const backups = async () => {
+const backups = async (spinner, inputs) => {
   const backups = await read("./src", ".backups.json");
 
   Object.keys(backups).forEach(key => {
@@ -20,18 +21,22 @@ const backups = async () => {
   });
 };
 
-const configuration = config => {
-  const keys = Object.keys(config).filter(key => key !== "steps");
+const configuration = async (spinner, inputs) => {
+  const config = await editConfig(spinner, inputs);
 
-  console.log();
-  keys.forEach(key => {
-    console.log(`${key}: ` + colorVariable(config[key]));
-  });
+  if (config) {
+    const keys = Object.keys(config).filter(key => key !== "steps");
 
-  console.log(
-    "\nfor more information, please refer to the documentation\nhttps://github.com/grimmbraten/spinning-jenny"
-      .gray
-  );
+    console.log();
+    keys.forEach(key => {
+      console.log(`${key}: ` + colorVariable(config[key]));
+    });
+
+    console.log(
+      "\nfor more information, please refer to the documentation\nhttps://github.com/grimmbraten/spinning-jenny"
+        .gray
+    );
+  }
 };
 
 const report = (response, spinner, hint, target, { verbose }) => {

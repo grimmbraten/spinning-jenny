@@ -6,28 +6,27 @@ const ora = require("ora");
 const { read } = require("./helpers");
 const { backup } = require("./compilers");
 const { controller } = require("./controller");
-const { editConfig, loadConfig } = require("./config");
+const { loadConfig } = require("./config");
 
 const [, , ...inputs] = process.argv;
 
 (async () => {
   const spinner = ora();
-
   const config = await loadConfig();
 
   const {
-    preparatory,
-    compiler,
-    teardown,
-    target,
-    handler,
+    hint,
     info,
     error,
-    hint
+    target,
+    handler,
+    teardown,
+    compiler,
+    preparatory
   } = controller(inputs, config);
 
   if (error) return spinner.fail(error);
-  else if (info) return info(config);
+  else if (info) return info(spinner, inputs);
 
   config.steps.total =
     preparatory.length + teardown.length + (compiler ? 1 : 0);

@@ -3,31 +3,41 @@ const Flags = {
   path: ["--path", "-p"],
   twist: ["--twist", "-t"],
   audit: ["--audit", "-a"],
-  revert: ["--revert", "-r"],
-  upgrade: ["--upgrade", "-u"],
-  install: ["--install", "-i"],
   config: ["--config", "-c"],
-  backups: ["--backup", "-b"]
+  revert: ["--revert", "-r"],
+  backups: ["--backup", "-b"],
+  upgrade: ["--upgrade", "-u"],
+  install: ["--install", "-i"]
 };
 
+const {
+  dry,
+  test,
+  audit,
+  backup,
+  revert,
+  install,
+  upgrade
+} = require("./compilers");
 const { twist, report, backups, configuration } = require("./handlers");
-const { dry, revert, test, audit, upgrade, install } = require("./compilers");
 
-const controller = (inputs, { frozen }) => {
-  let info;
+const controller = (inputs, { frozen, ...config }) => {
   let error;
   let index;
   let target;
+  let special;
   let handler;
   let compiler;
   let hint = "";
   let teardown = [];
   let preparatory = [];
 
-  if (Flags.config.includes(inputs[0])) info = configuration;
-  else if (Flags.backups.includes(inputs[0])) info = backups;
+  if (config.backup) preparatory.push(backup);
 
-  if (!info) {
+  if (Flags.config.includes(inputs[0])) special = configuration;
+  else if (Flags.backups.includes(inputs[0])) special = backups;
+
+  if (!special) {
     inputs.forEach((input, i) => {
       if (!target && index !== i) {
         if (Flags.path.includes(input)) {
@@ -88,14 +98,14 @@ const controller = (inputs, { frozen }) => {
   }
 
   return {
-    info,
     hint,
-    compiler,
+    error,
+    special,
     handler,
-    target: target || process.cwd(),
-    preparatory,
+    compiler,
     teardown,
-    error
+    preparatory,
+    target: target || process.cwd()
   };
 };
 

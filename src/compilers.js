@@ -13,7 +13,7 @@ const {
 
 const dry = (spinner, hint, target, { label, verbose, ...config }) =>
   new Promise(async function (resolve, reject) {
-    const step = config.getSteps();
+    const step = config.getStep();
     label && config.steps.completed++;
 
     verbose && spinner.start(step + "removing resolutions" + hint);
@@ -45,7 +45,7 @@ const dry = (spinner, hint, target, { label, verbose, ...config }) =>
 const test = (option, value) => shell.test(option, value);
 
 const audit = (spinner, hint, target, { label, verbose, ...config }) => {
-  const step = config.getSteps();
+  const step = config.getStep();
   label && config.steps.completed++;
 
   verbose && spinner.start(step + "scanning for vulnerabilities" + hint);
@@ -80,7 +80,7 @@ const upgrade = (
   target,
   { label, verbose, pattern, ...config }
 ) => {
-  const step = config.getSteps();
+  const step = config.getStep();
   label && config.steps.completed++;
 
   verbose && spinner.start(step + "upgrading packages" + hint);
@@ -112,7 +112,7 @@ const upgrade = (
 };
 
 const install = (spinner, hint, target, { label, verbose, ...config }) => {
-  const step = config.getSteps();
+  const step = config.getStep();
   label && config.steps.completed++;
 
   verbose && spinner.start(step + "install packages" + hint);
@@ -136,13 +136,18 @@ const install = (spinner, hint, target, { label, verbose, ...config }) => {
   });
 };
 
-const backup = async (spinner, hint, target, { verbose }) => {
+const backup = async (spinner, hint, target, { label, verbose, ...config }) => {
   let backup = {};
+  const step = config.getStep();
+  label && config.steps.completed++;
 
   const resolutions = await read(target, "package.json", "resolutions");
-  if (!resolutions) return;
+  if (!resolutions) {
+    verbose && spinner.info(step + "could not find any resolutions" + hint);
+    return;
+  }
 
-  verbose && spinner.start("backing up resolutions" + hint);
+  verbose && spinner.start(step + "backing up resolutions" + hint);
 
   const dir = target.split("/").pop();
 
@@ -150,11 +155,11 @@ const backup = async (spinner, hint, target, { verbose }) => {
 
   await write("./src", ".backups.json", backup);
 
-  verbose && spinner.info("created backup of resolutions" + hint);
+  verbose && spinner.succeed(step + "created backup of resolutions" + hint);
 };
 
 const revert = async (spinner, hint, target, { label, verbose, ...config }) => {
-  const step = config.getSteps();
+  const step = config.getStep();
   label && config.steps.completed++;
 
   verbose && spinner.start(step + "reverting resolutions" + hint);

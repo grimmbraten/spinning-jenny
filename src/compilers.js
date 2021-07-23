@@ -143,7 +143,8 @@ const backup = async (spinner, hint, target, { label, verbose, ...config }) => {
 
   const resolutions = await read(target, "package.json", "resolutions");
   if (!resolutions) {
-    verbose && spinner.info(step + "could not find any resolutions" + hint);
+    verbose &&
+      spinner.info(step + "could not find any resolutions to backup" + hint);
     return;
   }
 

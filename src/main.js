@@ -38,6 +38,8 @@ const [, , ...inputs] = process.argv;
     );
   }
 
+  if (!compiler && !handler) return;
+
   const response = compiler
     ? await compiler(spinner, hint, target, config)
     : undefined;

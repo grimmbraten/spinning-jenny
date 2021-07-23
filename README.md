@@ -6,6 +6,7 @@
 <a href="https://www.javascript.com/"><img alt="JavaScript" src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E"/></a>
 <a href="https://nodejs.org/en/"><img alt="NodeJS" src="https://img.shields.io/badge/node.js-%2343853D.svg?style=for-the-badge&logo=node-dot-js&logoColor=white"/></a>
 <a href="https://github.com/grimmbraten/spinning-jenny"><img alt="GitHub" src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/></a>
+
 </div>
 
 <br />
@@ -46,15 +47,15 @@ spinning-jenny [...flags]
 
 | Name            | Event                  | Description                                                 |
 | --------------- | ---------------------- | ----------------------------------------------------------- |
-| --dry           | preparatory / teardown | remove all pre-existing resolutions                         |
-| --install       | preparatory / teardown | run `yarn install`                                          |
-| --upgrade       | preparatory / teardown | run `yarn upgrade` (uses pattern set in the config file)    |
-| --original      | preparatory / teardown | apply original resolutions from a saved backup              |
+| --dry           | preparatory / teardown | remove pre-existing resolutions                             |
+| --install       | preparatory / teardown | `yarn install`                                              |
+| --upgrade       | preparatory / teardown | `yarn upgrade --pattern`                                    |
+| --original      | preparatory / teardown | apply original resolutions from a previously saved backup   |
 | --audit         | main                   | scan for vulnerabilities and print summary                  |
 | --resolve       | main                   | scan for patches and apply necessary resolutions            |
 | --path `<path>` | addon                  | target another directory than the current working directory |
-| --config        | special                | list personal configuration                                 |
-| --backups       | special                | list all saved backups of resolutions                       |
+| --config        | special                | list active configuration properties                        |
+| --backups       | special                | list all projects with saved resolution backups             |
 
 ### Events
 
@@ -84,13 +85,13 @@ Addon flags can be defined anywhere without changing the behavior. This is becau
 
 ### Configurations
 
-| Name    | Type    | Default | Description                                        |
-| ------- | ------- | ------- | -------------------------------------------------- |
-| label   | Boolean | true    | display event counter before messages (true)       |
-| pattern | String  | --caret | upgrade restriction (--caret, --tilde, --exact)    |
-| backup  | Boolean | true    | create a backup of the resolutions on each command |
-| frozen  | Boolean | false   | prevent any modifications to the yarn.lock file    |
-| verbose | Boolean | true    | display individual outputs for each event          |
+| Name    | Type                            | Default   | Description                                                                                                                                                                                                           |
+| ------- | ------------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| label   | `Boolean`                       | `true`    | display event counter before messages                                                                                                                                                                                 |
+| pattern | `--caret`, `--tilde`, `--exact` | `--caret` | defines what upgrade restriction to use. for more information, please refer to the [yarn documentation](https://classic.yarnpkg.com/en/docs/cli/upgrade/#toc-yarn-upgrade-package-latest-l-caret-tilde-exact-pattern) |
+| backup  | `Boolean`                       | `true`    | create a backup of the resolutions on each command                                                                                                                                                                    |
+| frozen  | `Boolean`                       | `false`   | prevent any modifications to the yarn.lock file                                                                                                                                                                       |
+| verbose | `Boolean`                       | `true`    | print `progress / success / fail` messages for each event                                                                                                                                                             |
 
 ## Uninstall
 

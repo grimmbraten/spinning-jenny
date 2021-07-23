@@ -1,4 +1,5 @@
 const path = require("path");
+const chalk = require("chalk");
 
 const Flags = {
   dry: ["--dry", "-d"],
@@ -49,10 +50,11 @@ const controller = (inputs, { frozen, ...config }) => {
           if (dir) {
             if (test("-e", path.join(dir, "package.json"))) {
               target = dir;
-              hint = ` in ${target}`.gray;
+              hint = chalk.gray(` in ${target}`);
             } else
               error =
-                `path does not contain a package.json file ` + `${dir}`.gray;
+                `path does not contain a package.json file ` +
+                chalk.gray(`${dir}`);
           } else error = "please provide a path after the --path flag";
         }
       }

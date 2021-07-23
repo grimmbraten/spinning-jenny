@@ -1,4 +1,4 @@
-require("colors");
+const chalk = require("chalk");
 const {
   sum,
   read,
@@ -14,9 +14,9 @@ const backups = async (spinner, inputs) => {
 
   Object.keys(backups).forEach(key => {
     console.log(
-      `\n${key}`.blue +
+      chalk.blue(`\n${key}`) +
         ` (${Object.entries(backups[key].resolutions).length} resolutions)` +
-        `\n${backups[key].date}`.gray
+        chalk.gray(`\n${backups[key].date}`)
     );
   });
 };
@@ -35,8 +35,9 @@ const configuration = async (spinner, inputs) => {
     });
 
     console.log(
-      "\nfor more information, please refer to the documentation\nhttps://github.com/grimmbraten/spinning-jenny"
-        .gray
+      chalk.gray(
+        "\nfor more information, please refer to the documentation\nhttps://github.com/grimmbraten/spinning-jenny"
+      )
     );
   }
 };
@@ -57,14 +58,14 @@ const report = (response, spinner, hint, target, { verbose }) => {
   } = data;
 
   const criticalBadge = critical
-    ? ` ${critical} critical `.bgMagenta.white
+    ? chalk.bgMagenta.white(`  ${critical} critical  `)
     : "";
-  const highBadge = high ? " " + ` ${high} high `.bgRed.white : "";
+  const highBadge = high ? " " + chalk.bgRed.white(`  ${high} high  `) : "";
   const moderateBadge = moderate
-    ? " " + `  ${moderate} moderate  `.bgYellow.black
+    ? " " + chalk.bgYellow.black(`  ${moderate} moderate  `)
     : "";
-  const lowBadge = low ? " " + `  ${low} low  `.bgGreen.black : "";
-  const infoBadge = info ? " " + `  ${info} info  `.bgBlue.white : "";
+  const lowBadge = low ? " " + chalk.bgGreen.black(`  ${low} low  `) : "";
+  const infoBadge = info ? " " + chalk.bgBlue.white(`  ${info} info  `) : "";
 
   verbose &&
     spinner.warn(

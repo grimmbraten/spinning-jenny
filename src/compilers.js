@@ -1,4 +1,3 @@
-require("colors");
 const shell = require("shelljs");
 
 const {

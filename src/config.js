@@ -1,4 +1,4 @@
-require("colors");
+const chalk = require("chalk");
 
 const { read, write, isBooleanInput, colorVariable } = require("./helpers");
 
@@ -19,7 +19,7 @@ const loadConfig = async () => {
   config["steps"] = { total: 0, completed: 0 };
   config["getStep"] = () =>
     config.label
-      ? `[${config.steps.completed + 1}/${config.steps.total}] `.gray
+      ? chalk.gray(`[${config.steps.completed + 1}/${config.steps.total}] `)
       : "";
 
   return config;

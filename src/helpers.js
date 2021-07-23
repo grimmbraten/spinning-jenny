@@ -1,14 +1,15 @@
 const path = require("path");
+const chalk = require("chalk");
 const json = require("json-file-plus");
 
 const sum = collection => Object.values(collection).reduce((a, b) => a + b);
 
 const colorVariable = value =>
   typeof value === "string"
-    ? `${value}`.gray
+    ? chalk.gray(`${value}`)
     : value
-    ? `${value}`.green
-    : `${value}`.red;
+    ? chalk.green(`${value}`)
+    : chalk.red(`${value}`);
 
 const parseJson = json =>
   json

@@ -1,3 +1,5 @@
+require("colors");
+
 const { read, write, isBooleanInput } = require("./helpers");
 
 const Flags = {
@@ -11,10 +13,17 @@ const Flags = {
 const configDir = "./src";
 const configFile = ".config.json";
 
-const loadConfig = async () => ({
-  steps: { total: 0, completed: 0 },
-  ...(await read(configDir, configFile))
-});
+const loadConfig = async () => {
+  const config = await read(configDir, configFile);
+
+  config["steps"] = { total: 0, completed: 0 };
+  config["getStep"] = () =>
+    config.label
+      ? `[${config.steps.completed + 1}/${config.steps.total}] `.gray
+      : "";
+
+  return config;
+};
 
 const editConfig = async (spinner, inputs) => {
   let config = await loadConfig();
@@ -23,6 +32,7 @@ const editConfig = async (spinner, inputs) => {
   inputs.shift();
 
   delete config.steps;
+  delete config.getStep;
 
   inputs.forEach((input, index) => {
     if (index % 2 === 1) return;

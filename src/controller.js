@@ -62,11 +62,11 @@ const controller = (inputs, { frozen, ...config }) => {
         else if (Flags.original.includes(input)) preparatory.push(original);
         else if (Flags.install.includes(input)) {
           if (frozen)
-            error = "--install is not allowed if frozen is set to true";
+            error = "--install is not allowed when frozen is set to true";
           else preparatory.push(install);
         } else if (Flags.upgrade.includes(input)) {
           if (frozen)
-            error = "--upgrade is not allowed if frozen is set to true";
+            error = "--upgrade is not allowed when frozen is set to true";
           else preparatory.push(upgrade);
         }
 
@@ -82,11 +82,11 @@ const controller = (inputs, { frozen, ...config }) => {
         else if (Flags.original.includes(input)) teardown.push(original);
         else if (Flags.install.includes(input)) {
           if (frozen)
-            error = "--install is not allowed if frozen is set to true";
+            error = "--install is not allowed when frozen is set to true";
           else teardown.push(install);
         } else if (Flags.upgrade.includes(input)) {
           if (frozen)
-            error = "--upgrade is not allowed if frozen is set to true";
+            error = "--upgrade is not allowed when frozen is set to true";
           else teardown.push(upgrade);
         }
       }

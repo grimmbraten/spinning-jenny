@@ -10,7 +10,7 @@
 
 <br />
 
-Stop swearing about annoying `yarn audit` issues, say goodbye to manually managing resolutions in your `package.json` file, and focus on your code instead. Let **spinning-jenny** resolve vulnerabilities and resolutions for you.
+Stop swearing about annoying `yarn audit` issues, say goodbye to manually managing resolutions in your `package.json` file, and instead focus on coding.
 
 ## Installation
 

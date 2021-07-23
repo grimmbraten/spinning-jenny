@@ -40,8 +40,16 @@ For more information, please refer to the [npm documentation](https://docs.npmjs
 ## Usage
 
 ```bash
-spinning-jenny [...flags]
+spinning-jenny --upgrade --audit
 ```
+
+The command example above would upgrade all dependencies following the active upgrade pattern restriction from the configuration file and then scan for any vulnerabilities.
+
+```bash
+spinning-jenny --dry --resolve --install
+```
+
+The command example above would remove any pre-existing resolution, scan for patches and apply the new necessary resolutions to resolve found vulnerabilities, and lastly install all packages using the new resolutions.
 
 ### Flags
 

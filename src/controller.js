@@ -3,11 +3,11 @@ const path = require("path");
 const Flags = {
   dry: ["--dry", "-d"],
   path: ["--path", "-p"],
-  twist: ["--twist", "-t"],
   audit: ["--audit", "-a"],
   config: ["--config", "-c"],
   revert: ["--revert", "-r"],
   backups: ["--backup", "-b"],
+  resolve: ["--resolve", "-r"],
   upgrade: ["--upgrade", "-u"],
   install: ["--install", "-i"]
 };
@@ -21,7 +21,7 @@ const {
   install,
   upgrade
 } = require("./compilers");
-const { twist, report, backups, configuration } = require("./handlers");
+const { resolve, report, backups, configuration } = require("./handlers");
 
 const controller = (inputs, { frozen, ...config }) => {
   let error;
@@ -73,9 +73,9 @@ const controller = (inputs, { frozen, ...config }) => {
         if (Flags.audit.includes(input)) {
           compiler = audit;
           handler = report;
-        } else if (Flags.twist.includes(input)) {
+        } else if (Flags.resolve.includes(input)) {
           compiler = audit;
-          handler = twist;
+          handler = resolve;
         }
       } else {
         if (Flags.dry.includes(input)) teardown.push(dry);

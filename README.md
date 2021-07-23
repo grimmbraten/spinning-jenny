@@ -50,8 +50,8 @@ spinning-jenny [...flags]
 | --revert        | preparatory / teardown | revert to a previously saved resolution backup              |
 | --install       | preparatory / teardown | run `yarn install`                                          |
 | --upgrade       | preparatory / teardown | run `yarn upgrade` (uses pattern set in the config file)    |
-| --audit         | main                   | scan for vulnerabilities and report findings                |
-| --twist         | main                   | scan for patches and apply necessary resolutions            |
+| --audit         | main                   | scan for vulnerabilities and print summary                  |
+| --resolve       | main                   | scan for patches and apply necessary resolutions            |
 | --path `<path>` | addon                  | target another directory than the current working directory |
 | --config        | special                | list personal configuration                                 |
 | --backups       | special                | list all saved backups of resolutions                       |
@@ -72,7 +72,7 @@ Flags defined before the main flag will be interpreted as preparatory events. Th
 
 #### Main
 
-There are currently only two main event flags `--audit` and `--twist`. These flags can only be combined with preparatory, teardown, and/or addon flags. For example, you can't execute an audit and a twist in a single command.
+There are currently only two main event flags `--audit` and `--resolve`. These flags can only be combined with preparatory, teardown, and/or addon flags. For example, you can't execute an audit and a resolve in a single command.
 
 #### Teardown
 

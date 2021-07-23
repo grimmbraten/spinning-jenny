@@ -47,9 +47,9 @@ const report = (response, spinner, hint, target, { verbose }) => {
   const vulnerabilities = sum(data.vulnerabilities);
 
   if (vulnerabilities === 0) {
-    return (
-      verbose && spinner.succeed("package.json has no vulnerabilities" + hint)
-    );
+    verbose &&
+      spinner.succeed("package.json contains no vulnerabilities" + hint);
+    return;
   }
 
   const {
@@ -74,14 +74,16 @@ const report = (response, spinner, hint, target, { verbose }) => {
     );
 };
 
-const twist = async (response, spinner, hint, target, { verbose }) => {
+const resolve = async (response, spinner, hint, target, { verbose }) => {
   let modules = {};
   const json = parseJson(response);
   const { data } = extractAuditSummary(json);
   const vulnerabilities = sum(data.vulnerabilities);
 
-  if (vulnerabilities === 0)
-    return verbose && spinner.fail("no vulnerabilities found" + hint);
+  if (vulnerabilities === 0) {
+    verbose && spinner.fail("package.json contains no vulnerabilities" + hint);
+    return;
+  }
 
   const resolutions = json
     .map(({ data, type }) => {
@@ -100,8 +102,11 @@ const twist = async (response, spinner, hint, target, { verbose }) => {
 
   if (verbose) spinner.text = `building resolutions`;
 
-  if (resolutions.length === 0)
-    return verbose && spinner.fail("failed to build resolutions");
+  if (resolutions.length === 0) {
+    verbose &&
+      spinner.fail("failed to resolved package vulnerabilities" + hint);
+    return;
+  }
 
   resolutions.forEach(({ module, patched }) => {
     modules[module] = patched;
@@ -109,12 +114,13 @@ const twist = async (response, spinner, hint, target, { verbose }) => {
 
   await write(target, "package.json", { resolutions: modules });
 
-  verbose && spinner.succeed(`twisted yarn successfully`);
+  verbose &&
+    spinner.succeed(`successfully resolved package vulnerabilities` + hint);
 };
 
 module.exports = {
-  twist,
   report,
+  resolve,
   backups,
   configuration
 };

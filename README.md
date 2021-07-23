@@ -47,9 +47,9 @@ spinning-jenny [...flags]
 | Name            | Event                  | Description                                                 |
 | --------------- | ---------------------- | ----------------------------------------------------------- |
 | --dry           | preparatory / teardown | remove all pre-existing resolutions                         |
-| --revert        | preparatory / teardown | revert to a previously saved resolution backup              |
 | --install       | preparatory / teardown | run `yarn install`                                          |
 | --upgrade       | preparatory / teardown | run `yarn upgrade` (uses pattern set in the config file)    |
+| --original      | preparatory / teardown | apply original resolutions from a saved backup              |
 | --audit         | main                   | scan for vulnerabilities and print summary                  |
 | --resolve       | main                   | scan for patches and apply necessary resolutions            |
 | --path `<path>` | addon                  | target another directory than the current working directory |

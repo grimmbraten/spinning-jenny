@@ -158,11 +158,16 @@ const backup = async (spinner, hint, target, { label, verbose, ...config }) => {
   verbose && spinner.succeed(step + "created backup of resolutions" + hint);
 };
 
-const revert = async (spinner, hint, target, { label, verbose, ...config }) => {
+const original = async (
+  spinner,
+  hint,
+  target,
+  { label, verbose, ...config }
+) => {
   const step = config.getStep();
   label && config.steps.completed++;
 
-  verbose && spinner.start(step + "reverting resolutions" + hint);
+  verbose && spinner.start(step + "applying original resolutions" + hint);
 
   const dir = target.split("/").pop();
 
@@ -175,7 +180,7 @@ const revert = async (spinner, hint, target, { label, verbose, ...config }) => {
 
   await write(target, "package.json", { resolutions });
 
-  verbose && spinner.succeed(step + "reverted resolutions" + hint);
+  verbose && spinner.succeed(step + "applied original resolutions" + hint);
 };
 
 module.exports = {
@@ -183,7 +188,7 @@ module.exports = {
   test,
   audit,
   backup,
-  revert,
+  original,
   upgrade,
   install
 };

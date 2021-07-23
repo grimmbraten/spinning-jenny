@@ -5,11 +5,11 @@ const Flags = {
   path: ["--path", "-p"],
   audit: ["--audit", "-a"],
   config: ["--config", "-c"],
-  revert: ["--revert", "-r"],
   backups: ["--backup", "-b"],
   resolve: ["--resolve", "-r"],
   upgrade: ["--upgrade", "-u"],
-  install: ["--install", "-i"]
+  install: ["--install", "-i"],
+  original: ["--original", "-o"]
 };
 
 const {
@@ -17,7 +17,7 @@ const {
   test,
   audit,
   backup,
-  revert,
+  original,
   install,
   upgrade
 } = require("./compilers");
@@ -59,7 +59,7 @@ const controller = (inputs, { frozen, ...config }) => {
 
       if (!compiler) {
         if (Flags.dry.includes(input)) preparatory.push(dry);
-        else if (Flags.revert.includes(input)) preparatory.push(revert);
+        else if (Flags.original.includes(input)) preparatory.push(original);
         else if (Flags.install.includes(input)) {
           if (frozen)
             error = "--install is not allowed if frozen is set to true";
@@ -79,7 +79,7 @@ const controller = (inputs, { frozen, ...config }) => {
         }
       } else {
         if (Flags.dry.includes(input)) teardown.push(dry);
-        else if (Flags.revert.includes(input)) teardown.push(revert);
+        else if (Flags.original.includes(input)) teardown.push(original);
         else if (Flags.install.includes(input)) {
           if (frozen)
             error = "--install is not allowed if frozen is set to true";

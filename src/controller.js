@@ -1,3 +1,5 @@
+const path = require("path");
+
 const Flags = {
   dry: ["--dry", "-d"],
   path: ["--path", "-p"],
@@ -42,14 +44,16 @@ const controller = (inputs, { frozen, ...config }) => {
       if (!target && index !== i) {
         if (Flags.path.includes(input)) {
           index = i + 1;
-          const path = inputs[index];
+          const dir = inputs[index];
 
-          if (path) {
-            if (test("-e", path)) {
-              target = path;
+          if (dir) {
+            if (test("-e", path.join(dir, "package.json"))) {
+              target = dir;
               hint = ` in ${target}`.gray;
-            } else error = `"${path}" is not a valid path`;
-          } else error = "please provide a path after passed flag";
+            } else
+              error =
+                `path does not contain a package.json file ` + `${dir}`.gray;
+          } else error = "please provide a path after the --path flag";
         }
       }
 
@@ -58,16 +62,12 @@ const controller = (inputs, { frozen, ...config }) => {
         else if (Flags.revert.includes(input)) preparatory.push(revert);
         else if (Flags.install.includes(input)) {
           if (frozen)
-            return console.log(
-              "--install is not allowed if frozen is set to true"
-            );
-          preparatory.push(install);
+            error = "--install is not allowed if frozen is set to true";
+          else preparatory.push(install);
         } else if (Flags.upgrade.includes(input)) {
           if (frozen)
-            return console.log(
-              "--upgrade is not allowed if frozen is set to true"
-            );
-          preparatory.push(upgrade);
+            error = "--upgrade is not allowed if frozen is set to true";
+          else preparatory.push(upgrade);
         }
 
         if (Flags.audit.includes(input)) {
@@ -82,16 +82,12 @@ const controller = (inputs, { frozen, ...config }) => {
         else if (Flags.revert.includes(input)) teardown.push(revert);
         else if (Flags.install.includes(input)) {
           if (frozen)
-            return console.log(
-              "--install is not allowed if frozen is set to true"
-            );
-          teardown.push(install);
+            error = "--install is not allowed if frozen is set to true";
+          else teardown.push(install);
         } else if (Flags.upgrade.includes(input)) {
           if (frozen)
-            return console.log(
-              "--upgrade is not allowed if frozen is set to true"
-            );
-          teardown.push(upgrade);
+            error = "--upgrade is not allowed if frozen is set to true";
+          else teardown.push(upgrade);
         }
       }
     });

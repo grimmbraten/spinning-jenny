@@ -1,12 +1,8 @@
 #!/usr/bin/env node
 
-require("colors");
 const ora = require("ora");
-
-const { read } = require("./helpers");
-const { backup } = require("./compilers");
-const { controller } = require("./controller");
 const { loadConfig } = require("./config");
+const { controller } = require("./controller");
 
 const [, , ...inputs] = process.argv;
 
@@ -16,9 +12,9 @@ const [, , ...inputs] = process.argv;
 
   const {
     hint,
-    info,
     error,
     target,
+    special,
     handler,
     teardown,
     compiler,
@@ -26,19 +22,12 @@ const [, , ...inputs] = process.argv;
   } = controller(inputs, config);
 
   if (error) return spinner.fail(error);
-  else if (info) return info(spinner, inputs);
+  else if (special) return special(spinner, inputs);
 
   config.steps.total =
     preparatory.length + teardown.length + (compiler ? 1 : 0);
 
-  config["getSteps"] = () =>
-    config.label
-      ? `[${config.steps.completed + 1}/${config.steps.total}] `.gray
-      : "";
-
   !config.verbose && spinner.start("working");
-
-  if (config.backup) await backup(spinner, hint, target, config);
 
   if (preparatory) {
     const resolve = Promise.resolve(null);
@@ -49,11 +38,13 @@ const [, , ...inputs] = process.argv;
     );
   }
 
-  if (!compiler) return;
-  const response = await compiler(spinner, hint, target, config);
-  if (!response) return spinner.fail("something went wrong, sorry about that");
+  const response = compiler
+    ? await compiler(spinner, hint, target, config)
+    : undefined;
 
-  if (!handler) return spinner.fail("something went wrong, sorry about that");
+  if (!response || !handler)
+    return spinner.fail("something went wrong, sorry about that");
+
   handler(response, spinner, hint, target, config);
 
   if (teardown) {
@@ -63,7 +54,7 @@ const [, , ...inputs] = process.argv;
         promise.then(() => action(spinner, hint, target, config)),
       resolve
     );
-
-    if (!config.verbose) spinner.succeed("done");
   }
+
+  !config.verbose && spinner.succeed("completed without any issues");
 })();

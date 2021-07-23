@@ -25,7 +25,9 @@ const configuration = async (spinner, inputs) => {
   const config = await editConfig(spinner, inputs);
 
   if (config) {
-    const keys = Object.keys(config).filter(key => key !== "steps");
+    const keys = Object.keys(config).filter(
+      key => key !== "steps" && key !== "getStep"
+    );
 
     console.log();
     keys.forEach(key => {

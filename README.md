@@ -1,12 +1,16 @@
-<img width="100%" src="https://media1.tenor.com/images/acd0887764b5413605cc658021d73b02/tenor.gif?itemid=14827678" />
+<img width="100%" src="https://media1.tenor.com/images/5928958c42329cf6e101dda2ad295393/tenor.gif?itemid=7848720" />
 
 <br />
 
+<div align="center">
 <a href="https://www.javascript.com/"><img alt="JavaScript" src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E"/></a>
 <a href="https://nodejs.org/en/"><img alt="NodeJS" src="https://img.shields.io/badge/node.js-%2343853D.svg?style=for-the-badge&logo=node-dot-js&logoColor=white"/></a>
 <a href="https://github.com/grimmbraten/spinning-jenny"><img alt="GitHub" src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/></a>
+</div>
 
-It's time to stop swearing about annoying `yarn audit` issues, say goodbye to manually managing resolutions in your `package.json` file, and focus on your code. It's time, to let **spinning-jenny** resolve vulnerabilities for you.
+<br />
+
+Stop swearing about annoying `yarn audit` issues, say goodbye to manually managing resolutions in your `package.json` file, and focus on your code instead. Let **spinning-jenny** resolve vulnerabilities and resolutions for you.
 
 ## Installation
 
@@ -49,8 +53,8 @@ spinning-jenny [...flags]
 | --audit         | main                   | scan for vulnerabilities and report findings                |
 | --twist         | main                   | scan for patches and apply necessary resolutions            |
 | --path `<path>` | addon                  | target another directory than the current working directory |
-| --config        | special                | show the personal configuration                             |
-| --backups       | special                | list projects with backups                                  |
+| --config        | special                | list personal configuration                                 |
+| --backups       | special                | list all saved backups of resolutions                       |
 
 ### Events
 
@@ -80,13 +84,13 @@ Addon flags can be defined anywhere without changing the behavior. This is becau
 
 ### Configurations
 
-| Name    | Type    | Default | Description                                     |
-| ------- | ------- | ------- | ----------------------------------------------- |
-| label   | Boolean | true    | display step labels before messages (true)      |
-| pattern | String  | --caret | upgrade restriction (--caret, --tilde, --exact) |
-| backup  | Boolean | true    | create resolutions backups                      |
-| frozen  | Boolean | false   | prevent modifications to yarn.lock              |
-| verbose | Boolean | true    | display individual steps                        |
+| Name    | Type    | Default | Description                                        |
+| ------- | ------- | ------- | -------------------------------------------------- |
+| label   | Boolean | true    | display event counter before messages (true)       |
+| pattern | String  | --caret | upgrade restriction (--caret, --tilde, --exact)    |
+| backup  | Boolean | true    | create a backup of the resolutions on each command |
+| frozen  | Boolean | false   | prevent any modifications to the yarn.lock file    |
+| verbose | Boolean | true    | display individual outputs for each event          |
 
 ## Uninstall
 

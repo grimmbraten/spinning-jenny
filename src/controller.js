@@ -25,15 +25,16 @@ const {
 const { resolve, report, backups, configuration } = require("./handlers");
 
 const controller = (inputs, { frozen, ...config }) => {
+  let dir;
   let error;
   let index;
-  let target;
   let special;
   let handler;
   let compiler;
   let hint = "";
   let teardown = [];
   let preparatory = [];
+  let target = process.cwd();
 
   if (config.backup) preparatory.push(backup);
 
@@ -42,20 +43,12 @@ const controller = (inputs, { frozen, ...config }) => {
 
   if (!special) {
     inputs.forEach((input, i) => {
-      if (!target && index !== i) {
+      if (!dir && index !== i) {
         if (Flags.path.includes(input)) {
           index = i + 1;
-          const dir = inputs[index];
-
-          if (dir) {
-            if (test("-e", path.join(dir, "package.json"))) {
-              target = dir;
-              hint = chalk.gray(` in ${target}`);
-            } else
-              error =
-                `path does not contain a package.json file ` +
-                chalk.gray(`${dir}`);
-          } else error = "please provide a path after the --path flag";
+          dir = inputs[index];
+          target = dir;
+          hint = chalk.gray(` in ${target}`);
         }
       }
 
@@ -95,15 +88,18 @@ const controller = (inputs, { frozen, ...config }) => {
     });
   }
 
+  if (!test("-e", path.join(target, "package.json")))
+    error = "could not find a package.json file" + hint;
+
   return {
     hint,
     error,
+    target,
     special,
     handler,
     compiler,
     teardown,
-    preparatory,
-    target: target || process.cwd()
+    preparatory
   };
 };
 

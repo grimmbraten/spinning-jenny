@@ -66,9 +66,8 @@ const extractAuditSummary = json =>
 
 const extractUpgradeOutcome = json => {
   const outcome = json.filter(data => data.type === "success")[1].data;
-  if (!outcome) return;
 
-  return outcome.replace(".", "").replace("S", "s");
+  return !outcome ? undefined : outcome.replace(".", "").replace("S", "s");
 };
 
 const scannedDependencies = json =>

@@ -11,7 +11,7 @@
 
 <br />
 
-A cli resolutions manager tool that helps you resolve those pesky `yarn audit` vulnerabilities with a single command
+A cli resolutions manager that helps you resolve those pesky `yarn audit` vulnerabilities.
 
 ## Installation
 

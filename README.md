@@ -11,7 +11,7 @@
 
 <br />
 
-Stop swearing about annoying `yarn audit` issues, say goodbye to manually managing resolutions in your `package.json` file, and instead focus on coding.
+A cli resolutions manager tool that helps you resolve those pesky `yarn audit` vulnerabilities with a single command
 
 ## Installation
 
@@ -46,24 +46,25 @@ spinning-jenny --upgrade --audit
 The command example above would upgrade all dependencies following the active upgrade pattern restriction from the configuration file and then scan for any vulnerabilities.
 
 ```bash
-spinning-jenny --dry --resolve --install
+spinning-jenny --new --resolve --install
 ```
 
 The command example above would remove any pre-existing resolution, scan for patches and apply the new necessary resolutions to resolve found vulnerabilities, and lastly install all packages using the new resolutions.
 
 ### Flags
 
-| Name            | Event                  | Description                                                 |
-| --------------- | ---------------------- | ----------------------------------------------------------- |
-| --dry           | preparatory / teardown | remove pre-existing resolutions                             |
-| --install       | preparatory / teardown | `yarn install`                                              |
-| --upgrade       | preparatory / teardown | `yarn upgrade --pattern`                                    |
-| --original      | preparatory / teardown | apply original resolutions from a previously saved backup   |
-| --audit         | main                   | scan for vulnerabilities and print summary                  |
-| --resolve       | main                   | scan for patches and apply necessary resolutions            |
-| --path `<path>` | addon                  | target another directory than the current working directory |
-| --config        | special                | list active configuration properties                        |
-| --backups       | special                | list all projects with saved resolution backups             |
+| Name                            | Event                  | Description                                                                                  |
+| ------------------------------- | ---------------------- | -------------------------------------------------------------------------------------------- |
+| --new                           | preparatory / teardown | remove pre-existing resolutions from `package.json`                                          |
+| --install                       | preparatory / teardown | execute `yarn install`                                                                       |
+| --upgrade                       | preparatory / teardown | execute `yarn upgrade --pattern`                                                             |
+| --original                      | preparatory / teardown | apply original resolutions from a previously saved backup to `package.json`                  |
+| --audit                         | main                   | scan for vulnerabilities and print a concise audit summary                                   |
+| --resolve                       | main                   | scan for available patches for found vulnerabilities and apply those versions as resolutions |
+| --patches                       | main                   | scan for vulnerabilities and list available patch information                                |
+| --directory `<path>`            | addon                  | target another directory than the current working directory                                  |
+| --config `[property]` `[value]` | special                | list current configuration or modify one or several configuration properties                 |
+| --backups                       | special                | list all projects with saved resolution backups                                              |
 
 ### Events
 
@@ -81,7 +82,7 @@ Flags defined before the main flag will be interpreted as preparatory events. Th
 
 #### Main
 
-There are currently only two main event flags `--audit` and `--resolve`. These flags can only be combined with preparatory, teardown, and/or addon flags. For example, you can't execute an audit and a resolve in a single command.
+There are currently three main event flags `--audit`, `--resolve`, and `--patches`. These flags can only be combined with preparatory, teardown, and/or addon flags. For example, you can't execute an audit and a resolve in a single command.
 
 #### Teardown
 
@@ -93,13 +94,13 @@ Addon flags can be defined anywhere without changing the behavior. This is becau
 
 ### Configurations
 
-| Name    | Type                            | Default   | Description                                                                                                                                                                                                           |
-| ------- | ------------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| label   | `Boolean`                       | `true`    | display event counter before messages                                                                                                                                                                                 |
-| pattern | `--caret`, `--tilde`, `--exact` | `--caret` | defines what upgrade restriction to use. for more information, please refer to the [yarn documentation](https://classic.yarnpkg.com/en/docs/cli/upgrade/#toc-yarn-upgrade-package-latest-l-caret-tilde-exact-pattern) |
-| backup  | `Boolean`                       | `true`    | create a backup of the resolutions on each command                                                                                                                                                                    |
-| frozen  | `Boolean`                       | `false`   | prevent any modifications to the yarn.lock file                                                                                                                                                                       |
-| verbose | `Boolean`                       | `true`    | print `progress / success / fail` messages for each event                                                                                                                                                             |
+| Name    | Type                          | Default   | Description                                                                                                                                                                                                           |
+| ------- | ----------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| label   | `Boolean`                     | `true`    | display event counter before messages                                                                                                                                                                                 |
+| pattern | `--caret` `--tilde` `--exact` | `--caret` | defines what upgrade restriction to use. for more information, please refer to the [yarn documentation](https://classic.yarnpkg.com/en/docs/cli/upgrade/#toc-yarn-upgrade-package-latest-l-caret-tilde-exact-pattern) |
+| backup  | `Boolean`                     | `true`    | create a backup of the resolutions on each command                                                                                                                                                                    |
+| frozen  | `Boolean`                     | `false`   | prevent any modifications to the yarn.lock file                                                                                                                                                                       |
+| verbose | `Boolean`                     | `true`    | print `progress / success / fail` messages for each event                                                                                                                                                             |
 
 ## Uninstall
 

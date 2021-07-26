@@ -4,6 +4,38 @@ const json = require("json-file-plus");
 
 const sum = collection => Object.values(collection).reduce((a, b) => a + b);
 
+const loader = (verbose, spinner, action, message, step, hint) => {
+  if (!verbose) return;
+
+  switch (action) {
+    case "start":
+      spinner.start(step + message + hint);
+      break;
+    case "fail":
+      spinner.fail(step + message + hint);
+      break;
+    case "succeed":
+      spinner.succeed(step + message + hint);
+      break;
+    case "warn":
+      spinner.warn(step + message + hint);
+      break;
+    case "text":
+      spinner.text = step + message + hint;
+      break;
+    case "info":
+      spinner.info(step + message + hint);
+  }
+};
+
+const stepLabel = ({ label, steps, getStep }) => {
+  if (!label) return "";
+
+  const step = getStep();
+  steps.completed++;
+  return step;
+};
+
 const severityBadge = (severity, count = "") => {
   if (count !== "") count = `${count} `;
 
@@ -53,7 +85,7 @@ const read = (dir, file, property) =>
       if (err) reject(err);
       resolve(property ? await json.get(property) : await json.get());
     });
-  });
+  }).catch(err => console.error(err));
 
 const write = (dir, file, property) =>
   new Promise(async (resolve, reject) => {
@@ -63,7 +95,7 @@ const write = (dir, file, property) =>
       await json.save();
       resolve(true);
     });
-  });
+  }).catch(err => console.error(err));
 
 const remove = (dir, file, property) =>
   new Promise(async (resolve, reject) => {
@@ -73,13 +105,15 @@ const remove = (dir, file, property) =>
       await json.save();
       resolve(true);
     });
-  });
+  }).catch(err => console.error(err));
 
 module.exports = {
   sum,
   read,
   write,
+  loader,
   remove,
+  stepLabel,
   parseJson,
   severityBadge,
   colorVariable,

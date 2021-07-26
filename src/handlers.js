@@ -3,6 +3,7 @@ const {
   sum,
   read,
   write,
+  loader,
   parseJson,
   severityBadge,
   colorVariable,
@@ -37,22 +38,25 @@ const configuration = async (spinner, inputs) => {
 
     console.log(
       chalk.gray(
-        "\nfor more information, please refer to the documentation\nhttps://github.com/grimmbraten/spinning-jenny"
+        "\nplease refer to the documentation for more information\nhttps://github.com/grimmbraten/spinning-jenny"
       )
     );
   }
 };
 
 const report = (response, spinner, hint, target, { verbose }) => {
-  const json = parseJson(response);
-  const { data } = extractAuditSummary(json);
+  const { data } = extractAuditSummary(parseJson(response));
   const vulnerabilities = sum(data.vulnerabilities);
 
-  if (vulnerabilities === 0) {
-    verbose &&
-      spinner.succeed("package.json contains no vulnerabilities" + hint);
-    return;
-  }
+  if (vulnerabilities === 0)
+    return loader(
+      verbose,
+      spinner,
+      "succeed",
+      "could not find any vulnerabilities",
+      "",
+      hint
+    );
 
   const {
     vulnerabilities: { critical, high, moderate, low, info }
@@ -66,15 +70,18 @@ const report = (response, spinner, hint, target, { verbose }) => {
   const lowBadge = low ? " " + severityBadge("low", low) : "";
   const infoBadge = info ? " " + severityBadge("info", info) : "";
 
-  verbose
-    ? spinner.warn(
-        `found ${vulnerabilities} vulnerabilities` +
-          hint +
-          `\n\n${criticalBadge}${highBadge}${moderateBadge}${lowBadge}${infoBadge}`
-      )
-    : console.log(
-        `\n${criticalBadge}${highBadge}${moderateBadge}${lowBadge}${infoBadge}`
-      );
+  loader(
+    verbose,
+    spinner,
+    "warn",
+    `found ${vulnerabilities} vulnerabilities`,
+    "",
+    hint
+  );
+
+  console.log(
+    `\n\n${criticalBadge}${highBadge}${moderateBadge}${lowBadge}${infoBadge}`
+  );
 };
 
 const resolve = async (response, spinner, hint, target, { verbose }) => {
@@ -83,12 +90,17 @@ const resolve = async (response, spinner, hint, target, { verbose }) => {
   const { data } = extractAuditSummary(json);
   const vulnerabilities = sum(data.vulnerabilities);
 
-  if (vulnerabilities === 0) {
-    verbose && spinner.succeed("no vulnerabilities detected" + hint);
-    return;
-  }
+  if (vulnerabilities === 0)
+    return loader(
+      verbose,
+      spinner,
+      "succeed",
+      "could not find any vulnerabilities",
+      "",
+      hint
+    );
 
-  if (verbose) spinner.text = `resolving vulnerabilities` + hint;
+  loader(verbose, spinner, "text", "resolving vulnerabilities", "", hint);
 
   let resolutions = json
     .map(({ data, type }) => {
@@ -107,10 +119,15 @@ const resolve = async (response, spinner, hint, target, { verbose }) => {
   const noPatch = resolutions.filter(({ patched }) => patched === "<0.0.0");
   resolutions = resolutions.filter(({ patched }) => patched !== "<0.0.0");
 
-  if (resolutions.length === 0) {
-    verbose && spinner.fail("failed to resolved vulnerabilities" + hint);
-    return;
-  }
+  if (resolutions.length === 0)
+    return loader(
+      verbose,
+      spinner,
+      "fail",
+      "failed to resolve vulnerabilities",
+      "",
+      hint
+    );
 
   resolutions.forEach(({ module, patched }) => {
     modules[module] = patched;
@@ -118,23 +135,34 @@ const resolve = async (response, spinner, hint, target, { verbose }) => {
 
   await write(target, "package.json", { resolutions: modules });
 
-  if (verbose) {
-    spinner.succeed(`successfully resolved vulnerabilities` + hint);
-    if (noPatch.length > 0)
-      spinner.warn(
-        `found ${noPatch.length} package(s) without a patch\n\n${chalk.gray(
-          `please run ${chalk.white(
-            `spinning-jenny --patches${target ? ` --directory ${target}` : ""}`
-          )} for more information`
-        )}`
-      );
-  }
+  loader(
+    verbose,
+    spinner,
+    "succeed",
+    "successfully resolved vulnerabilities",
+    "",
+    hint
+  );
+
+  if (noPatch.length > 0)
+    loader(
+      verbose,
+      spinner,
+      "succeed",
+      `found ${noPatch.length} package(s) without a patch\n\n${chalk.gray(
+        `please run ${chalk.white(
+          `spinning-jenny --patches${target ? ` --directory ${target}` : ""}`
+        )} for more information`
+      )}`,
+      "",
+      ""
+    );
 };
 
 const patches = (response, spinner, hint, target, { verbose }) => {
   const json = parseJson(response);
 
-  if (verbose) spinner.text = `analyzing vulnerabilities` + hint;
+  loader(verbose, spinner, "text", "analyzing vulnerabilities", "", hint);
 
   let resolutions = json
     .map(({ data, type }) => {
@@ -156,15 +184,24 @@ const patches = (response, spinner, hint, target, { verbose }) => {
     resolutions.find(package => package.module === module)
   );
 
-  if (patches.length === 0) {
-    verbose && spinner.fail("failed to analyze vulnerabilities" + hint);
-    return;
-  }
-
-  verbose &&
-    spinner.succeed(
-      `found ${patches.length} module(s) with vulnerabilities` + hint
+  if (patches.length === 0)
+    return loader(
+      verbose,
+      spinner,
+      "fail",
+      "failed to analyze vulnerabilities",
+      "",
+      hint
     );
+
+  loader(
+    verbose,
+    spinner,
+    "succeed",
+    `found ${patches.length} module(s) with vulnerabilities`,
+    "",
+    hint
+  );
 
   patches.forEach(patch => {
     console.log(

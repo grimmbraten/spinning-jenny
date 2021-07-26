@@ -18,9 +18,7 @@ const loadConfig = async () => {
 
   config["steps"] = { total: 0, completed: 0 };
   config["getStep"] = () =>
-    config.label
-      ? chalk.gray(`[${config.steps.completed + 1}/${config.steps.total}] `)
-      : "";
+    chalk.gray(`[${config.steps.completed + 1}/${config.steps.total}] `);
 
   return config;
 };

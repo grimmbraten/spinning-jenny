@@ -2,15 +2,16 @@ const path = require("path");
 const chalk = require("chalk");
 
 const Flags = {
-  dry: ["--dry", "-d"],
-  path: ["--path", "-p"],
   audit: ["--audit", "-a"],
-  config: ["--config", "-c"],
   backups: ["--backup", "-b"],
-  resolve: ["--resolve", "-r"],
-  upgrade: ["--upgrade", "-u"],
+  config: ["--config", "-c"],
+  dir: ["--directory", "--dir", "-d"],
   install: ["--install", "-i"],
-  original: ["--original", "-o"]
+  new: ["--new", "-n"],
+  original: ["--original", "-o"],
+  patches: ["--patches", "-p"],
+  resolve: ["--resolve", "-r"],
+  upgrade: ["--upgrade", "-u"]
 };
 
 const {
@@ -22,7 +23,13 @@ const {
   install,
   upgrade
 } = require("./compilers");
-const { resolve, report, backups, configuration } = require("./handlers");
+const {
+  resolve,
+  report,
+  backups,
+  patches,
+  configuration
+} = require("./handlers");
 
 const controller = (inputs, { frozen, ...config }) => {
   let dir;
@@ -44,7 +51,7 @@ const controller = (inputs, { frozen, ...config }) => {
   if (!special) {
     inputs.forEach((input, i) => {
       if (!dir && index !== i) {
-        if (Flags.path.includes(input)) {
+        if (Flags.dir.includes(input)) {
           index = i + 1;
           dir = inputs[index];
           target = dir;
@@ -53,7 +60,7 @@ const controller = (inputs, { frozen, ...config }) => {
       }
 
       if (!compiler) {
-        if (Flags.dry.includes(input)) preparatory.push(dry);
+        if (Flags.new.includes(input)) preparatory.push(dry);
         else if (Flags.original.includes(input)) preparatory.push(original);
         else if (Flags.install.includes(input)) {
           if (frozen)
@@ -71,9 +78,12 @@ const controller = (inputs, { frozen, ...config }) => {
         } else if (Flags.resolve.includes(input)) {
           compiler = audit;
           handler = resolve;
+        } else if (Flags.patches.includes(input)) {
+          compiler = audit;
+          handler = patches;
         }
       } else {
-        if (Flags.dry.includes(input)) teardown.push(dry);
+        if (Flags.new.includes(input)) teardown.push(dry);
         else if (Flags.original.includes(input)) teardown.push(original);
         else if (Flags.install.includes(input)) {
           if (frozen)

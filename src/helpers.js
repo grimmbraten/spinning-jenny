@@ -4,6 +4,18 @@ const json = require("json-file-plus");
 
 const sum = collection => Object.values(collection).reduce((a, b) => a + b);
 
+const severityBadge = (severity, count = "") => {
+  if (count !== "") count = `${count} `;
+
+  if (severity === "critical")
+    return chalk.bgMagenta.white(`  ${count}critical  `);
+  else if (severity === "high") return chalk.bgRed.white(`  ${count}high  `);
+  else if (severity === "moderate")
+    return chalk.bgYellow.black(`  ${count}moderate  `);
+  else if (severity === "low") chalk.bgGreen.black(`  ${count}low  `);
+  else return chalk.bgBlue.white(`  ${count}info  `);
+};
+
 const colorVariable = value =>
   typeof value === "string"
     ? chalk.gray(`${value}`)
@@ -69,6 +81,7 @@ module.exports = {
   write,
   remove,
   parseJson,
+  severityBadge,
   colorVariable,
   isBooleanInput,
   resolutionCount,

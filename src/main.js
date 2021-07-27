@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const ora = require("ora");
+const { sequence } = require("all-aboard");
 const { loadConfig } = require("./config");
 const { controller } = require("./controller");
 
@@ -29,14 +30,7 @@ const [, , ...inputs] = process.argv;
 
   !config.verbose && spinner.start("working");
 
-  if (preparatory) {
-    const resolve = Promise.resolve(null);
-    await preparatory.reduce(
-      (promise, action) =>
-        promise.then(() => action(spinner, hint, target, config)),
-      resolve
-    );
-  }
+  if (preparatory) await sequence(preparatory, spinner, hint, target, config);
 
   if (!compiler && !handler) return;
 
@@ -49,14 +43,7 @@ const [, , ...inputs] = process.argv;
 
   handler(response, spinner, hint, target, config);
 
-  if (teardown) {
-    const resolve = Promise.resolve(null);
-    await teardown.reduce(
-      (promise, action) =>
-        promise.then(() => action(spinner, hint, target, config)),
-      resolve
-    );
-  }
+  if (teardown) await sequence(teardown, spinner, hint, target, config);
 
   !config.verbose && spinner.succeed("completed without any issues");
 })();

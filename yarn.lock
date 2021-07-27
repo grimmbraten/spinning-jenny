@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+all-aboard@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/all-aboard/-/all-aboard-1.1.0.tgz#2e0d813dd03f8a4b6a1247a45504a6640a385078"
+  integrity sha512-5V+7BxvYzocFa+w54O0kenL4GZLrepyjOt8aKCibwdloA1INkHwzNent1ZWca80gE6w9CX/O0goix++a7DGVeA==
+
 ansi-regex@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-5.0.0.tgz#388539f55179bf39339c81af30a654d69f87cb75"

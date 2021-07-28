@@ -2,7 +2,7 @@
   "name": "spinning-jenny",
   "description": "Resolve yarn audit vulnerabilites with ease",
   "author": "Erik Grimmbråten <79856585+grimmbraten@users.noreply.github.com>",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "engines": {
     "node": ">= 8.5.0"
   },

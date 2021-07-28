@@ -12,6 +12,9 @@ const {
   extractUpgradeOutcome
 } = require("./helpers");
 
+const backupDir = __dirname;
+const backupFile = ".backups.json";
+
 const test = (option, value) => shell.test(option, value);
 
 const dry = (spinner, hint, target, { verbose, ...config }) =>
@@ -172,9 +175,9 @@ const backup = async (spinner, hint, target, { verbose, ...config }) => {
       hint
     );
 
-  const dir = target.split("/").pop();
-  backup[dir] = { resolutions, date: new Date().toString() };
-  await write("./src", ".backups.json", backup);
+  const project = target.split("/").pop();
+  backup[project] = { resolutions, date: new Date().toString() };
+  await write(backupDir, backupFile, backup);
 
   loader(
     verbose,
@@ -197,8 +200,8 @@ const original = async (spinner, hint, target, { verbose, ...config }) => {
     hint
   );
 
-  const dir = target.split("/").pop();
-  const { resolutions } = await read("./src", ".backups.json", dir);
+  const project = target.split("/").pop();
+  const { resolutions } = await read(backupDir, backupFile, project);
 
   if (!resolutions)
     return loader(

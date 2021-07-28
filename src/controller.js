@@ -99,7 +99,7 @@ const controller = (inputs, { frozen, ...config }) => {
     });
   }
 
-  if (!test("-e", path.join(target, "package.json")))
+  if (!special && !test("-e", path.join(target, "package.json")))
     error = "could not find a package.json file" + hint;
 
   return {

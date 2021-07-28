@@ -10,7 +10,7 @@ const Flags = {
   verbose: ["--verbose", "verbose", "-v"]
 };
 
-const configDir = "./src";
+const configDir = __dirname;
 const configFile = ".config.json";
 
 const loadConfig = async () => {

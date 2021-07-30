@@ -1,4 +1,5 @@
 reports
-.eslintignore
+.github
 .eslintrc
 .prettierrc
+.eslintignore

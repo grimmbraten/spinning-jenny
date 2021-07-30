@@ -72,6 +72,8 @@ const editConfig = async (spinner, inputs) => {
 
       config.pattern = value;
       spinner.info('set pattern to ', colorVariable(value));
+    } else {
+      return spinner.fail(`${input} is not a valid configuration property`);
     }
   });
 

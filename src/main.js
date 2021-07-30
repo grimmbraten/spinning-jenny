@@ -24,7 +24,7 @@ const [, , ...inputs] = process.argv;
 
   !config.verbose && spinner.start('working');
 
-  if (preparatory) await sequence(preparatory, spinner, hint, target, config);
+  if (preparatory) await sequence(preparatory, [spinner, hint, target, config]);
 
   if (!compiler && !handler) return;
 
@@ -34,7 +34,7 @@ const [, , ...inputs] = process.argv;
 
   handler(response, spinner, hint, target, config);
 
-  if (teardown) await sequence(teardown, spinner, hint, target, config);
+  if (teardown) await sequence(teardown, [spinner, hint, target, config]);
 
   !config.verbose && spinner.succeed('completed without any issues');
 })();

@@ -27,12 +27,12 @@ const dry = (spinner, hint, target, { verbose, ...config }) => {
 
     const resolutions = await read(target, 'package.json', 'resolutions');
 
-    if (!resolutions) {
+    if (!resolutions)
       loader(verbose, spinner, 'warn', 'could not find any resolutions to remove', step, hint);
-    } else {
+    else {
       const success = await remove(target, 'package.json', 'resolutions');
 
-      if (success) {
+      if (success)
         loader(
           verbose,
           spinner,
@@ -41,7 +41,7 @@ const dry = (spinner, hint, target, { verbose, ...config }) => {
           step,
           hint
         );
-      } else return reject();
+      else return reject();
     }
 
     resolve();

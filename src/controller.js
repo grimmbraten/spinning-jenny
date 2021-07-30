@@ -35,27 +35,25 @@ const controller = (inputs, { frozen, ...config }) => {
   if (Flags.config.includes(inputs[0])) special = configuration;
   else if (Flags.backups.includes(inputs[0])) special = backups;
 
-  if (!special) {
+  if (!special)
     inputs.forEach((input, i) => {
-      if (!dir && index !== i) {
+      if (!dir && index !== i)
         if (Flags.dir.includes(input)) {
           index = i + 1;
           dir = inputs[index];
           target = dir;
           hint = chalk.gray(` in ${target}`);
         }
-      }
 
       if (!compiler) {
         if (Flags.new.includes(input)) preparatory.push(dry);
         else if (Flags.original.includes(input)) preparatory.push(original);
-        else if (Flags.install.includes(input)) {
+        else if (Flags.install.includes(input))
           if (frozen) error = '--install is not allowed when frozen is set to true';
           else preparatory.push(install);
-        } else if (Flags.upgrade.includes(input)) {
+        else if (Flags.upgrade.includes(input))
           if (frozen) error = '--upgrade is not allowed when frozen is set to true';
           else preparatory.push(upgrade);
-        }
 
         if (Flags.audit.includes(input)) {
           compiler = audit;
@@ -67,19 +65,15 @@ const controller = (inputs, { frozen, ...config }) => {
           compiler = audit;
           handler = patches;
         }
-      } else {
-        if (Flags.new.includes(input)) teardown.push(dry);
-        else if (Flags.original.includes(input)) teardown.push(original);
-        else if (Flags.install.includes(input)) {
-          if (frozen) error = '--install is not allowed when frozen is set to true';
-          else teardown.push(install);
-        } else if (Flags.upgrade.includes(input)) {
-          if (frozen) error = '--upgrade is not allowed when frozen is set to true';
-          else teardown.push(upgrade);
-        }
-      }
+      } else if (Flags.new.includes(input)) teardown.push(dry);
+      else if (Flags.original.includes(input)) teardown.push(original);
+      else if (Flags.install.includes(input))
+        if (frozen) error = '--install is not allowed when frozen is set to true';
+        else teardown.push(install);
+      else if (Flags.upgrade.includes(input))
+        if (frozen) error = '--upgrade is not allowed when frozen is set to true';
+        else teardown.push(upgrade);
     });
-  }
 
   if (!special && !test('-e', path.join(target, 'package.json')))
     error = 'could not find a package.json file' + hint;

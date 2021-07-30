@@ -16,8 +16,8 @@ const configFile = '.config.json';
 const loadConfig = async () => {
   const config = await read(configDir, configFile);
 
-  config['steps'] = { total: 0, completed: 0 };
-  config['getStep'] = () => chalk.gray(`[${config.steps.completed + 1}/${config.steps.total}] `);
+  config.steps = { total: 0, completed: 0 };
+  config.getStep = () => chalk.gray(`[${config.steps.completed + 1}/${config.steps.total}] `);
 
   return config;
 };
@@ -72,9 +72,7 @@ const editConfig = async (spinner, inputs) => {
 
       config.pattern = value;
       spinner.info('set pattern to ', colorVariable(value));
-    } else {
-      return spinner.fail(`${input} is not a valid configuration property`);
-    }
+    } else return spinner.fail(`${input} is not a valid configuration property`);
   });
 
   await write(configDir, configFile, config);

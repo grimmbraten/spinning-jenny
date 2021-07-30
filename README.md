@@ -2,15 +2,6 @@
 
 <br />
 
-<div align="center">
-<a href="https://www.javascript.com/"><img alt="JavaScript" src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E"/></a>
-<a href="https://nodejs.org/en/"><img alt="NodeJS" src="https://img.shields.io/badge/node.js-%2343853D.svg?style=for-the-badge&logo=node-dot-js&logoColor=white"/></a>
-<a href="https://github.com/grimmbraten/spinning-jenny"><img alt="GitHub" src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/></a>
-
-</div>
-
-<br />
-
 A cli resolutions manager that helps you resolve those pesky `yarn audit` vulnerabilities.
 
 ## Installation

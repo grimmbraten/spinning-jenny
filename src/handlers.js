@@ -1,4 +1,4 @@
-const chalk = require("chalk");
+const chalk = require('chalk');
 const {
   sum,
   read,
@@ -8,11 +8,13 @@ const {
   severityBadge,
   colorVariable,
   extractAuditSummary
-} = require("./helpers");
-const { editConfig } = require("./config");
+} = require('./helpers');
+const { editConfig } = require('./config');
 
-const backups = async (spinner, inputs) => {
-  const backups = await read("./src", ".backups.json");
+const emptyArray = 0;
+
+const backups = async () => {
+  const backups = await read('./src', '.backups.json');
 
   Object.keys(backups).forEach(key => {
     console.log(
@@ -27,9 +29,7 @@ const configuration = async (spinner, inputs) => {
   const config = await editConfig(spinner, inputs);
 
   if (config) {
-    const keys = Object.keys(config).filter(
-      key => key !== "steps" && key !== "getStep"
-    );
+    const keys = Object.keys(config).filter(key => key !== 'steps' && key !== 'getStep');
 
     console.log();
     keys.forEach(key => {
@@ -38,7 +38,7 @@ const configuration = async (spinner, inputs) => {
 
     console.log(
       chalk.gray(
-        "\nplease refer to the documentation for more information\nhttps://github.com/grimmbraten/spinning-jenny"
+        '\nplease refer to the documentation for more information\nhttps://github.com/grimmbraten/spinning-jenny'
       )
     );
   }
@@ -48,63 +48,38 @@ const report = (response, spinner, hint, target, { verbose }) => {
   const { data } = extractAuditSummary(parseJson(response));
   const vulnerabilities = sum(data.vulnerabilities);
 
-  if (vulnerabilities === 0)
-    return loader(
-      verbose,
-      spinner,
-      "succeed",
-      "could not find any vulnerabilities",
-      "",
-      hint
-    );
+  if (vulnerabilities === emptyArray)
+    return loader(verbose, spinner, 'succeed', 'could not find any vulnerabilities', '', hint);
 
   const {
     vulnerabilities: { critical, high, moderate, low, info }
   } = data;
 
-  const criticalBadge = critical ? severityBadge("critical", critical) : "";
-  const highBadge = high ? " " + severityBadge("high", high) : "";
-  const moderateBadge = moderate
-    ? " " + severityBadge("moderate", moderate)
-    : "";
-  const lowBadge = low ? " " + severityBadge("low", low) : "";
-  const infoBadge = info ? " " + severityBadge("info", info) : "";
+  const criticalBadge = critical ? severityBadge('critical', critical) : '';
+  const highBadge = high ? ' ' + severityBadge('high', high) : '';
+  const moderateBadge = moderate ? ' ' + severityBadge('moderate', moderate) : '';
+  const lowBadge = low ? ' ' + severityBadge('low', low) : '';
+  const infoBadge = info ? ' ' + severityBadge('info', info) : '';
 
-  loader(
-    verbose,
-    spinner,
-    "warn",
-    `found ${vulnerabilities} vulnerabilities`,
-    "",
-    hint
-  );
+  loader(verbose, spinner, 'warn', `found ${vulnerabilities} vulnerabilities`, '', hint);
 
-  console.log(
-    `\n\n${criticalBadge}${highBadge}${moderateBadge}${lowBadge}${infoBadge}`
-  );
+  console.log(`\n\n${criticalBadge}${highBadge}${moderateBadge}${lowBadge}${infoBadge}`);
 };
 
 const resolve = async (response, spinner, hint, target, { verbose }) => {
-  let modules = {};
+  const modules = {};
   const json = parseJson(response);
   const { data } = extractAuditSummary(json);
   const vulnerabilities = sum(data.vulnerabilities);
 
-  if (vulnerabilities === 0)
-    return loader(
-      verbose,
-      spinner,
-      "succeed",
-      "could not find any vulnerabilities",
-      "",
-      hint
-    );
+  if (vulnerabilities === emptyArray)
+    return loader(verbose, spinner, 'succeed', 'could not find any vulnerabilities', '', hint);
 
-  loader(verbose, spinner, "text", "resolving vulnerabilities", "", hint);
+  loader(verbose, spinner, 'text', 'resolving vulnerabilities', '', hint);
 
   let resolutions = json
     .map(({ data, type }) => {
-      if (type === "auditAdvisory")
+      if (type === 'auditAdvisory')
         return {
           title: data.advisory.title,
           module: data.advisory.module_name,
@@ -116,57 +91,43 @@ const resolve = async (response, spinner, hint, target, { verbose }) => {
     })
     .filter(data => data);
 
-  const noPatch = resolutions.filter(({ patched }) => patched === "<0.0.0");
-  resolutions = resolutions.filter(({ patched }) => patched !== "<0.0.0");
+  const noPatch = resolutions.filter(({ patched }) => patched === '<0.0.0');
+  resolutions = resolutions.filter(({ patched }) => patched !== '<0.0.0');
 
-  if (resolutions.length === 0)
-    return loader(
-      verbose,
-      spinner,
-      "fail",
-      "failed to resolve vulnerabilities",
-      "",
-      hint
-    );
+  if (resolutions.length === emptyArray)
+    return loader(verbose, spinner, 'fail', 'failed to resolve vulnerabilities', '', hint);
 
   resolutions.forEach(({ module, patched }) => {
     modules[module] = patched;
   });
 
-  await write(target, "package.json", { resolutions: modules });
+  await write(target, 'package.json', { resolutions: modules });
 
-  loader(
-    verbose,
-    spinner,
-    "succeed",
-    "successfully resolved vulnerabilities",
-    "",
-    hint
-  );
+  loader(verbose, spinner, 'succeed', 'successfully resolved vulnerabilities', '', hint);
 
-  if (noPatch.length > 0)
+  if (noPatch.length > emptyArray)
     loader(
       verbose,
       spinner,
-      "succeed",
+      'succeed',
       `found ${noPatch.length} package(s) without a patch\n\n${chalk.gray(
         `please run ${chalk.white(
-          `spinning-jenny --patches${target ? ` --directory ${target}` : ""}`
+          `spinning-jenny --patches${target ? ` --directory ${target}` : ''}`
         )} for more information`
       )}`,
-      "",
-      ""
+      '',
+      ''
     );
 };
 
 const patches = (response, spinner, hint, target, { verbose }) => {
   const json = parseJson(response);
 
-  loader(verbose, spinner, "text", "analyzing vulnerabilities", "", hint);
+  loader(verbose, spinner, 'text', 'analyzing vulnerabilities', '', hint);
 
-  let resolutions = json
+  const resolutions = json
     .map(({ data, type }) => {
-      if (type === "auditAdvisory")
+      if (type === 'auditAdvisory')
         return {
           title: data.advisory.title,
           module: data.advisory.module_name,
@@ -180,26 +141,17 @@ const patches = (response, spinner, hint, target, { verbose }) => {
 
   const unique = [...new Set(resolutions.map(package => package.module))];
 
-  const patches = unique.map(module =>
-    resolutions.find(package => package.module === module)
-  );
+  const patches = unique.map(module => resolutions.find(package => package.module === module));
 
-  if (patches.length === 0)
-    return loader(
-      verbose,
-      spinner,
-      "fail",
-      "failed to analyze vulnerabilities",
-      "",
-      hint
-    );
+  if (patches.length === emptyArray)
+    return loader(verbose, spinner, 'fail', 'failed to analyze vulnerabilities', '', hint);
 
   loader(
     verbose,
     spinner,
-    "succeed",
+    'succeed',
     `found ${patches.length} module(s) with vulnerabilities`,
-    "",
+    '',
     hint
   );
 
@@ -208,7 +160,7 @@ const patches = (response, spinner, hint, target, { verbose }) => {
       `\n${severityBadge(patch.severity)}\n${patch.module}${chalk.gray(
         `@${patch.version}`
       )}\npatched: ${
-        patch.patched !== "<0.0.0" ? chalk.green("true") : chalk.red("false")
+        patch.patched !== '<0.0.0' ? chalk.green('true') : chalk.red('false')
       }\nvulnerability: ${patch.title.toLowerCase()}\n${chalk.gray(patch.url)}`
     );
   });

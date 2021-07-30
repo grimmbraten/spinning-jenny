@@ -4,11 +4,9 @@
     "es2021": true
   },
   "rules": {
-    "no-empty-function": "warn",
-    "no-inline-comments": "warn",
+    "dot-notation": "warn",
+    "default-case-last": "warn",
     "default-param-last": "warn",
-    "prefer-destructuring": "warn",
-    "prefer-arrow-callback": "warn",
     "no-magic-numbers": [
       "warn",
       {
@@ -18,20 +16,38 @@
         "ignoreDefaultValues": true
       }
     ],
-    "func-style": ["warn", "declaration", { "allowArrowFunctions": true }],
+    "prefer-destructuring": ["warn", { "object": true, "array": false }],
     "no-var": "error",
     "eqeqeq": "error",
+    "no-eval": "error",
     "camelcase": "error",
     "no-eq-null": "error",
     "prefer-const": "error",
+    "guard-for-in": "error",
+    "no-script-url": "error",
+    "no-undef-init": "error",
+    "require-await": "error",
+    "no-lone-blocks": "error",
+    "no-implied-eval": "error",
+    "no-multi-spaces": "error",
     "no-self-compare": "error",
+    "curly": ["error", "multi"],
     "no-useless-return": "error",
+    "no-inline-comments": "error",
     "no-trailing-spaces": "error",
+    "no-implicit-globals": "error",
+    "no-floating-decimal": "error",
     "no-duplicate-imports": "error",
-    "capitalized-comments": "error",
+    "prefer-arrow-callback": "error",
+    "require-atomic-updates": "error",
+    "comma-dangle": ["error", "never"],
     "arrow-parens": ["error", "as-needed"],
+    "no-unsafe-optional-chaining": "error",
+    "no-template-curly-in-string": "error",
+    "no-unmodified-loop-condition": "error",
     "arrow-body-style": ["error", "as-needed"],
-    "comma-dangle": ["error", "never"]
+    "no-empty-function": ["error", { "allow": ["constructors"] }],
+    "func-style": ["error", "expression", { "allowArrowFunctions": true }]
   },
   "extends": ["eslint:recommended", "plugin:prettier/recommended"]
 }

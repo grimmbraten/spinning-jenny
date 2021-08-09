@@ -28,7 +28,7 @@ const [, , ...inputs] = process.argv;
 
   if (!compiler && !handler) return;
 
-  const response = compiler ? await compiler(spinner, hint, target, config) : undefined;
+  const response = await compiler(spinner, hint, target, config);
 
   if (!response || !handler) return spinner.fail('something went wrong, sorry about that');
 

@@ -31,7 +31,7 @@ const loader = (verbose, spinner, action, message, step, hint) => {
 const stepLabel = ({ label, steps, getStep }) => {
   if (!label) return '';
 
-  const step = getStep();
+  const step = getStep();   
   steps.completed++;
   return step;
 };

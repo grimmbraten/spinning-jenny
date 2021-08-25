@@ -13,6 +13,7 @@ const { editConfig } = require('./config');
 
 const emptyArray = 0;
 
+// TODO Allow search by name and display raw JSON output
 const backups = async () => {
   const backups = await read('./src', '.backups.json');
 
@@ -166,7 +167,40 @@ const patches = (response, spinner, hint, target, { verbose }) => {
   });
 };
 
+const help = (_, inputs) => {
+  if (inputs[1] === 'flags') {
+    console.log(
+      `\n${chalk.bold.underline('preparatory / teardown')}\n` +
+        `\n--backup ${chalk.gray('backup, apply, list, and/or manage resolutions')}` +
+        `\n--clean ${chalk.gray('remove pre-existing resolutions')}` +
+        `\n--install ${chalk.gray('perform a yarn install')}` +
+        `\n--upgrade ${chalk.gray('perform a yarn upgrade --pattern')}`
+    );
+
+    console.log(
+      `\n${chalk.bold.underline('main')}\n` +
+        `\n--audit ${chalk.gray('scan for vulnerabilities and print a concise summary')}` +
+        `\n--resolve ${chalk.gray(
+          'scan for available patches for found vulnerabilities and apply those versions as resolutions'
+        )}`
+    );
+
+    console.log(
+      `\n${chalk.bold.underline('extras')}\n` +
+        `\n--directory ${chalk.gray('overwrite current working directory scope')}` +
+        `\n--options ${chalk.gray('TODO')}`
+    );
+
+    console.log(
+      chalk.gray(
+        '\nfor more information, please refer to the documentation\nhttps://github.com/grimmbraten/spinning-jenny'
+      )
+    );
+  } else console.log('general help message');
+};
+
 module.exports = {
+  help,
   report,
   resolve,
   backups,

@@ -25,13 +25,9 @@ const [, , ...inputs] = process.argv;
   !config.verbose && spinner.start('working');
 
   if (preparatory) await sequence(preparatory, [spinner, hint, target, config]);
-
   if (!compiler && !handler) return;
-
   const response = await compiler(spinner, hint, target, config);
-
-  if (!response || !handler) return spinner.fail('something went wrong, sorry about that');
-
+  if (!response) return spinner.fail('something went wrong, sorry about that');
   handler(response, spinner, hint, target, config);
 
   if (teardown) await sequence(teardown, [spinner, hint, target, config]);

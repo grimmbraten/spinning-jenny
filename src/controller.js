@@ -1,5 +1,6 @@
 const path = require('path');
 const chalk = require('chalk');
+const Fuse = require('fuse.js');
 
 const Flags = {
   audit: ['--audit', '-a'],
@@ -66,7 +67,24 @@ const controller = (inputs, { frozen, ...config }) => {
       } else if (Flags.patches.includes(input)) {
         compiler = audit;
         handler = patches;
-      } else error = 'please note that ' + chalk.red(`"${input}"`) + ' is not a valid flag';
+      } else {
+        const fuzzy = new Fuse(
+          Object.values(Flags)
+            .flat(2)
+            .filter(data => data.length > 2),
+          { threshold: 0.4 }
+        ).search(input);
+
+        let suggestions = '\n';
+
+        // eslint-disable-next-line no-extra-parens
+        fuzzy.forEach(suggestion => (suggestions += chalk.gray(`\n${suggestion.item}`)));
+
+        error =
+          'invalid flag ' +
+          chalk.red(`${input}`) +
+          (fuzzy.length > 0 ? ', did you mean to use?' + `${suggestions}` : '');
+      }
     });
 
   !error && config.backup && preparatory.push(backup);

@@ -3,20 +3,19 @@ const chalk = require('chalk');
 
 const Flags = {
   audit: ['--audit', '-a'],
-  backups: ['--backup', '-b'],
-  config: ['--config', '-c'],
-  dir: ['--directory', '--dir', '-d'],
+  backup: ['--backup', '-b'],
+  clean: ['--clean', '-c'],
+  dir: ['--directory', '-d'],
+  help: ['--help', '-h'],
   install: ['--install', '-i'],
-  new: ['--new', '-n'],
-  original: ['--original', '-o'],
+  options: ['--options', '-o'],
   patches: ['--patches', '-p'],
   resolve: ['--resolve', '-r'],
   upgrade: ['--upgrade', '-u']
 };
 
 const { dry, test, audit, backup, original, install, upgrade } = require('./compilers');
-
-const { resolve, report, backups, patches, configuration } = require('./handlers');
+const { help, resolve, report, backups, patches, configuration } = require('./handlers');
 
 const controller = (inputs, { frozen, ...config }) => {
   let dir;
@@ -30,53 +29,47 @@ const controller = (inputs, { frozen, ...config }) => {
   const preparatory = [];
   let target = process.cwd();
 
-  if (config.backup) preparatory.push(backup);
+  if (!test('-e', path.join(target, 'package.json')))
+    error = 'could not find a package.json file' + hint || chalk.gray(`in ${target}`);
 
-  if (Flags.config.includes(inputs[0])) special = configuration;
-  else if (Flags.backups.includes(inputs[0])) special = backups;
+  if (Flags.options.includes(inputs[0])) special = configuration;
+  else if (Flags.backup.includes(inputs[0]) && inputs[1] === 'list') special = backups;
+  else if (Flags.help.includes(inputs[0])) special = help;
 
-  if (!special)
+  !special &&
     inputs.forEach((input, i) => {
-      if (!dir && index !== i)
-        if (Flags.dir.includes(input)) {
+      if (index === i) return;
+
+      if (Flags.dir.includes(input)) {
+        index = i + 1;
+        dir = inputs[index];
+        target = dir;
+        hint = chalk.gray(` in ${target}`);
+      } else if (Flags.clean.includes(input)) compiler ? teardown.push(dry) : preparatory.push(dry);
+      else if (Flags.backup.includes(input))
+        if (inputs[i + 1] === 'apply') {
           index = i + 1;
-          dir = inputs[index];
-          target = dir;
-          hint = chalk.gray(` in ${target}`);
-        }
-
-      if (!compiler) {
-        if (Flags.new.includes(input)) preparatory.push(dry);
-        else if (Flags.original.includes(input)) preparatory.push(original);
-        else if (Flags.install.includes(input))
-          if (frozen) error = '--install is not allowed when frozen is set to true';
-          else preparatory.push(install);
-        else if (Flags.upgrade.includes(input))
-          if (frozen) error = '--upgrade is not allowed when frozen is set to true';
-          else preparatory.push(upgrade);
-
-        if (Flags.audit.includes(input)) {
-          compiler = audit;
-          handler = report;
-        } else if (Flags.resolve.includes(input)) {
-          compiler = audit;
-          handler = resolve;
-        } else if (Flags.patches.includes(input)) {
-          compiler = audit;
-          handler = patches;
-        }
-      } else if (Flags.new.includes(input)) teardown.push(dry);
-      else if (Flags.original.includes(input)) teardown.push(original);
+          compiler ? teardown.push(original) : preparatory.push(original);
+        } else compiler ? teardown.push(backup) : preparatory.push(backup);
       else if (Flags.install.includes(input))
         if (frozen) error = '--install is not allowed when frozen is set to true';
-        else teardown.push(install);
+        else compiler ? teardown.push(install) : preparatory.push(install);
       else if (Flags.upgrade.includes(input))
         if (frozen) error = '--upgrade is not allowed when frozen is set to true';
-        else teardown.push(upgrade);
+        else compiler ? teardown.push(upgrade) : preparatory.push(upgrade);
+      else if (Flags.audit.includes(input)) {
+        compiler = audit;
+        handler = report;
+      } else if (Flags.resolve.includes(input)) {
+        compiler = audit;
+        handler = resolve;
+      } else if (Flags.patches.includes(input)) {
+        compiler = audit;
+        handler = patches;
+      } else error = 'please note that ' + chalk.red(`"${input}"`) + ' is not a valid flag';
     });
 
-  if (!special && !test('-e', path.join(target, 'package.json')))
-    error = 'could not find a package.json file' + hint;
+  !error && config.backup && preparatory.push(backup);
 
   return {
     hint,

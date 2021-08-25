@@ -4,6 +4,7 @@ const {
   read,
   write,
   loader,
+  colorSize,
   parseJson,
   severityBadge,
   colorVariable,
@@ -62,9 +63,9 @@ const report = (response, spinner, hint, target, { verbose }) => {
   const lowBadge = low ? ' ' + severityBadge('low', low) : '';
   const infoBadge = info ? ' ' + severityBadge('info', info) : '';
 
-  loader(verbose, spinner, 'warn', `found ${vulnerabilities} vulnerabilities`, '', hint);
+  loader(verbose, spinner, 'warn', `found ${colorSize(vulnerabilities)} vulnerabilities`, '', hint);
 
-  console.log(`\n\n${criticalBadge}${highBadge}${moderateBadge}${lowBadge}${infoBadge}`);
+  console.log(`\n ${criticalBadge}${highBadge}${moderateBadge}${lowBadge}${infoBadge}`);
 };
 
 const resolve = async (response, spinner, hint, target, { verbose }) => {

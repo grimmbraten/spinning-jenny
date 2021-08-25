@@ -31,7 +31,7 @@ const loader = (verbose, spinner, action, message, step, hint) => {
 const stepLabel = ({ label, steps, getStep }) => {
   if (!label) return '';
 
-  const step = getStep();   
+  const step = getStep();
   steps.completed++;
   return step;
 };
@@ -44,6 +44,12 @@ const severityBadge = (severity, count = '') => {
   else if (severity === 'moderate') return chalk.bgYellow.black(`  ${count}moderate  `);
   else if (severity === 'low') chalk.bgGreen.black(`  ${count}low  `);
   else return chalk.bgBlue.white(`  ${count}info  `);
+};
+
+const colorSize = count => {
+  if (count > 25) return chalk.red(count);
+  else if (count > 11) return chalk.yellow(count);
+  else return chalk.green(count);
 };
 
 const colorError = err =>
@@ -116,6 +122,7 @@ module.exports = {
   remove,
   stepLabel,
   parseJson,
+  colorSize,
   colorError,
   severityBadge,
   colorVariable,

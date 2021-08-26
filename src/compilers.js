@@ -18,17 +18,17 @@ const backupFile = '.backups.json';
 
 const test = (option, value) => shell.test(option, value);
 
-const dry = (spinner, hint, target, { verbose, ...config }) => {
+const clean = (spinner, hint, target, { verbose, ...config }) => {
   const step = stepLabel(config);
 
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
-    loader(verbose, spinner, 'start', 'removing resolutions', step, hint);
+    loader(verbose, spinner, 'start', 'cleaning up old resolutions', step, hint);
 
     const resolutions = await read(target, 'package.json', 'resolutions');
 
     if (!resolutions)
-      loader(verbose, spinner, 'warn', 'could not find any resolutions to remove', step, hint);
+      loader(verbose, spinner, 'warn', 'failed to remove pre-existing resolution', step, hint);
     else {
       const success = await remove(target, 'package.json', 'resolutions');
 
@@ -37,7 +37,9 @@ const dry = (spinner, hint, target, { verbose, ...config }) => {
           verbose,
           spinner,
           'succeed',
-          `removed ${resolutionCount(resolutions)} resolution(s)`,
+          `cleaned up ${resolutionCount(resolutions)} resolution${
+            resolutionCount(resolutions) > 1 ? 's' : ''
+          }`,
           step,
           hint
         );
@@ -51,11 +53,11 @@ const dry = (spinner, hint, target, { verbose, ...config }) => {
   });
 };
 
-const audit = (spinner, hint, target, { verbose, ...config }) => {
+const scan = (spinner, hint, target, { verbose, ...config }) => {
   const step = stepLabel(config);
 
   return new Promise((resolve, reject) => {
-    loader(verbose, spinner, 'start', 'scanning for vulnerabilities', step, hint);
+    loader(verbose, spinner, 'start', 'scanning package.json', step, hint);
 
     shell.exec(
       `yarn --cwd ${target} audit --json`,
@@ -78,7 +80,7 @@ const audit = (spinner, hint, target, { verbose, ...config }) => {
       }
     );
   }).catch(err => {
-    loader(verbose, spinner, 'fail', 'failed to scan for vulnerabilities', step, hint);
+    loader(verbose, spinner, 'fail', 'failed to scan package.json', step, hint);
     console.log(`\n${colorError(err)}`);
   });
 };
@@ -140,41 +142,41 @@ const backup = async (spinner, hint, target, { verbose, ...config }) => {
   const backup = {};
   const step = stepLabel(config);
 
-  loader(verbose, spinner, 'start', 'scanning for existing resolutions', step, hint);
+  loader(verbose, spinner, 'start', 'searching for pre-existing resolutions', step, hint);
 
   const resolutions = await read(target, 'package.json', 'resolutions');
 
   if (!resolutions)
-    return loader(verbose, spinner, 'info', 'could not find any resolutions to backup', step, hint);
+    return loader(verbose, spinner, 'info', 'no pre-existing resolutions found', step, hint);
 
   const project = target.split('/').pop();
   backup[project] = { resolutions, date: new Date().toString() };
   await write(backupDir, backupFile, backup);
 
-  loader(verbose, spinner, 'succeed', 'successfully created backup of resolutions', step, hint);
+  loader(verbose, spinner, 'succeed', 'successfully backed up resolutions', step, hint);
 };
 
-const original = async (spinner, hint, target, { verbose, ...config }) => {
+const restore = async (spinner, hint, target, { verbose, ...config }) => {
   const step = stepLabel(config);
-  loader(verbose, spinner, 'start', 'applying original resolutions', step, hint);
+  loader(verbose, spinner, 'start', 'restoring resolutions', step, hint);
 
   const project = target.split('/').pop();
   const { resolutions } = await read(backupDir, backupFile, project);
 
   if (!resolutions)
-    return loader(verbose, spinner, 'fail', 'failed to apply original resolutions', step, hint);
+    return loader(verbose, spinner, 'fail', 'failed to restore resolutions', step, hint);
 
   await write(target, 'package.json', { resolutions });
 
-  loader(verbose, spinner, 'succeed', 'successfully applied original resolutions', step, hint);
+  loader(verbose, spinner, 'succeed', 'successfully restored resolutions', step, hint);
 };
 
 module.exports = {
-  dry,
   test,
-  audit,
+  scan,
+  clean,
   backup,
+  restore,
   install,
-  upgrade,
-  original
+  upgrade
 };

@@ -14,8 +14,8 @@ const Flags = {
   upgrade: ['--upgrade', '-u']
 };
 
-const { dry, test, audit, backup, original, install, upgrade } = require('./compilers');
-const { help, resolve, report, backups, patches, configuration } = require('./handlers');
+const { clean, test, scan, backup, restore, install, upgrade } = require('./compilers');
+const { help, protect, report, backups, advisories, configuration } = require('./handlers');
 
 const controller = (inputs, { frozen, ...config }) => {
   let dir;
@@ -45,11 +45,12 @@ const controller = (inputs, { frozen, ...config }) => {
         dir = inputs[index];
         target = dir;
         hint = chalk.gray(` in ${target}`);
-      } else if (Flags.clean.includes(input)) compiler ? teardown.push(dry) : preparatory.push(dry);
+      } else if (Flags.clean.includes(input))
+        compiler ? teardown.push(clean) : preparatory.push(clean);
       else if (Flags.backup.includes(input))
         if (inputs[i + 1] === 'apply') {
           index = i + 1;
-          compiler ? teardown.push(original) : preparatory.push(original);
+          compiler ? teardown.push(restore) : preparatory.push(restore);
         } else compiler ? teardown.push(backup) : preparatory.push(backup);
       else if (Flags.install.includes(input))
         if (frozen) error = '--install is not allowed when frozen is set to true';
@@ -57,15 +58,15 @@ const controller = (inputs, { frozen, ...config }) => {
       else if (Flags.upgrade.includes(input))
         if (frozen) error = '--upgrade is not allowed when frozen is set to true';
         else compiler ? teardown.push(upgrade) : preparatory.push(upgrade);
-      else if (Flags.audit.includes(input)) {
-        compiler = audit;
+      else if (Flags.scan.includes(input)) {
+        compiler = scan;
         handler = report;
       } else if (Flags.protect.includes(input)) {
-        compiler = audit;
-        handler = resolve;
+        compiler = scan;
+        handler = protect;
       } else if (Flags.advisories.includes(input)) {
-        compiler = audit;
-        handler = patches;
+        compiler = scan;
+        handler = advisories;
       } else {
         const fuzzy = new Fuse(
           Object.values(Flags)

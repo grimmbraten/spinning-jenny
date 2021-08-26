@@ -48,9 +48,12 @@ const controller = (inputs, { frozen, ...config }) => {
       } else if (Flags.clean.includes(input))
         compiler ? teardown.push(clean) : preparatory.push(clean);
       else if (Flags.backup.includes(input))
-        if (inputs[i + 1] === 'apply') {
+        if (inputs[i + 1] === 'restore') {
           index = i + 1;
           compiler ? teardown.push(restore) : preparatory.push(restore);
+        } else if (inputs[i + 1] === 'list') {
+          index = i + 1;
+          compiler ? teardown.push(backups) : preparatory.push(backups);
         } else compiler ? teardown.push(backup) : preparatory.push(backup);
       else if (Flags.install.includes(input))
         if (frozen) error = '--install is not allowed when frozen is set to true';

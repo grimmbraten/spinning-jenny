@@ -92,7 +92,7 @@ const controller = (inputs, { frozen, ...config }) => {
       }
     });
 
-  !error && config.backup && preparatory.push(backup);
+  !error && config.backup && preparatory.unshift(backup);
 
   return {
     hint,

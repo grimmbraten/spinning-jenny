@@ -39,7 +39,7 @@ const controller = (inputs, { frozen, ...config }) => {
   else if (Flags.backup.includes(inputs[0]) && inputs[1] === 'list') special = backups;
 
   !special &&
-    inputs.forEach((input, i) => {
+    inputs.every((input, i) => {
       if (index === i) return;
 
       if (Flags.directory.includes(input)) {
@@ -89,6 +89,8 @@ const controller = (inputs, { frozen, ...config }) => {
           'invalid flag ' +
           chalk.red(`${input}`) +
           (fuzzy.length > 0 ? ', did you mean to use?' + `${suggestions}` : '');
+
+        return undefined;
       }
     });
 

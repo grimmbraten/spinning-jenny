@@ -185,21 +185,19 @@ const help = (_, inputs) => {
   if (inputs[1] === 'flags') {
     console.log(
       `\n${chalk.bold.underline('preparatory / teardown')}\n` +
-        `\n--backup ${chalk.gray('backup, apply, list, and/or manage resolutions')}` +
-        `\n--clean ${chalk.gray('remove pre-existing resolutions')}` +
-        `\n--install ${chalk.gray('perform a yarn install')}` +
-        `\n--upgrade ${chalk.gray('perform a yarn upgrade --pattern')}`
+        `\n--clean ${chalk.gray('cleanup pre-existing resolutions')}` +
+        `\n--install ${chalk.gray('install dependencies')}` +
+        `\n--upgrade ${chalk.gray(
+          'upgrade dependencies to their latest version based on the set pattern configuration'
+        )}` +
+        `\n--backup ${chalk.gray('backup, apply, list, and/or manage resolutions')}`
     );
 
     console.log(
       `\n${chalk.bold.underline('main')}\n` +
-        `\n--scan ${chalk.gray('scan for vulnerabilities and print a concise summary')}` +
-        `\n--protect ${chalk.gray(
-          'scan for available patches for found vulnerabilities and apply those versions as resolutions'
-        )}` +
-        `\n--advisories ${chalk.gray(
-          'scan for vulnerabilities and list available patch information'
-        )}`
+        `\n--scan ${chalk.gray('find modules with known vulnerabilities  ')}` +
+        `\n--protect ${chalk.gray('protect modules against known vulnerabilities ')}` +
+        `\n--advisories ${chalk.gray('find published advisories for modules with vulnerabilities')}`
     );
 
     console.log(

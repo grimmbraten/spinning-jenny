@@ -30,7 +30,7 @@ const controller = (inputs, { frozen, ...config }) => {
   let target = process.cwd();
 
   if (!test('-e', path.join(target, 'package.json')))
-    error = 'could not find a package.json file' + hint || chalk.gray(`in ${target}`);
+    error = 'failed to locate a package.json file' + hint || chalk.gray(`in ${target}`);
 
   if (inputs[0] === 'help') special = help;
   else if (inputs[0] === 'config') special = configuration;

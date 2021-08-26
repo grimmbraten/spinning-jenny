@@ -3,15 +3,14 @@ const chalk = require('chalk');
 const Fuse = require('fuse.js');
 
 const Flags = {
-  audit: ['--audit', '-a'],
+  advisories: ['--advisories', '-a'],
   backup: ['--backup', '-b'],
   clean: ['--clean', '-c'],
-  dir: ['--directory', '-d'],
+  directory: ['--directory', '-d'],
   help: ['--help', '-h'],
   install: ['--install', '-i'],
-  options: ['--options', '-o'],
-  patches: ['--patches', '-p'],
-  resolve: ['--resolve', '-r'],
+  protect: ['--protect', '-p'],
+  scan: ['--scan', '-s'],
   upgrade: ['--upgrade', '-u']
 };
 
@@ -33,15 +32,15 @@ const controller = (inputs, { frozen, ...config }) => {
   if (!test('-e', path.join(target, 'package.json')))
     error = 'could not find a package.json file' + hint || chalk.gray(`in ${target}`);
 
-  if (Flags.options.includes(inputs[0])) special = configuration;
+  if (inputs[0] === 'help') special = help;
+  else if (inputs[0] === 'config') special = configuration;
   else if (Flags.backup.includes(inputs[0]) && inputs[1] === 'list') special = backups;
-  else if (Flags.help.includes(inputs[0])) special = help;
 
   !special &&
     inputs.forEach((input, i) => {
       if (index === i) return;
 
-      if (Flags.dir.includes(input)) {
+      if (Flags.directory.includes(input)) {
         index = i + 1;
         dir = inputs[index];
         target = dir;
@@ -61,10 +60,10 @@ const controller = (inputs, { frozen, ...config }) => {
       else if (Flags.audit.includes(input)) {
         compiler = audit;
         handler = report;
-      } else if (Flags.resolve.includes(input)) {
+      } else if (Flags.protect.includes(input)) {
         compiler = audit;
         handler = resolve;
-      } else if (Flags.patches.includes(input)) {
+      } else if (Flags.advisories.includes(input)) {
         compiler = audit;
         handler = patches;
       } else {

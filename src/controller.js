@@ -14,6 +14,7 @@ const Flags = {
   upgrade: ['--upgrade', '-u']
 };
 
+const { editConfig } = require('./config');
 const { clean, test, scan, backup, restore, install, upgrade } = require('./compilers');
 const { help, protect, report, backups, advisories, configuration } = require('./handlers');
 
@@ -33,6 +34,7 @@ const controller = (inputs, { frozen, ...config }) => {
     error = 'failed to locate a package.json file' + hint || chalk.gray(`in ${target}`);
 
   if (inputs[0] === 'help') special = help;
+  else if (inputs[0] === 'set') special = editConfig;
   else if (inputs[0] === 'config') special = configuration;
   else if (Flags.backup.includes(inputs[0]) && inputs[1] === 'list') special = backups;
 

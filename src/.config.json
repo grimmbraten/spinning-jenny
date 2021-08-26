@@ -1,7 +1,7 @@
 {
   "label": true,
-  "pattern": "--caret",
   "backup": true,
   "frozen": false,
-  "verbose": true
+  "verbose": true,
+  "pattern": "--caret"
 }

@@ -12,19 +12,22 @@
     "report:eslint": "yarn eslint . --output-file ./reports/eslint.html --format html"
   },
   "bin": {
+    "spj": "src/main.js",
     "jenny": "src/main.js",
     "spinning-jenny": "src/main.js"
   },
   "license": "MIT",
   "keywords": [
     "cli",
-    "terminal",
+    "scan",
     "yarn",
     "audit",
-    "vulnerabilites",
+    "protect",
+    "terminal",
+    "advisories",
     "resolutions",
     "package.json",
-    "patches"
+    "vulnerabilites"
   ],
   "dependencies": {
     "all-aboard": "^2.0.1",

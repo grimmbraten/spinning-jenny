@@ -180,16 +180,18 @@ const help = (_, inputs) => {
 
     console.log(
       `\n${chalk.bold.underline('main')}\n` +
-        `\n--audit ${chalk.gray('scan for vulnerabilities and print a concise summary')}` +
-        `\n--resolve ${chalk.gray(
+        `\n--scan ${chalk.gray('scan for vulnerabilities and print a concise summary')}` +
+        `\n--protect ${chalk.gray(
           'scan for available patches for found vulnerabilities and apply those versions as resolutions'
+        )}` +
+        `\n--advisories ${chalk.gray(
+          'scan for vulnerabilities and list available patch information'
         )}`
     );
 
     console.log(
       `\n${chalk.bold.underline('extras')}\n` +
-        `\n--directory ${chalk.gray('overwrite current working directory scope')}` +
-        `\n--options ${chalk.gray('TODO')}`
+        `\n--directory ${chalk.gray('overwrite current working directory scope')}`
     );
 
     console.log(

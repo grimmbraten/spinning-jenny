@@ -1,6 +1,6 @@
 {
   "name": "spinning-jenny",
-  "description": "Resolve yarn audit vulnerabilites with ease",
+  "description": "Handle yarn audit vulnerabilites with ease",
   "author": "Erik Grimmbråten <79856585+grimmbraten@users.noreply.github.com>",
   "version": "1.4.0",
   "engines": {

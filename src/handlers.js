@@ -12,6 +12,7 @@ const {
   extractAuditSummary
 } = require('./helpers');
 const { editConfig } = require('./config');
+const { bin, name, description, version, repository } = require('../package.json');
 
 const emptyArray = 0;
 
@@ -182,6 +183,9 @@ const advisories = (response, spinner, hint, target, { verbose }) => {
 };
 
 const help = (_, inputs) => {
+  const alias = Object.keys(bin)[2];
+  const trueFalse = `${chalk.green('true')} / ${chalk.red('false')}`;
+
   if (inputs[1] === 'flags') {
     console.log(
       `\n${chalk.bold.underline('preparatory / teardown')}\n` +
@@ -207,10 +211,51 @@ const help = (_, inputs) => {
 
     console.log(
       chalk.gray(
-        '\nfor more information, please refer to the documentation\nhttps://github.com/grimmbraten/spinning-jenny'
+        `\nfor more information, please refer to the documentation\n${repository.url}#flags`
       )
     );
-  } else console.log('general help message');
+  } else if (inputs[1] === 'usage')
+    console.log(
+      `\n${chalk.underline('usage examples')}\n\n${alias} --upgrade --scan\n${chalk.gray(
+        'upgrade all dependencies following the set upgrade pattern restriction from the configuration file, then scan the package.json file for any vulnerabilities'
+      )}\n\n${alias} --clean --protect --install\n${chalk.gray(
+        'cleanup any pre-existing resolution, scan package.json file for vulnerabilities and try to protect against them, and lastly execute yarn install'
+      )}\n\n${chalk.gray(
+        `for more information, please refer to the documentation\n${repository.url}#usage`
+      )}`
+    );
+  else if (inputs[1] === 'config')
+    console.log(
+      `\n${chalk.underline('configurable properties')}\n\nlabel ${trueFalse}\n${chalk.gray(
+        'display action counter'
+      )}\n\nbackup ${trueFalse}\n${chalk.gray(
+        'backup pre-existing resolutions'
+      )}\n\nfrozen ${trueFalse}\n${chalk.gray('prevent yarn.lock modifications')}
+      \nverbose ${trueFalse}\n${chalk.gray('run spinning-jenny verbosely')}
+      \npattern ${chalk.blue('--caret')} / ${chalk.blue('--tilde')} / ${chalk.blue(
+        '--exact'
+      )}\n${chalk.gray('restrict upgrades to set pattern')}\n\n${chalk.gray(
+        `for more information, please refer to the documentation\n${repository.url}#configuration`
+      )}`
+    );
+  else if (inputs[1] === 'commands')
+    console.log(
+      `\n${chalk.underline('available commands')}\n\nset ${chalk.gray(
+        'edit configuration property'
+      )}\nhelp ${chalk.gray(`learn how to use ${name}`)}\nconfig ${chalk.gray(
+        'list current configuration'
+      )}\n\n${chalk.gray(
+        `for more information, please refer to the documentation\n${repository.url}#commands`
+      )}`
+    );
+  else
+    console.log(
+      `\n${name} @ ${chalk.gray(version)}\n${description.toLocaleLowerCase()}\n\n${chalk.underline(
+        'available cli documentation:'
+      )}\n\n${chalk.gray(
+        `- ${alias} help flags\n- ${alias} help usage\n- ${alias} help config\n- ${alias} help commands\n\nfor more information, please refer to the documentation\n${repository.url}`
+      )}`
+    );
 };
 
 module.exports = {

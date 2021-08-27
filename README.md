@@ -42,36 +42,38 @@ spinning-jenny --clean --protect --install
 
 <small>Cleanup any pre-existing resolution, scan package.json file for vulnerabilities and try to protect against them, and lastly execute yarn install.</small>
 
-### Preparatory / Teardown
+### Flags
 
-| Name      | Description                                        |
-| --------- | -------------------------------------------------- |
-| --clean   | cleanup pre-existing resolutions                   |
-| --install | install dependencies                               |
-| --upgrade | upgrade dependencies following pattern restriction |
-| --backup  | backup, list, and/or restore resolutions           |
+#### Preparatory / Teardown
 
-### Main
+| Name      | Short | Description                                        |
+| --------- | ----- | -------------------------------------------------- |
+| --clean   | -d    | cleanup pre-existing resolutions                   |
+| --install | -i    | install dependencies                               |
+| --upgrade | -u    | upgrade dependencies following pattern restriction |
+| --backup  | -b    | backup, list, and/or restore resolutions           |
 
-| Name         | Description                                                |
-| ------------ | ---------------------------------------------------------- |
-| --scan       | find modules with known vulnerabilities                    |
-| --protect    | protect modules against known vulnerabilities              |
-| --advisories | find published advisories for modules with vulnerabilities |
+#### Main
 
-### Extras
+| Name         | Short | Description                                                |
+| ------------ | ----- | ---------------------------------------------------------- |
+| --scan       | -s    | find modules with known vulnerabilities                    |
+| --protect    | -p    | protect modules against known vulnerabilities              |
+| --advisories | -a    | find published advisories for modules with vulnerabilities |
 
-| Name        | Description                               |
-| ----------- | ----------------------------------------- |
-| --directory | overwrite current working directory scope |
+#### Extras
 
-### Commands
+| Name        | Short | Description                               |
+| ----------- | ----- | ----------------------------------------- |
+| --directory | -d    | overwrite current working directory scope |
 
-| Name   | Description                 |
-| ------ | --------------------------- |
-| set    | edit configuration property |
-| config | list current configuration  |
-| help   | learns about spinning-jenny |
+#### Commands
+
+| Name   | Description                     |
+| ------ | ------------------------------- |
+| set    | edit configuration property     |
+| config | list current configuration      |
+| help   | learn how to use spinning-jenny |
 
 ### Configuration
 
@@ -92,7 +94,7 @@ spinning-jenny --clean --protect --install
 | label     | `true / false`                | display action counter           |
 | backup    | `true / false`                | backup pre-existing resolutions  |
 | frozen    | `true / false`                | prevent yarn.lock modifications  |
-| verbose   | `true / false`                | execute actions verbosely        |
+| verbose   | `true / false`                | run spinning-jenny verbosely     |
 | pattern\* | `--caret / --tilde / --exact` | restrict upgrades to set pattern |
 
 <small>\*For more information about upgrade pattern restrictions, refer to the [yarn documentation](https://classic.yarnpkg.com/en/docs/cli/upgrade/#toc-yarn-upgrade-package-latest-l-caret-tilde-exact-pattern).</small>

@@ -2,7 +2,7 @@
 
 <br />
 
-<small>A cli package.json resolution assistant that helps you with those pesky yarn audit vulnerabilities.</small>
+A cli package.json resolution assistant that helps you with those pesky yarn audit vulnerabilities.
 
 ## Installation
 
@@ -20,13 +20,11 @@ npm install -g spinning-jenny
 yarn global upgrade spinning-jenny --latest
 ```
 
-<small>For more information, refer to the [yarn documentation](https://classic.yarnpkg.com/en/docs/cli/upgrade).</small>
-
 ```bash
 npm update -g spinning-jenny
 ```
 
-<small>For more information, refer to the [npm documentation](https://docs.npmjs.com/cli/v6/commands/npm-update).</small>
+For more information, please refer to the [npm](https://docs.npmjs.com/cli/v6/commands/npm-update) or [yarn](https://classic.yarnpkg.com/en/docs/cli/upgrade) documentation.
 
 ## Usage
 
@@ -34,13 +32,13 @@ npm update -g spinning-jenny
 spinning-jenny --upgrade --scan
 ```
 
-<small>Upgrade all dependencies following the set upgrade pattern restriction from the configuration file, then scan the package.json file for any vulnerabilities.</small>
+Upgrade all dependencies following the set upgrade pattern restriction from the configuration file, then scan the package.json file for any vulnerabilities.
 
 ```bash
 spinning-jenny --clean --protect --install
 ```
 
-<small>Cleanup any pre-existing resolution, scan package.json file for vulnerabilities and try to protect against them, and lastly execute yarn install.</small>
+Cleanup any pre-existing resolution, scan package.json file for vulnerabilities and try to protect against them, and lastly execute yarn install.
 
 ### Flags
 
@@ -289,7 +287,7 @@ restrict upgrades to set pattern
 </tr>
 </table>
 
-\*For more information about upgrade pattern restrictions, please refer to the [yarn documentation](https://classic.yarnpkg.com/en/docs/cli/upgrade/#toc-yarn-upgrade-package-latest-l-caret-tilde-exact-pattern).
+\*For more information about upgrade pattern restrictions, please refer to the [yarn](https://classic.yarnpkg.com/en/docs/cli/upgrade/#toc-yarn-upgrade-package-latest-l-caret-tilde-exact-pattern) documentation.
 
 #### Default configuration
 

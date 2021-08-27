@@ -83,7 +83,11 @@ const controller = (inputs, { frozen, ...config }) => {
         let suggestions = '\n';
 
         // eslint-disable-next-line no-extra-parens
-        fuzzy.forEach(suggestion => (suggestions += chalk.gray(`\n${suggestion.item}`)));
+        fuzzy.forEach(suggestion => {
+          suggestions += `\n${chalk.gray(
+            `${inputs.join().replace(',', ' ').replace(input, chalk.white(suggestion.item))}`
+          )}`;
+        });
 
         error =
           'invalid flag ' +

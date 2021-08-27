@@ -16,17 +16,25 @@ const { bin, name, description, version, repository } = require('../package.json
 
 const emptyArray = 0;
 
-// TODO Allow search by name and display raw JSON output
-const backups = async () => {
+const backups = async (_, inputs) => {
+  const project = inputs[2];
   const backups = await read('./src', '.backups.json');
 
-  Object.keys(backups).forEach(key => {
-    console.log(
-      chalk.blue(`\n${key}`) +
-        ` (${Object.entries(backups[key].resolutions).length} resolutions)` +
-        chalk.gray(`\n${backups[key].date}`)
-    );
-  });
+  if (project) {
+    const backup = Object.keys(backups).find(key => key === project);
+
+    if (backup) {
+      console.log(`\n${chalk.underline(project)}\n${chalk.gray(backups[backup].date)}\n`);
+      console.log(backups[backup].resolutions);
+    } else console.log('could not find a backup');
+  } else
+    Object.keys(backups).forEach((key, index) => {
+      console.log(
+        `\n${index}. ${key} ${chalk.green(
+          `${Object.entries(backups[key].resolutions).length} resolutions`
+        )}`
+      );
+    });
 };
 
 const configuration = async spinner => {

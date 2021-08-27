@@ -66,19 +66,13 @@ spinning-jenny --clean --protect --install
 <table>
 <tr>
 <th width="204">
-<p> 
 Name
-</p>
 </th>
 <th width="104">
-<p> 
   Short
-</p>
 </th>
 <th width="584">
-<p> 
-  Description
-</p>
+Description
 </th>
 </tr>
 <tr>

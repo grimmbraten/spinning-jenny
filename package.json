@@ -12,7 +12,6 @@
     "report:eslint": "yarn eslint . --output-file ./reports/eslint.html --format html"
   },
   "bin": {
-    "spj": "src/main.js",
     "jenny": "src/main.js",
     "spinning-jenny": "src/main.js"
   },

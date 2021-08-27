@@ -65,20 +65,17 @@ spinning-jenny --clean --protect --install
 
 <table>
 <tr>
-<th>
-<img width="204" height="1">
+<th width="204">
 <p> 
 Name
 </p>
 </th>
-<th>
-<img width="104" height="1">
+<th width="104">
 <p> 
   Short
 </p>
 </th>
-<th>
-<img width="584" height="1">
+<th width="584">
 <p> 
   Description
 </p>

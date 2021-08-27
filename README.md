@@ -63,19 +63,61 @@ spinning-jenny --clean --protect --install
 
 #### Extras
 
-| Name        | Short | Description                               |
-| ----------- | ----- | ----------------------------------------- |
-| --directory | -d    | overwrite current working directory scope |
+<table>
+<tr>
+<th>
+<img width="204" height="1">
+<p> 
+Name
+</p>
+</th>
+<th>
+<img width="104" height="1">
+<p> 
+  Short
+</p>
+</th>
+<th>
+<img width="584" height="1">
+<p> 
+  Description
+</p>
+</th>
+</tr>
+<tr>
+<td>
+--directory
+</td>
+<td>
+-d
+</td>
+<td>
+overwrite current working directory scope
+</td>
+</tr>
+</table>
 
 #### Commands
 
 | Name   | Description                     |
 | ------ | ------------------------------- |
 | set    | edit configuration property     |
-| config | list current configuration      |
 | help   | learn how to use spinning-jenny |
+| config | list current configuration      |
 
 ### Configuration
+
+| Name      | Value                         | Description                      |
+| --------- | ----------------------------- | -------------------------------- |
+| label     | `true / false`                | display action counter           |
+| backup    | `true / false`                | backup pre-existing resolutions  |
+| frozen    | `true / false`                | prevent yarn.lock modifications  |
+| verbose   | `true / false`                | run spinning-jenny verbosely     |
+| pattern\* | `--caret / --tilde / --exact` | restrict upgrades to set pattern |
+
+\*For more information about upgrade pattern restrictions, please refer to the [yarn documentation](https://classic.yarnpkg.com/en/docs/cli/upgrade/#toc-yarn-upgrade-package-latest-l-caret-tilde-exact-pattern).
+
+#### Default configuration
 
 ```json
 {
@@ -86,18 +128,6 @@ spinning-jenny --clean --protect --install
   "pattern": "--caret"
 }
 ```
-
-<small>The JSON object above represents the default configuration file for spinning-jenny.</small>
-
-| Name      | Value                         | Description                      |
-| --------- | ----------------------------- | -------------------------------- |
-| label     | `true / false`                | display action counter           |
-| backup    | `true / false`                | backup pre-existing resolutions  |
-| frozen    | `true / false`                | prevent yarn.lock modifications  |
-| verbose   | `true / false`                | run spinning-jenny verbosely     |
-| pattern\* | `--caret / --tilde / --exact` | restrict upgrades to set pattern |
-
-<small>\*For more information about upgrade pattern restrictions, refer to the [yarn documentation](https://classic.yarnpkg.com/en/docs/cli/upgrade/#toc-yarn-upgrade-package-latest-l-caret-tilde-exact-pattern).</small>
 
 ## Uninstall
 

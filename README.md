@@ -52,7 +52,7 @@ spinning-jenny --clean --protect --install
 Name
 </th>
 <th align="left" width="104">
-  Short
+Short
 </th>
 <th align="left" width="584">
 Description
@@ -112,7 +112,7 @@ backup, list, and/or restore resolutions
 Name
 </th>
 <th align="left" width="104">
-  Short
+Short
 </th>
 <th align="left" width="584">
 Description
@@ -163,7 +163,7 @@ find published advisories for modules with vulnerabilities
 Name
 </th>
 <th align="left" width="104">
-  Short
+Short
 </th>
 <th align="left" width="584">
 Description
@@ -220,13 +220,74 @@ list current configuration
 
 ### Configuration
 
-| Name      | Value                         | Description                      |
-| --------- | ----------------------------- | -------------------------------- |
-| label     | `true / false`                | display action counter           |
-| backup    | `true / false`                | backup pre-existing resolutions  |
-| frozen    | `true / false`                | prevent yarn.lock modifications  |
-| verbose   | `true / false`                | run spinning-jenny verbosely     |
-| pattern\* | `--caret / --tilde / --exact` | restrict upgrades to set pattern |
+<table>
+<tr>
+<th align="left" width="104">
+Name
+</th>
+<th align="left" width="244">
+Value
+</th>
+<th align="left" width="544">
+Description
+</th>
+</tr>
+<tr>
+<td>
+label
+</td>
+<td>
+`true / false`
+</td>
+<td>
+display action counter
+</td>
+</tr>
+<tr>
+<td>
+backup
+</td>
+<td>
+`true / false`
+</td>
+<td>
+backup pre-existing resolutions
+</td>
+</tr>
+<tr>
+<td>
+frozen
+</td>
+<td>
+`true / false`
+</td>
+<td>
+prevent yarn.lock modifications
+</td>
+</tr>
+<tr>
+<td>
+verbose
+</td>
+<td>
+`true / false`
+</td>
+<td>
+run spinning-jenny verbosely
+</td>
+</tr>
+<tr>
+<td>
+pattern\*
+</td>
+<td>
+`--caret / --tilde / --exact`
+</td>
+<td>
+restrict upgrades to set pattern
+</td>
+</tr>
+</table>
 
 \*For more information about upgrade pattern restrictions, please refer to the [yarn documentation](https://classic.yarnpkg.com/en/docs/cli/upgrade/#toc-yarn-upgrade-package-latest-l-caret-tilde-exact-pattern).
 

@@ -83,7 +83,11 @@ const report = (response, spinner, hint, target, { verbose }) => {
   );
 
   console.log(`\n ${criticalBadge}${highBadge}${moderateBadge}${lowBadge}${infoBadge}`);
-  console.log(`\n${chalk.gray('for more information, please run: spinning-jenny --advisories')}\n`);
+  console.log(
+    `\n${chalk.underline('recommended actions after scan:')}${chalk.gray(
+      '\n- spinning-jenny --protect\n- spinning-jenny --advisories'
+    )}\n`
+  );
 };
 
 const protect = async (response, spinner, hint, target, { verbose }) => {

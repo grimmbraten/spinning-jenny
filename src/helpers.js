@@ -46,6 +46,20 @@ const severityBadge = (severity, count = '') => {
   else return chalk.bgBlue.white(`  ${count}info  `);
 };
 
+const severityColor = severity => {
+  if (severity === 'critical') return chalk.magenta(severity);
+  else if (severity === 'high') return chalk.red(severity);
+  else if (severity === 'moderate') return chalk.yellow(severity);
+  else if (severity === 'low') chalk.green(severity);
+  else return chalk.blue(severity);
+};
+
+const colorSize = (count, append = '') => {
+  if (count > 25) return chalk.red(`${count}${append}`);
+  else if (count > 11) return chalk.yellow(`${count}${append}`);
+  else return chalk.green(`${count}${append}`);
+};
+
 const colorError = err =>
   err
     .replace(/error/g, chalk.red('error'))
@@ -116,9 +130,11 @@ module.exports = {
   remove,
   stepLabel,
   parseJson,
+  colorSize,
   colorError,
   severityBadge,
   colorVariable,
+  severityColor,
   isBooleanInput,
   resolutionCount,
   extractAuditSummary,

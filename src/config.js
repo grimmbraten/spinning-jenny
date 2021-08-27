@@ -25,7 +25,7 @@ const loadConfig = async () => {
 const editConfig = async (spinner, inputs) => {
   const config = await loadConfig();
 
-  if (inputs.length === 1) return config;
+  if (!inputs) return config;
   inputs.shift();
 
   delete config.steps;

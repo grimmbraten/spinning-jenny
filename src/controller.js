@@ -1,22 +1,22 @@
 const path = require('path');
 const chalk = require('chalk');
+const Fuse = require('fuse.js');
 
 const Flags = {
-  audit: ['--audit', '-a'],
-  backups: ['--backup', '-b'],
-  config: ['--config', '-c'],
-  dir: ['--directory', '--dir', '-d'],
+  advisories: ['--advisories', '-a'],
+  backup: ['--backup', '-b'],
+  clean: ['--clean', '-c'],
+  directory: ['--directory', '-d'],
+  help: ['--help', '-h'],
   install: ['--install', '-i'],
-  new: ['--new', '-n'],
-  original: ['--original', '-o'],
-  patches: ['--patches', '-p'],
-  resolve: ['--resolve', '-r'],
+  protect: ['--protect', '-p'],
+  scan: ['--scan', '-s'],
   upgrade: ['--upgrade', '-u']
 };
 
-const { dry, test, audit, backup, original, install, upgrade } = require('./compilers');
-
-const { resolve, report, backups, patches, configuration } = require('./handlers');
+const { editConfig } = require('./config');
+const { clean, test, scan, backup, restore, install, upgrade } = require('./compilers');
+const { help, protect, report, backups, advisories, configuration } = require('./handlers');
 
 const controller = (inputs, { frozen, ...config }) => {
   let dir;
@@ -30,53 +30,73 @@ const controller = (inputs, { frozen, ...config }) => {
   const preparatory = [];
   let target = process.cwd();
 
-  if (config.backup) preparatory.push(backup);
+  if (!test('-e', path.join(target, 'package.json')))
+    error = 'failed to locate a package.json file' + hint || chalk.gray(`in ${target}`);
 
-  if (Flags.config.includes(inputs[0])) special = configuration;
-  else if (Flags.backups.includes(inputs[0])) special = backups;
+  if (inputs[0] === 'help') special = help;
+  else if (inputs[0] === 'set') special = editConfig;
+  else if (inputs[0] === 'config') special = configuration;
+  else if (Flags.backup.includes(inputs[0]) && inputs[1] === 'list') special = backups;
 
-  if (!special)
+  !special &&
     inputs.forEach((input, i) => {
-      if (!dir && index !== i)
-        if (Flags.dir.includes(input)) {
+      if (error || index === i) return;
+
+      if (Flags.directory.includes(input)) {
+        index = i + 1;
+        dir = inputs[index];
+        target = dir;
+        hint = chalk.gray(` in ${target}`);
+      } else if (Flags.clean.includes(input))
+        compiler ? teardown.push(clean) : preparatory.push(clean);
+      else if (Flags.backup.includes(input))
+        if (inputs[i + 1] === 'restore') {
           index = i + 1;
-          dir = inputs[index];
-          target = dir;
-          hint = chalk.gray(` in ${target}`);
-        }
-
-      if (!compiler) {
-        if (Flags.new.includes(input)) preparatory.push(dry);
-        else if (Flags.original.includes(input)) preparatory.push(original);
-        else if (Flags.install.includes(input))
-          if (frozen) error = '--install is not allowed when frozen is set to true';
-          else preparatory.push(install);
-        else if (Flags.upgrade.includes(input))
-          if (frozen) error = '--upgrade is not allowed when frozen is set to true';
-          else preparatory.push(upgrade);
-
-        if (Flags.audit.includes(input)) {
-          compiler = audit;
-          handler = report;
-        } else if (Flags.resolve.includes(input)) {
-          compiler = audit;
-          handler = resolve;
-        } else if (Flags.patches.includes(input)) {
-          compiler = audit;
-          handler = patches;
-        }
-      } else if (Flags.new.includes(input)) teardown.push(dry);
-      else if (Flags.original.includes(input)) teardown.push(original);
+          compiler ? teardown.push(restore) : preparatory.push(restore);
+        } else if (inputs[i + 1] === 'list') {
+          index = i + 1;
+          compiler ? teardown.push(backups) : preparatory.push(backups);
+        } else compiler ? teardown.push(backup) : preparatory.push(backup);
       else if (Flags.install.includes(input))
         if (frozen) error = '--install is not allowed when frozen is set to true';
-        else teardown.push(install);
+        else compiler ? teardown.push(install) : preparatory.push(install);
       else if (Flags.upgrade.includes(input))
         if (frozen) error = '--upgrade is not allowed when frozen is set to true';
-        else teardown.push(upgrade);
+        else compiler ? teardown.push(upgrade) : preparatory.push(upgrade);
+      else if (Flags.scan.includes(input)) {
+        compiler = scan;
+        handler = report;
+      } else if (Flags.protect.includes(input)) {
+        compiler = scan;
+        handler = protect;
+      } else if (Flags.advisories.includes(input)) {
+        compiler = scan;
+        handler = advisories;
+      } else {
+        const fuzzy = new Fuse(
+          Object.values(Flags)
+            .flat(2)
+            .filter(data => data.length > 2),
+          { threshold: 0.4 }
+        ).search(input);
+
+        let suggestions = '\n';
+
+        // eslint-disable-next-line no-extra-parens
+        fuzzy.forEach(suggestion => {
+          suggestions += `\n${chalk.gray(
+            `${inputs.join().replace(',', ' ').replace(input, chalk.white(suggestion.item))}`
+          )}`;
+        });
+
+        error =
+          'invalid flag ' +
+          chalk.red(`${input}`) +
+          (fuzzy.length > 0 ? ', did you mean to use?' + `${suggestions}` : '');
+      }
     });
 
-  if (!special && !test('-e', path.join(target, 'package.json')))
-    error = 'could not find a package.json file' + hint;
+  !error && config.backup && preparatory.unshift(backup);
 
   return {
     hint,

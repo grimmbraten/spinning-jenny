@@ -1,8 +1,8 @@
 {
   "name": "spinning-jenny",
-  "description": "Resolve yarn audit vulnerabilites with ease",
+  "description": "Handle yarn audit vulnerabilites with ease",
   "author": "Erik Grimmbråten <79856585+grimmbraten@users.noreply.github.com>",
-  "version": "1.3.6",
+  "version": "1.4.0",
   "engines": {
     "node": ">= 8.5.0"
   },
@@ -12,23 +12,26 @@
     "report:eslint": "yarn eslint . --output-file ./reports/eslint.html --format html"
   },
   "bin": {
-    "spin": "src/main.js",
+    "jenny": "src/main.js",
     "spinning-jenny": "src/main.js"
   },
   "license": "MIT",
   "keywords": [
     "cli",
-    "terminal",
+    "scan",
     "yarn",
     "audit",
-    "vulnerabilites",
+    "protect",
+    "terminal",
+    "advisories",
     "resolutions",
     "package.json",
-    "patches"
+    "vulnerabilites"
   ],
   "dependencies": {
     "all-aboard": "^2.0.1",
     "chalk": "^4.1.1",
+    "fuse.js": "^6.4.6",
     "json-file-plus": "^3.3.1",
     "ora": "^5.4.1",
     "shelljs": "^0.8.4"

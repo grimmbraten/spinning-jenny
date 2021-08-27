@@ -47,6 +47,7 @@
     "no-unmodified-loop-condition": "error",
     "arrow-body-style": ["error", "as-needed"],
     "no-empty-function": ["error", { "allow": ["constructors"] }],
+    "no-extra-parens": ["error", "all", { "enforceForArrowConditionals": false }],
     "func-style": ["error", "expression", { "allowArrowFunctions": true }]
   },
   "extends": ["eslint:recommended", "plugin:prettier/recommended"]

@@ -55,11 +55,54 @@ spinning-jenny --clean --protect --install
 
 #### Main
 
-| Name         | Short | Description                                                |
-| ------------ | ----- | ---------------------------------------------------------- |
-| --scan       | -s    | find modules with known vulnerabilities                    |
-| --protect    | -p    | protect modules against known vulnerabilities              |
-| --advisories | -a    | find published advisories for modules with vulnerabilities |
+<table>
+<tr>
+<th align="left" width="204">
+Name
+</th>
+<th align="left" width="104">
+  Short
+</th>
+<th align="left" width="584">
+Description
+</th>
+</tr>
+<tr>
+<td>
+--scan
+</td>
+<td>
+-s
+</td>
+<td>
+find modules with known vulnerabilities
+</td>
+</tr>
+</tr>
+<tr>
+<td>
+--protect
+</td>
+<td>
+-p
+</td>
+<td>
+protect modules against known vulnerabilities
+</td>
+</tr>
+</tr>
+<tr>
+<td>
+--advisories
+</td>
+<td>
+-a
+</td>
+<td>
+find published advisories for modules with vulnerabilities
+</td>
+</tr>
+</table>
 
 #### Extras
 

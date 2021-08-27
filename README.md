@@ -184,11 +184,39 @@ overwrite current working directory scope
 
 #### Commands
 
-| Name   | Description                     |
-| ------ | ------------------------------- |
-| set    | edit configuration property     |
-| help   | learn how to use spinning-jenny |
-| config | list current configuration      |
+<table>
+<tr>
+<th align="left" width="308">
+Name
+<th align="left" width="584">
+Description
+</th>
+</tr>
+<tr>
+<td>
+set
+</td>
+<td>
+edit configuration property
+</td>
+</tr>
+<tr>
+<td>
+help
+</td>
+<td>
+learn how to use spinning-jenny
+</td>
+</tr>
+<tr>
+<td>
+config
+</td>
+<td>
+list current configuration
+</td>
+</tr>
+</table>
 
 ### Configuration
 

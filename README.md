@@ -46,12 +46,63 @@ spinning-jenny --clean --protect --install
 
 #### Preparatory / Teardown
 
-| Name      | Short | Description                                        |
-| --------- | ----- | -------------------------------------------------- |
-| --clean   | -d    | cleanup pre-existing resolutions                   |
-| --install | -i    | install dependencies                               |
-| --upgrade | -u    | upgrade dependencies following pattern restriction |
-| --backup  | -b    | backup, list, and/or restore resolutions           |
+<table>
+<tr>
+<th align="left" width="204">
+Name
+</th>
+<th align="left" width="104">
+  Short
+</th>
+<th align="left" width="584">
+Description
+</th>
+</tr>
+<tr>
+<td>
+--clean
+</td>
+<td>
+-c
+</td>
+<td>
+cleanup pre-existing resolutions
+</td>
+</tr>
+<tr>
+<td>
+--install
+</td>
+<td>
+-i
+</td>
+<td>
+install dependencies
+</td>
+</tr>
+<tr>
+<td>
+--upgrade
+</td>
+<td>
+-u
+</td>
+<td>
+upgrade dependencies following pattern restriction
+</td>
+</tr>
+<tr>
+<td>
+--backup
+</td>
+<td>
+-b
+</td>
+<td>
+backup, list, and/or restore resolutions
+</td>
+</tr>
+</table>
 
 #### Main
 
@@ -108,13 +159,13 @@ find published advisories for modules with vulnerabilities
 
 <table>
 <tr>
-<th width="204">
+<th align="left" width="204">
 Name
 </th>
-<th width="104">
+<th align="left" width="104">
   Short
 </th>
-<th width="584">
+<th align="left" width="584">
 Description
 </th>
 </tr>

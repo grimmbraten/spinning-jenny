@@ -7,7 +7,6 @@ const Flags = {
   backup: ['--backup', '-b'],
   clean: ['--clean', '-c'],
   directory: ['--directory', '-d'],
-  help: ['--help', '-h'],
   install: ['--install', '-i'],
   protect: ['--protect', '-p'],
   scan: ['--scan', '-s'],

@@ -237,7 +237,7 @@ Description
 label
 </td>
 <td>
-`true / false`
+true / false
 </td>
 <td>
 display action counter
@@ -248,7 +248,7 @@ display action counter
 backup
 </td>
 <td>
-`true / false`
+true / false
 </td>
 <td>
 backup pre-existing resolutions
@@ -259,7 +259,7 @@ backup pre-existing resolutions
 frozen
 </td>
 <td>
-`true / false`
+true / false
 </td>
 <td>
 prevent yarn.lock modifications
@@ -270,7 +270,7 @@ prevent yarn.lock modifications
 verbose
 </td>
 <td>
-`true / false`
+true / false
 </td>
 <td>
 run spinning-jenny verbosely
@@ -278,10 +278,10 @@ run spinning-jenny verbosely
 </tr>
 <tr>
 <td>
-pattern\*
+pattern*
 </td>
 <td>
-`--caret / --tilde / --exact`
+--caret / --tilde / --exact
 </td>
 <td>
 restrict upgrades to set pattern

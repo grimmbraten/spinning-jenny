@@ -61,7 +61,14 @@ const report = (response, spinner, hint, target, { verbose }) => {
   const vulnerabilities = sum(data.vulnerabilities);
 
   if (vulnerabilities === emptyArray)
-    return loader(verbose, spinner, 'succeed', 'no vulnerabilities found', '', hint);
+    return loader(
+      verbose,
+      spinner,
+      'succeed',
+      'modules are fully protected against known vulnerabilities',
+      '',
+      hint
+    );
 
   const {
     vulnerabilities: { critical, high, moderate, low, info }
@@ -99,9 +106,16 @@ const protect = async (response, spinner, hint, target, { verbose }) => {
   const vulnerabilities = sum(data.vulnerabilities);
 
   if (vulnerabilities === emptyArray)
-    return loader(verbose, spinner, 'succeed', 'could not find any vulnerabilities', '', hint);
+    return loader(
+      verbose,
+      spinner,
+      'succeed',
+      'modules are fully protected against known vulnerabilities',
+      '',
+      hint
+    );
 
-  loader(verbose, spinner, 'text', 'resolving vulnerabilities', '', hint);
+  loader(verbose, spinner, 'text', 'protecting against known vulnerabilities', '', hint);
 
   let resolutions = json
     .map(({ data, type }) => {
@@ -121,7 +135,14 @@ const protect = async (response, spinner, hint, target, { verbose }) => {
   resolutions = resolutions.filter(({ patched }) => patched !== '<0.0.0');
 
   if (resolutions.length === emptyArray)
-    return loader(verbose, spinner, 'fail', 'failed to resolve vulnerabilities', '', hint);
+    return loader(
+      verbose,
+      spinner,
+      'fail',
+      'failed to protect against known vulnerabilities',
+      '',
+      hint
+    );
 
   resolutions.forEach(({ module, patched }) => {
     modules[module] = patched;
@@ -129,16 +150,25 @@ const protect = async (response, spinner, hint, target, { verbose }) => {
 
   await write(target, 'package.json', { resolutions: modules });
 
-  loader(verbose, spinner, 'succeed', 'successfully resolved vulnerabilities', '', hint);
+  loader(
+    verbose,
+    spinner,
+    'succeed',
+    'successfully protected against known vulnerabilities',
+    '',
+    hint
+  );
 
   if (noPatch.length > emptyArray)
     loader(
       verbose,
       spinner,
       'succeed',
-      `found ${noPatch.length} package(s) without a patch\n\n${chalk.gray(
+      `found ${noPatch.length} module${
+        noPatch.length > 1 ? 's' : ''
+      } without a patch\n\n${chalk.gray(
         `please run ${chalk.white(
-          `spinning-jenny --patches${target ? ` --directory ${target}` : ''}`
+          `spinning-jenny --advisories${target ? ` --directory ${target}` : ''}`
         )} for more information`
       )}`,
       '',

@@ -33,8 +33,10 @@ const controller = (inputs, { frozen, ...config }) => {
     error = 'failed to locate a package.json file' + hint || chalk.gray(`in ${target}`);
 
   if (inputs[0] === 'help') special = help;
-  else if (inputs[0] === 'set') special = editConfig;
-  else if (inputs[0] === 'config') special = configuration;
+  else if (inputs[0] === 'config')
+    if (inputs[1] === 'set') special = editConfig;
+    else if (!inputs[1]) special = configuration;
+    else error = 'invalid command ' + chalk.red(`${inputs[1]}`) + ', did you mean to use?\n\n- set';
   else if (Flags.backup.includes(inputs[0]) && inputs[1] === 'list') special = backups;
 
   !special &&
@@ -81,7 +83,6 @@ const controller = (inputs, { frozen, ...config }) => {
 
         let suggestions = '\n';
 
-        // eslint-disable-next-line no-extra-parens
         fuzzy.forEach(suggestion => {
           suggestions += `\n${chalk.gray(
             `${inputs.join().replace(',', ' ').replace(input, chalk.white(suggestion.item))}`

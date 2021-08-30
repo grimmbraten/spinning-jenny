@@ -148,7 +148,7 @@ protect modules against known vulnerabilities
 -a
 </td>
 <td>
-find published advisories for modules with vulnerabilities
+find published advisories for modules with known vulnerabilities
 </td>
 </tr>
 </table>

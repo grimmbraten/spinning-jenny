@@ -77,16 +77,18 @@ const report = (response, spinner, hint, target, { verbose }) => {
     verbose,
     spinner,
     'warn',
-    `encountered ${colorSize(vulnerabilities, ' vulnerabilities')}`,
+    `identified ${colorSize(vulnerabilities, ' vulnerabilities')}`,
     '',
     hint
   );
 
   console.log(`\n ${criticalBadge}${highBadge}${moderateBadge}${lowBadge}${infoBadge}`);
   console.log(
-    `\n${chalk.underline('recommended actions after scan:')}${chalk.gray(
-      '\n- spinning-jenny --protect\n- spinning-jenny --advisories'
-    )}\n`
+    `\n${chalk.underline('recommended actions:')}\n\nspinning-jenny --protect\n${chalk.gray(
+      'protect modules against known vulnerabilities'
+    )}\n\nspinning-jenny --advisories\n${chalk.gray(
+      'find published advisories for modules with known vulnerabilities'
+    )}`
   );
 };
 
@@ -178,18 +180,20 @@ const advisories = (response, spinner, hint, target, { verbose }) => {
     `found advisories for ${colorSize(
       patchCount,
       ` module${patchCount > 1 ? 's' : ''}`
-    )} with vulnerabilities`,
+    )} with known vulnerabilities`,
     '',
     hint
   );
 
   patches.forEach(patch => {
     console.log(
-      `\n${patch.module}${chalk.gray(` @ ${patch.version}`)}\npatched: ${
-        patch.patched !== '<0.0.0' ? chalk.green('true') : chalk.red('false')
-      }\nseverity: ${severityColor(
-        patch.severity
-      )}\nvulnerability: ${patch.title.toLowerCase()}\n${chalk.gray(patch.url)}`
+      `\n${patch.module}\npatched: ${
+        patch.patched !== '<0.0.0'
+          ? `${chalk.green('true')} ${chalk.gray(`${patch.version}`)}`
+          : chalk.red('false')
+      }\nvulnerability: ${severityColor(patch.severity)} ${chalk.gray(
+        patch.title.toLowerCase()
+      )}\n${chalk.gray(patch.url)}`
     );
   });
 };
@@ -213,7 +217,9 @@ const help = (_, inputs) => {
       `\n${chalk.bold.underline('main')}\n` +
         `\n--scan ${chalk.gray('find modules with known vulnerabilities  ')}` +
         `\n--protect ${chalk.gray('protect modules against known vulnerabilities ')}` +
-        `\n--advisories ${chalk.gray('find published advisories for modules with vulnerabilities')}`
+        `\n--advisories ${chalk.gray(
+          'find published advisories for modules with known vulnerabilities'
+        )}`
     );
 
     console.log(

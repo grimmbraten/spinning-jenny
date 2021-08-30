@@ -27,8 +27,7 @@ const clean = (spinner, hint, target, { verbose, ...config }) => {
 
     const resolutions = await read(target, 'package.json', 'resolutions');
 
-    if (!resolutions)
-      loader(verbose, spinner, 'warn', 'failed to remove pre-existing resolution', step, hint);
+    if (!resolutions) loader(verbose, spinner, 'warn', 'could not find any resolution', step, hint);
     else {
       const success = await remove(target, 'package.json', 'resolutions');
 
@@ -48,7 +47,7 @@ const clean = (spinner, hint, target, { verbose, ...config }) => {
 
     resolve();
   }).catch(err => {
-    loader(verbose, spinner, 'fail', 'failed to remove resolutions', step, hint);
+    loader(verbose, spinner, 'fail', 'failed to cleanup resolutions', step, hint);
     console.log(`\n${colorError(err)}`);
   });
 };
@@ -142,18 +141,18 @@ const backup = async (spinner, hint, target, { verbose, ...config }) => {
   const backup = {};
   const step = stepLabel(config);
 
-  loader(verbose, spinner, 'start', 'searching for pre-existing resolutions', step, hint);
+  loader(verbose, spinner, 'start', 'searching for resolutions', step, hint);
 
   const resolutions = await read(target, 'package.json', 'resolutions');
 
   if (!resolutions)
-    return loader(verbose, spinner, 'info', 'no pre-existing resolutions found', step, hint);
+    return loader(verbose, spinner, 'warn', 'could not find any resolutions', step, hint);
 
   const project = target.split('/').pop();
   backup[project] = { resolutions, date: new Date().toString() };
   await write(backupDir, backupFile, backup);
 
-  loader(verbose, spinner, 'succeed', 'successfully backed up resolutions', step, hint);
+  loader(verbose, spinner, 'succeed', 'successfully saved resolutions', step, hint);
 };
 
 const restore = async (spinner, hint, target, { verbose, ...config }) => {

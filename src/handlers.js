@@ -275,9 +275,9 @@ const help = (_, inputs) => {
       `\n${chalk.underline('configurable properties')}\n\nlabel ${trueFalse}\n${chalk.gray(
         'display action counter'
       )}\n\nbackup ${trueFalse}\n${chalk.gray(
-        'backup pre-existing resolutions'
+        'save backup of resolutions'
       )}\n\nfrozen ${trueFalse}\n${chalk.gray('prevent yarn.lock modifications')}
-      \nverbose ${trueFalse}\n${chalk.gray('run spinning-jenny verbosely')}
+      \nverbose ${trueFalse}\n${chalk.gray(`run ${name} verbosely`)}
       \npattern ${chalk.blue('--caret')} / ${chalk.blue('--tilde')} / ${chalk.blue(
         '--exact'
       )}\n${chalk.gray('restrict upgrades to set pattern')}\n\n${chalk.gray(

@@ -241,7 +241,7 @@ backup
 true / false
 </td>
 <td>
-backup pre-existing resolutions
+save backup of resolutions
 </td>
 </tr>
 <tr>

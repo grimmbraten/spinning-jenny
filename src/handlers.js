@@ -26,7 +26,7 @@ const backups = async (_, inputs) => {
     if (backup) {
       console.log(`\n${chalk.underline(project)}\n${chalk.gray(backups[backup].date)}\n`);
       console.log(backups[backup].resolutions);
-    } else console.log('could not find a backup');
+    } else console.log('could not find a saved backup for that project name');
   } else
     Object.keys(backups).forEach((key, index) => {
       console.log(
@@ -50,7 +50,7 @@ const configuration = async spinner => {
 
     console.log(
       chalk.gray(
-        '\nplease refer to the documentation for more information\nhttps://github.com/grimmbraten/spinning-jenny'
+        '\nfor more information, please refer to the documentation\nhttps://github.com/grimmbraten/spinning-jenny#configuration'
       )
     );
   }
@@ -139,7 +139,7 @@ const protect = async (response, spinner, hint, target, { verbose }) => {
       verbose,
       spinner,
       'fail',
-      'failed to protect against known vulnerabilities',
+      'failed to protect against all known vulnerabilities',
       '',
       hint
     );
@@ -166,11 +166,9 @@ const protect = async (response, spinner, hint, target, { verbose }) => {
       'succeed',
       `found ${noPatch.length} module${
         noPatch.length > 1 ? 's' : ''
-      } without a patch\n\n${chalk.gray(
-        `please run ${chalk.white(
-          `spinning-jenny --advisories${target ? ` --directory ${target}` : ''}`
-        )} for more information`
-      )}`,
+      } without a patch\n\n${chalk.underline(
+        'recommended actions:'
+      )}\n\nspinning-jenny --advisories${target ? ` --directory ${target}` : ''}`,
       '',
       ''
     );
@@ -288,11 +286,9 @@ const help = (_, inputs) => {
     );
   else if (inputs[1] === 'commands')
     console.log(
-      `\n${chalk.underline('available commands')}\n\nset ${chalk.gray(
-        'edit configuration property'
-      )}\nhelp ${chalk.gray(`learn how to use ${name}`)}\nconfig ${chalk.gray(
-        'list current configuration'
-      )}\n\n${chalk.gray(
+      `\n${chalk.underline('available commands')}\n\nhelp [issue] ${chalk.gray(
+        `learn how to use ${name}`
+      )}\nconfig [set] ${chalk.gray('list or edit configuration properties')}\n\n${chalk.gray(
         `for more information, please refer to the documentation\n${repository.url}#commands`
       )}`
     );

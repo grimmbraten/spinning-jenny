@@ -19,7 +19,6 @@ const [, , ...inputs] = process.argv;
   if (error) return spinner.fail(error);
   else if (special) return special(spinner, inputs);
 
-  // eslint-disable-next-line no-magic-numbers
   config.steps.total = preparatory.length + teardown.length + (compiler ? 1 : 0);
 
   !config.verbose && spinner.start('working');

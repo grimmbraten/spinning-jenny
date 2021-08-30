@@ -90,7 +90,7 @@ const controller = (inputs, { frozen, ...config }) => {
         });
 
         error =
-          'invalid flag ' +
+          `invalid ${input.includes('-') ? 'flag' : 'command'} ` +
           chalk.red(`${input}`) +
           (fuzzy.length > 0 ? ', did you mean to use?' + `${suggestions}` : '');
       }

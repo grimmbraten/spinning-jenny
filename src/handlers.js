@@ -199,7 +199,7 @@ const advisories = (response, spinner, hint, target, { verbose }) => {
 };
 
 const help = (_, inputs) => {
-  const alias = Object.keys(bin)[2];
+  const alias = Object.keys(bin)[1];
   const trueFalse = `${chalk.green('true')} / ${chalk.red('false')}`;
 
   if (inputs[1] === 'flags') {
@@ -268,7 +268,7 @@ const help = (_, inputs) => {
     );
   else
     console.log(
-      `\n${name} @ ${chalk.gray(version)}\n${description.toLocaleLowerCase()}\n\n${chalk.underline(
+      `\n${name} ${chalk.gray(version)}\n${description.toLocaleLowerCase()}\n\n${chalk.underline(
         'available cli documentation:'
       )}\n\n${chalk.gray(
         `- ${alias} help flags\n- ${alias} help usage\n- ${alias} help config\n- ${alias} help commands\n\nfor more information, please refer to the documentation\n${repository.url}`

@@ -12,6 +12,7 @@ const Flags = {
 
 const configDir = __dirname;
 const configFile = '.config.json';
+const trueFalse = `${chalk.green('true')} / ${chalk.red('false')}`;
 
 const loadConfig = async () => {
   const config = await read(configDir, configFile);
@@ -26,40 +27,39 @@ const editConfig = async (spinner, inputs) => {
   const config = await loadConfig();
 
   if (!inputs) return config;
-  inputs.shift();
+  inputs = inputs.slice(2);
 
   delete config.steps;
   delete config.getStep;
 
   inputs.forEach((input, index) => {
-    // eslint-disable-next-line no-magic-numbers
     if (index % 2 === 1) return;
-    spinner.start('updating configuration');
+    spinner.start('modifying configuration');
 
     if (Flags.verbose.includes(input)) {
       const value = isBooleanInput(inputs[index + 1]);
-      if (value === undefined) return spinner.fail('verbose can only be set to true / false');
+      if (value === undefined) return spinner.fail(`verbose can only be: ${trueFalse}`);
 
       config.verbose = value;
-      spinner.info('set verbose to ' + colorVariable(value));
+      spinner.succeed('verbose: ' + colorVariable(value));
     } else if (Flags.frozen.includes(input)) {
       const value = isBooleanInput(inputs[index + 1]);
-      if (value === undefined) return spinner.fail('frozen can only be set to true / false');
+      if (value === undefined) return spinner.fail(`frozen can only be: ${trueFalse}`);
 
       config.frozen = value;
-      spinner.info('set frozen to ' + colorVariable(value));
+      spinner.succeed('frozen: ' + colorVariable(value));
     } else if (Flags.backup.includes(input)) {
       const value = isBooleanInput(inputs[index + 1]);
-      if (value === undefined) return spinner.fail('frozen can only be set to true / false');
+      if (value === undefined) return spinner.fail(`backup can only be: ${trueFalse}`);
 
       config.backup = value;
-      spinner.info('set backup to ' + colorVariable(value));
+      spinner.succeed('backup: ' + colorVariable(value));
     } else if (Flags.label.includes(input)) {
       const value = isBooleanInput(inputs[index + 1]);
-      if (value === undefined) return spinner.fail('label can only be set to true / false');
+      if (value === undefined) return spinner.fail(`label can only be: ${trueFalse}`);
 
       config.label = value;
-      spinner.info('set label to ' + colorVariable(value));
+      spinner.succeed('label: ' + colorVariable(value));
     } else if (Flags.pattern.includes(input)) {
       let value = inputs[index + 1];
       if (!value) return spinner.fail('please pass a value');
@@ -68,11 +68,20 @@ const editConfig = async (spinner, inputs) => {
 
       const allowed = ['exact', 'caret', 'tilde'];
       if (!allowed.includes(value))
-        return spinner.fail('pattern can only be set to exact, tilde, or caret');
+        return spinner.fail(
+          `pattern can only be: ${chalk.gray('--exact')} / ${chalk.gray('--tilde')} / ${chalk.gray(
+            '--caret'
+          )}`
+        );
 
       config.pattern = value;
-      spinner.info('set pattern to ', colorVariable(value));
+      spinner.succeed('pattern: ', colorVariable(value));
     } else return spinner.fail(`${input} is not a valid configuration property`);
+  });
+
+  console.log();
+  Object.keys(config).forEach(key => {
+    console.log(`${key}: ` + colorVariable(config[key]));
   });
 
   await write(configDir, configFile, config);

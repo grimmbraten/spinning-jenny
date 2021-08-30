@@ -7,15 +7,6 @@
     "dot-notation": "warn",
     "default-case-last": "warn",
     "default-param-last": "warn",
-    "no-magic-numbers": [
-      "warn",
-      {
-        "ignore": [1],
-        "enforceConst": true,
-        "ignoreArrayIndexes": true,
-        "ignoreDefaultValues": true
-      }
-    ],
     "prefer-destructuring": ["warn", { "object": true, "array": false }],
     "no-var": "error",
     "eqeqeq": "error",

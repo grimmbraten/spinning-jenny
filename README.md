@@ -91,7 +91,7 @@ upgrade dependencies following pattern restriction
 </tr>
 <tr>
 <td>
---backup
+--backup*
 </td>
 <td>
 -b
@@ -101,6 +101,20 @@ backup, list, and/or restore resolutions
 </td>
 </tr>
 </table>
+
+\*The backup flag can either be used on it's own to trigger a backup save as a preparatory or teardown action. Or it can be used with addons to trigger different actions.
+
+```bash
+spinning-jenny --backup restore
+```
+
+Restore the saved resolutions for the package.json in the current directory scope as a preparatory or teardown action.
+
+```bash
+spinning-jenny --backup list [project-name]
+```
+
+List all saved backup or go into detail for a specific saved backup as a special action.
 
 #### Main
 

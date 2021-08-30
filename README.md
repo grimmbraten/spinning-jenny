@@ -192,15 +192,7 @@ Description
 </tr>
 <tr>
 <td>
-set
-</td>
-<td>
-edit configuration property
-</td>
-</tr>
-<tr>
-<td>
-help
+help [issue]
 </td>
 <td>
 learn how to use spinning-jenny
@@ -208,10 +200,10 @@ learn how to use spinning-jenny
 </tr>
 <tr>
 <td>
-config
+config [set]
 </td>
 <td>
-list current configuration
+list or edit configuration properties
 </td>
 </tr>
 </table>

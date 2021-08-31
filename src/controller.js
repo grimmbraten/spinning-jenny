@@ -29,9 +29,6 @@ const controller = (inputs, { frozen, ...config }) => {
   const preparatory = [];
   let target = process.cwd();
 
-  if (!test('-e', path.join(target, 'package.json')))
-    error = 'failed to locate a package.json file' + hint || chalk.gray(`in ${target}`);
-
   if (inputs[0] === 'help') special = help;
   else if (inputs[0] === 'config')
     if (inputs[1] === 'set') special = editConfig;
@@ -95,6 +92,9 @@ const controller = (inputs, { frozen, ...config }) => {
           (fuzzy.length > 0 ? ', did you mean to use?' + `${suggestions}` : '');
       }
     });
+
+  if (!test('-e', path.join(target, 'package.json')))
+    error = 'failed to locate a package.json file' + hint || chalk.gray(`in ${target}`);
 
   !error && config.backup && preparatory.unshift(backup);
 

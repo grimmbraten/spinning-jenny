@@ -14,25 +14,23 @@ const {
 const { editConfig } = require('./config');
 const { bin, name, description, version, repository } = require('../package.json');
 
-const emptyArray = 0;
-
-const backups = async (_, inputs) => {
+const backups = async (spinner, inputs) => {
   const project = inputs[2];
-  const backups = await read('./src', '.backups.json');
+  const backups = await read(__dirname, '.backups.json');
 
   if (project) {
     const backup = Object.keys(backups).find(key => key === project);
 
     if (backup) {
-      console.log(`\n${chalk.underline(project)}\n${chalk.gray(backups[backup].date)}\n`);
+      console.log();
       console.log(backups[backup].resolutions);
-    } else console.log('could not find a saved backup for that project name');
+    } else spinner.fail('could not find a saved backup for that project name');
   } else
-    Object.keys(backups).forEach((key, index) => {
+    Object.keys(backups).forEach(key => {
       console.log(
-        `\n${index}. ${key} ${chalk.green(
+        `\n- ${key} ${chalk.gray(
           `${Object.entries(backups[key].resolutions).length} resolutions`
-        )}`
+        )}\n${chalk.gray(backups[key].date)}`
       );
     });
 };
@@ -60,7 +58,7 @@ const report = (response, spinner, hint, target, { verbose }) => {
   const { data } = extractAuditSummary(parseJson(response));
   const vulnerabilities = sum(data.vulnerabilities);
 
-  if (vulnerabilities === emptyArray)
+  if (vulnerabilities === 0)
     return loader(
       verbose,
       spinner,
@@ -105,7 +103,7 @@ const protect = async (response, spinner, hint, target, { verbose }) => {
   const { data } = extractAuditSummary(json);
   const vulnerabilities = sum(data.vulnerabilities);
 
-  if (vulnerabilities === emptyArray)
+  if (vulnerabilities === 0)
     return loader(
       verbose,
       spinner,
@@ -134,7 +132,7 @@ const protect = async (response, spinner, hint, target, { verbose }) => {
   const noPatch = resolutions.filter(({ patched }) => patched === '<0.0.0');
   resolutions = resolutions.filter(({ patched }) => patched !== '<0.0.0');
 
-  if (resolutions.length === emptyArray)
+  if (resolutions.length === 0)
     return loader(
       verbose,
       spinner,
@@ -159,7 +157,7 @@ const protect = async (response, spinner, hint, target, { verbose }) => {
     hint
   );
 
-  if (noPatch.length > emptyArray)
+  if (noPatch.length > 0)
     loader(
       verbose,
       spinner,
@@ -198,7 +196,7 @@ const advisories = (response, spinner, hint, target, { verbose }) => {
   const patches = unique.map(module => advisories.find(package => package.module === module));
   const patchCount = patches.length;
 
-  if (patchCount === emptyArray)
+  if (patchCount === 0)
     return loader(verbose, spinner, 'fail', 'failed to analyze vulnerabilities', '', hint);
 
   loader(

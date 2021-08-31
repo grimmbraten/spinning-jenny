@@ -1,6 +1,6 @@
-<img width="100%" src="https://media1.tenor.com/images/5928958c42329cf6e101dda2ad295393/tenor.gif?itemid=7848720" />
 
-<br />
+
+https://user-images.githubusercontent.com/79856585/131501311-4362dc12-4bf8-415c-a887-73c408e2f971.mp4
 
 A cli package.json resolution assistant that helps you with those pesky yarn audit vulnerabilities.
 

@@ -124,7 +124,7 @@ const install = (spinner, hint, target, { verbose, ...config }) => {
         silent: true
       },
       (_, stdout, stderr) => {
-        if (stderr) return reject(stderr);
+        if (stderr.includes('error')) return reject(stderr);
 
         loader(verbose, spinner, 'succeed', 'successfully installed packages', step, hint);
 

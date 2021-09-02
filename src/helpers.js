@@ -4,29 +4,8 @@ const json = require('json-file-plus');
 
 const sum = collection => Object.values(collection).reduce((a, b) => a + b);
 
-const loader = (verbose, spinner, action, message, step, hint) => {
-  if (!verbose) return;
-
-  switch (action) {
-    case 'start':
-      spinner.start(step + message + hint);
-      break;
-    case 'fail':
-      spinner.fail(step + message + hint);
-      break;
-    case 'succeed':
-      spinner.succeed(step + message + hint);
-      break;
-    case 'warn':
-      spinner.warn(step + message + hint);
-      break;
-    case 'text':
-      spinner.text = step + message + hint;
-      break;
-    case 'info':
-      spinner.info(step + message + hint);
-  }
-};
+const loader = (verbose, spinner, action, message, step, hint) =>
+  verbose && spinner[action](step + message + hint);
 
 const stepLabel = ({ label, steps, getStep }) => {
   if (!label) return '';

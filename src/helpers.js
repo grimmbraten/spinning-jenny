@@ -79,7 +79,10 @@ const read = (dir, file, property) =>
       if (err) reject(err);
       resolve(property ? await json.get(property) : await json.get());
     });
-  }).catch(err => console.error(err));
+  }).catch(error => {
+    console.error(error);
+    return [false, error];
+  });
 
 const write = (dir, file, property) =>
   new Promise((resolve, reject) => {
@@ -99,7 +102,10 @@ const remove = (dir, file, property) =>
       await json.save();
       resolve(true);
     });
-  }).catch(err => console.error(err));
+  }).catch(error => {
+    console.error(error);
+    return false;
+  });
 
 module.exports = {
   sum,

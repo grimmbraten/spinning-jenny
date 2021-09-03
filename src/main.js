@@ -11,7 +11,7 @@ const [, , ...inputs] = process.argv;
   const spinner = ora();
   const config = await loadConfig();
 
-  const { hint, error, target, special, handler, teardown, compiler, preparatory } = controller(
+  const { hint, error, target, special, handler, teardown, operation, preparatory } = controller(
     inputs,
     config
   );
@@ -19,13 +19,13 @@ const [, , ...inputs] = process.argv;
   if (error) return spinner.fail(error);
   else if (special) return special(spinner, inputs);
 
-  config.steps.total = preparatory.length + teardown.length + (compiler ? 1 : 0);
+  config.steps.total = preparatory.length + teardown.length + (operation ? 1 : 0);
 
   !config.verbose && spinner.start('working');
 
   if (preparatory) await sequence(preparatory, [spinner, hint, target, config]);
-  if (!compiler && !handler) return;
-  const response = await compiler(spinner, hint, target, config);
+  if (!operation && !handler) return;
+  const response = await operation(spinner, hint, target, config);
   if (!response) return spinner.fail('something went wrong, sorry about that');
   await handler(response, spinner, hint, target, config);
 

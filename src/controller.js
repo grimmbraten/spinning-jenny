@@ -13,8 +13,9 @@ const Flags = {
   upgrade: ['--upgrade', '-u']
 };
 
+const { test } = require('./shell');
 const { editConfig } = require('./config');
-const { clean, test, scan, backup, restore, install, upgrade } = require('./compilers');
+const { scan, clean, backup, restore, install, upgrade } = require('./operations');
 const { help, protect, report, backups, advisories, configuration } = require('./handlers');
 
 const controller = (inputs, { frozen, ...config }) => {
@@ -23,7 +24,7 @@ const controller = (inputs, { frozen, ...config }) => {
   let index;
   let special;
   let handler;
-  let compiler;
+  let operation;
   let hint = '';
   const teardown = [];
   const preparatory = [];
@@ -46,29 +47,29 @@ const controller = (inputs, { frozen, ...config }) => {
         target = dir;
         hint = chalk.gray(` in ${target}`);
       } else if (Flags.clean.includes(input))
-        compiler ? teardown.push(clean) : preparatory.push(clean);
+        operation ? teardown.push(clean) : preparatory.push(clean);
       else if (Flags.backup.includes(input))
         if (inputs[i + 1] === 'restore') {
           index = i + 1;
-          compiler ? teardown.push(restore) : preparatory.push(restore);
+          operation ? teardown.push(restore) : preparatory.push(restore);
         } else if (inputs[i + 1] === 'list') {
           index = i + 1;
-          compiler ? teardown.push(backups) : preparatory.push(backups);
-        } else compiler ? teardown.push(backup) : preparatory.push(backup);
+          operation ? teardown.push(backups) : preparatory.push(backups);
+        } else operation ? teardown.push(backup) : preparatory.push(backup);
       else if (Flags.install.includes(input))
         if (frozen) error = '--install is not allowed when frozen is set to true';
-        else compiler ? teardown.push(install) : preparatory.push(install);
+        else operation ? teardown.push(install) : preparatory.push(install);
       else if (Flags.upgrade.includes(input))
         if (frozen) error = '--upgrade is not allowed when frozen is set to true';
-        else compiler ? teardown.push(upgrade) : preparatory.push(upgrade);
+        else operation ? teardown.push(upgrade) : preparatory.push(upgrade);
       else if (Flags.scan.includes(input)) {
-        compiler = scan;
+        operation = scan;
         handler = report;
       } else if (Flags.protect.includes(input)) {
-        compiler = scan;
+        operation = scan;
         handler = protect;
       } else if (Flags.advisories.includes(input)) {
-        compiler = scan;
+        operation = scan;
         handler = advisories;
       } else {
         const fuzzy = new Fuse(
@@ -104,8 +105,8 @@ const controller = (inputs, { frozen, ...config }) => {
     target,
     special,
     handler,
-    compiler,
     teardown,
+    operation,
     preparatory
   };
 };

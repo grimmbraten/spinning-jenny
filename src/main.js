@@ -27,7 +27,7 @@ const [, , ...inputs] = process.argv;
   if (!compiler && !handler) return;
   const response = await compiler(spinner, hint, target, config);
   if (!response) return spinner.fail('something went wrong, sorry about that');
-  handler(response, spinner, hint, target, config);
+  await handler(response, spinner, hint, target, config);
 
   if (teardown) await sequence(teardown, [spinner, hint, target, config]);
 

@@ -4,7 +4,7 @@ const { loader, colorSize, parseJson, severityColor } = require('../helpers');
 const advisories = (response, spinner, hint, target, { verbose }) => {
   const json = parseJson(response);
 
-  loader(verbose, spinner, 'text', 'analyzing vulnerabilities', '', hint);
+  loader(verbose, spinner, 'start', 'analyzing vulnerabilities', '', hint);
 
   const advisories = json
     .map(({ data, type }) => {

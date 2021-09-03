@@ -17,7 +17,7 @@ const protect = async (response, spinner, hint, target, { verbose }) => {
       hint
     );
 
-  loader(verbose, spinner, 'text', 'protecting against known vulnerabilities', '', hint);
+  loader(verbose, spinner, 'start', 'protecting against known vulnerabilities', '', hint);
 
   let resolutions = json
     .map(({ data, type }) => {

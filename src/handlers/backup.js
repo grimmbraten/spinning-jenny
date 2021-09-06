@@ -15,7 +15,7 @@ const backup = async (spinner, inputs) => {
   } else
     Object.keys(backups).forEach(key => {
       console.log(
-        `\n- ${key} ${chalk.gray(
+        `\n${key} ${chalk.gray(
           `${Object.entries(backups[key].resolutions).length} resolutions`
         )}\n${chalk.gray(backups[key].date)}`
       );

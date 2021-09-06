@@ -16,7 +16,14 @@ const Flags = {
 const { test } = require('./shell');
 const { editConfig } = require('./config');
 const { scan, clean, backup, restore, install, upgrade } = require('./operations');
-const { help, protect, report, backups, advisories, configuration } = require('./handlers');
+const {
+  help,
+  protect,
+  report,
+  backup: backupHandler,
+  advisories,
+  configuration
+} = require('./handlers');
 
 const controller = (inputs, { frozen, ...config }) => {
   let dir;
@@ -35,7 +42,7 @@ const controller = (inputs, { frozen, ...config }) => {
     if (inputs[1] === 'set') special = editConfig;
     else if (!inputs[1]) special = configuration;
     else error = 'invalid command ' + chalk.red(`${inputs[1]}`) + ', did you mean to use?\n\n- set';
-  else if (Flags.backup.includes(inputs[0]) && inputs[1] === 'list') special = backups;
+  else if (Flags.backup.includes(inputs[0]) && inputs[1] === 'list') special = backupHandler;
 
   if (!special) {
     inputs.forEach((input, i) => {
@@ -54,7 +61,7 @@ const controller = (inputs, { frozen, ...config }) => {
           operation ? teardown.push(restore) : preparatory.push(restore);
         } else if (inputs[i + 1] === 'list') {
           index = i + 1;
-          operation ? teardown.push(backups) : preparatory.push(backups);
+          operation ? teardown.push(backupHandler) : preparatory.push(backupHandler);
         } else operation ? teardown.push(backup) : preparatory.push(backup);
       else if (Flags.install.includes(input))
         if (frozen) error = '--install is not allowed when frozen is set to true';

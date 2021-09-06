@@ -37,7 +37,7 @@ const controller = (inputs, { frozen, ...config }) => {
     else error = 'invalid command ' + chalk.red(`${inputs[1]}`) + ', did you mean to use?\n\n- set';
   else if (Flags.backup.includes(inputs[0]) && inputs[1] === 'list') special = backups;
 
-  !special &&
+  if (!special) {
     inputs.forEach((input, i) => {
       if (error || index === i) return;
 
@@ -94,8 +94,9 @@ const controller = (inputs, { frozen, ...config }) => {
       }
     });
 
-  if (!test('-e', path.join(target, 'package.json')))
-    error = 'failed to locate a package.json file' + hint || chalk.gray(`in ${target}`);
+    if (!test('-e', path.join(target, 'package.json')))
+      error = 'failed to locate a package.json file' + hint || chalk.gray(`in ${target}`);
+  }
 
   !error && config.backup && preparatory.unshift(backup);
 

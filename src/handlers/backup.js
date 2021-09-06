@@ -11,7 +11,7 @@ const backup = async (spinner, inputs) => {
     if (backup) {
       console.log();
       console.log(backups[backup].resolutions);
-    } else spinner.fail('could not find a saved backup for that project name');
+    } else spinner.fail('backup does not exist');
   } else
     Object.keys(backups).forEach(key => {
       console.log(

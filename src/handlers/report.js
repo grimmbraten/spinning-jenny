@@ -13,14 +13,7 @@ const report = (response, spinner, hint, target, { verbose }) => {
   const vulnerabilities = sum(data.vulnerabilities);
 
   if (vulnerabilities === 0)
-    return loader(
-      verbose,
-      spinner,
-      'succeed',
-      'modules are fully protected against known vulnerabilities',
-      '',
-      hint
-    );
+    return loader(verbose, spinner, 'succeed', 'all dependencies are secure', '', hint);
 
   const {
     vulnerabilities: { critical, high, moderate, low, info }
@@ -36,7 +29,7 @@ const report = (response, spinner, hint, target, { verbose }) => {
     verbose,
     spinner,
     'warn',
-    `identified ${colorSize(vulnerabilities, ' vulnerabilities')}`,
+    `detected ${colorSize(vulnerabilities, ' vulnerabilities')}`,
     '',
     hint
   );

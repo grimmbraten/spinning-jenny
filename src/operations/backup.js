@@ -4,18 +4,17 @@ const backup = async (spinner, hint, target, { verbose, ...config }) => {
   const backup = {};
   const step = stepLabel(config);
 
-  loader(verbose, spinner, 'start', 'searching for resolutions', step, hint);
+  loader(verbose, spinner, 'start', 'creating backup', step, hint);
 
   const resolutions = await read(target, 'package.json', 'resolutions');
 
-  if (!resolutions)
-    return loader(verbose, spinner, 'warn', 'could not find any resolutions', step, hint);
+  if (!resolutions) return loader(verbose, spinner, 'warn', 'skipped backup', step, hint);
 
   const project = target.split('/').pop();
   backup[project] = { resolutions, date: new Date().toString() };
   await write(__dirname, '../.backups.json', backup);
 
-  loader(verbose, spinner, 'succeed', 'successfully saved resolutions', step, hint);
+  loader(verbose, spinner, 'succeed', 'created backup', step, hint);
 };
 
 module.exports = {

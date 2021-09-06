@@ -18,7 +18,7 @@ const loadConfig = async () => {
   const config = await read(configDir, configFile);
 
   config.steps = { total: 0, completed: 0 };
-  config.getStep = () => chalk.gray(`[${config.steps.completed + 1}/${config.steps.total}] `);
+  config.getStep = () => chalk.gray(`${config.steps.completed + 1}/${config.steps.total} `);
 
   return config;
 };

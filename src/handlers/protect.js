@@ -8,16 +8,9 @@ const protect = async (response, spinner, hint, target, { verbose }) => {
   const vulnerabilities = sum(data.vulnerabilities);
 
   if (vulnerabilities === 0)
-    return loader(
-      verbose,
-      spinner,
-      'succeed',
-      'modules are fully protected against known vulnerabilities',
-      '',
-      hint
-    );
+    return loader(verbose, spinner, 'succeed', 'all dependencies are secure', '', hint);
 
-  loader(verbose, spinner, 'start', 'protecting against known vulnerabilities', '', hint);
+  loader(verbose, spinner, 'start', 'applying patches', '', hint);
 
   let resolutions = json
     .map(({ data, type }) => {
@@ -37,14 +30,7 @@ const protect = async (response, spinner, hint, target, { verbose }) => {
   resolutions = resolutions.filter(({ patched }) => patched !== '<0.0.0');
 
   if (resolutions.length === 0)
-    return loader(
-      verbose,
-      spinner,
-      'fail',
-      'failed to protect against all known vulnerabilities',
-      '',
-      hint
-    );
+    return loader(verbose, spinner, 'fail', 'patching failed', '', hint);
 
   resolutions.forEach(({ module, patched }) => {
     modules[module] = patched;
@@ -52,14 +38,7 @@ const protect = async (response, spinner, hint, target, { verbose }) => {
 
   await write(target, 'package.json', { resolutions: modules });
 
-  loader(
-    verbose,
-    spinner,
-    'succeed',
-    'successfully protected against known vulnerabilities',
-    '',
-    hint
-  );
+  loader(verbose, spinner, 'succeed', 'patched known vulnerabilities', '', hint);
 
   if (noPatch.length > 0)
     loader(

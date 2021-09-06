@@ -25,17 +25,13 @@ const advisories = (response, spinner, hint, target, { verbose }) => {
   const patches = unique.map(module => advisories.find(package => package.module === module));
   const patchCount = patches.length;
 
-  if (patchCount === 0)
-    return loader(verbose, spinner, 'fail', 'failed to analyze vulnerabilities', '', hint);
+  if (patchCount === 0) return loader(verbose, spinner, 'fail', 'analyze failed', '', hint);
 
   loader(
     verbose,
     spinner,
     'succeed',
-    `found advisories for ${colorSize(
-      patchCount,
-      ` module${patchCount > 1 ? 's' : ''}`
-    )} with known vulnerabilities`,
+    `located ${colorSize(patchCount, `${patchCount > 1 ? 'advisories' : 'advisory'}`)}`,
     '',
     hint
   );

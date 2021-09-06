@@ -69,8 +69,6 @@ const extractUpgradeOutcome = json => {
 const scannedDependencies = json =>
   json.filter(data => data.type === 'auditSummary')[0].data.totalDependencies;
 
-const resolutionCount = resolutions => Object.entries(resolutions).length;
-
 const isBooleanInput = value => (value === 'true' ? true : value === 'false' ? false : undefined);
 
 const read = (dir, file, property) =>
@@ -121,7 +119,6 @@ module.exports = {
   colorVariable,
   severityColor,
   isBooleanInput,
-  resolutionCount,
   extractAuditSummary,
   scannedDependencies,
   extractUpgradeOutcome

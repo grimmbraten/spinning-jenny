@@ -4,7 +4,7 @@ const { loader, stepLabel, parseJson, extractUpgradeOutcome } = require('../help
 const upgrade = async (spinner, hint, target, { verbose, pattern, ...config }) => {
   const step = stepLabel(config);
 
-  loader(verbose, spinner, 'start', 'upgrading packages', step, hint);
+  loader(verbose, spinner, 'start', 'upgrading dependencies', step, hint);
 
   const [success, response] = await execute(`yarn --cwd ${target} upgrade ${pattern} --json`);
 
@@ -14,7 +14,7 @@ const upgrade = async (spinner, hint, target, { verbose, pattern, ...config }) =
     if (!outcome) return undefined;
 
     loader(verbose, spinner, 'succeed', outcome, step, hint);
-  } else loader(verbose, spinner, 'fail', 'failed to upgrade packages', step, hint);
+  } else loader(verbose, spinner, 'fail', 'upgrade failed', step, hint);
 
   return success ? response : undefined;
 };

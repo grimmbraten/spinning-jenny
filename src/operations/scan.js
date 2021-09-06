@@ -17,7 +17,7 @@ const scan = async (spinner, hint, target, { verbose, ...config }) => {
       step,
       hint
     );
-  else loader(verbose, spinner, 'fail', 'failed to scan package.json', step, hint);
+  else loader(verbose, spinner, 'fail', 'scan failed', step, hint);
 
   return success ? response : undefined;
 };

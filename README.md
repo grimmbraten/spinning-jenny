@@ -1,7 +1,3 @@
-
-
-https://user-images.githubusercontent.com/79856585/131501311-4362dc12-4bf8-415c-a887-73c408e2f971.mp4
-
 A cli package.json resolution assistant that helps you with those pesky yarn audit vulnerabilities.
 
 ## Installation

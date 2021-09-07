@@ -77,10 +77,7 @@ const read = (dir, file, property) =>
       if (err) reject(err);
       resolve(property ? await json.get(property) : await json.get());
     });
-  }).catch(error => {
-    console.error(error);
-    return [false, error];
-  });
+  }).catch(error => console.error(error));
 
 const write = (dir, file, property) =>
   new Promise((resolve, reject) => {

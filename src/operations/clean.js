@@ -1,19 +1,16 @@
 const { read, remove, loader, stepLabel } = require('../helpers');
 
-const clean = (spinner, hint, target, { verbose, ...config }) => {
+const clean = async (spinner, hint, target, { verbose, ...config }) => {
   const step = stepLabel(config);
-
   loader(verbose, spinner, 'start', 'cleaning package.json', step, hint);
 
-  const [success, resolutions] = read(target, 'package.json', 'resolutions');
-
-  if (!success) return loader(verbose, spinner, 'fail', 'cleanup failed', step, hint);
+  const resolutions = await read(target, 'package.json', 'resolutions');
   if (!resolutions) return loader(verbose, spinner, 'warn', 'skipped cleanup', step, hint);
 
-  const response = remove(target, 'package.json', 'resolutions');
+  const response = await remove(target, 'package.json', 'resolutions');
+  if (!response) return loader(verbose, spinner, 'fail', 'cleanup failed', step, hint);
 
-  if (response) loader(verbose, spinner, 'succeed', 'cleaned package.json', step, hint);
-  else loader(verbose, spinner, 'fail', 'cleanup failed', step, hint);
+  loader(verbose, spinner, 'succeed', 'cleaned package.json', step, hint);
 };
 
 module.exports = {

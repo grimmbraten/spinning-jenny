@@ -31,7 +31,7 @@ const advisories = (response, spinner, hint, target, { verbose }) => {
     verbose,
     spinner,
     'succeed',
-    `located ${colorSize(patchCount, `${patchCount > 1 ? 'advisories' : 'advisory'}`)}`,
+    `located ${colorSize(patchCount, `${patchCount > 1 ? ' advisories' : ' advisory'}`)}`,
     '',
     hint
   );

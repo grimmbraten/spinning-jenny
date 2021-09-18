@@ -2,34 +2,21 @@
 
 const ora = require('ora');
 const { sequence } = require('all-aboard');
-const { loadConfig } = require('./config');
-const { controller } = require('./controller');
+
+const { load } = require('./config');
+const { interpret } = require('./controller');
 
 const [, , ...inputs] = process.argv;
 
 (async () => {
   const spinner = ora();
-  const config = await loadConfig();
+  const config = await load();
 
-  const { hint, error, target, special, handler, teardown, operation, preparatory } = controller(
-    inputs,
-    config
-  );
+  const { hint, target, functions, command } = interpret(inputs);
 
-  if (error) return spinner.fail(error);
-  else if (special) return special(spinner, inputs);
+  if (command) return command(spinner, inputs);
+  if (!functions) return;
 
-  config.steps.total = preparatory.length + teardown.length + (operation ? 1 : 0);
-
-  !config.verbose && spinner.start('working');
-
-  if (preparatory) await sequence(preparatory, [spinner, hint, target, config]);
-  if (!operation && !handler) return;
-  const response = await operation(spinner, hint, target, config);
-  if (!response) return spinner.fail('something went wrong, sorry about that');
-  await handler(response, spinner, hint, target, config);
-
-  if (teardown) await sequence(teardown, [spinner, hint, target, config]);
-
-  !config.verbose && spinner.succeed('completed without any issues');
+  config.steps.total = functions.length;
+  await sequence(functions, [spinner, hint, target, config]);
 })();

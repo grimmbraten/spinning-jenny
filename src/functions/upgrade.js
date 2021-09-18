@@ -1,8 +1,19 @@
-const { execute } = require('../shell');
+const chalk = require('chalk');
+const { execute } = require('../common');
 const { loader, stepLabel, parseJson, extractUpgradeOutcome } = require('../helpers');
 
-const upgrade = async (spinner, hint, target, { verbose, pattern, ...config }) => {
+const upgrade = async (spinner, hint, target, { verbose, pattern, frozen, ...config }) => {
   const step = stepLabel(config);
+
+  if (frozen)
+    return loader(
+      verbose,
+      spinner,
+      'warn',
+      'skipped install',
+      step,
+      `${hint} ${chalk.gray('[frozen: true]')}`
+    );
 
   loader(verbose, spinner, 'start', 'upgrading dependencies', step, hint);
 

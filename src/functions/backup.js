@@ -1,4 +1,5 @@
-const { read, write, loader, stepLabel } = require('../helpers');
+const { read, write } = require('../common');
+const { loader, stepLabel } = require('../helpers');
 
 const backup = async (spinner, hint, target, { verbose, ...config }) => {
   const backup = {};

@@ -1,8 +1,16 @@
 const chalk = require('chalk');
-const { sum, write, loader, parseJson, extractAuditSummary } = require('../helpers');
+const { write } = require('../common');
+const { audit } = require('../common');
+const { sum, loader, parseJson, extractAuditSummary, stepLabel } = require('../helpers');
 
-const protect = async (response, spinner, hint, target, { verbose }) => {
+const protect = async (spinner, hint, target, { verbose, ...config }) => {
   const modules = {};
+  const step = stepLabel(config);
+
+  const [success, response] = await audit(spinner, hint, target, verbose, step);
+
+  if (!success) return;
+
   const json = parseJson(response);
   const { data } = extractAuditSummary(json);
   const vulnerabilities = sum(data.vulnerabilities);

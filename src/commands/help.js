@@ -1,6 +1,8 @@
 const chalk = require('chalk');
 const { bin, name, description, version, repository } = require('../../package.json');
 
+const packageVersion = () => console.log(`\n${name} ${chalk.gray(version)}`);
+
 const help = (_, inputs) => {
   const alias = Object.keys(bin)[1];
   const trueFalse = `${chalk.green('true')} / ${chalk.red('false')}`;
@@ -78,5 +80,6 @@ const help = (_, inputs) => {
 };
 
 module.exports = {
-  help
+  help,
+  packageVersion
 };

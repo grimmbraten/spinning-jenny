@@ -1,7 +1,14 @@
 const chalk = require('chalk');
-const { loader, colorSize, parseJson, severityColor } = require('../helpers');
+const { audit } = require('../common');
+const { loader, stepLabel, colorSize, parseJson, severityColor } = require('../helpers');
 
-const advisories = (response, spinner, hint, target, { verbose }) => {
+const advise = async (spinner, hint, target, { verbose, ...config }) => {
+  const step = stepLabel(config);
+
+  const [success, response] = await audit(spinner, hint, target, verbose, step);
+
+  if (!success) return;
+
   const json = parseJson(response);
 
   loader(verbose, spinner, 'start', 'analyzing vulnerabilities', '', hint);
@@ -47,8 +54,10 @@ const advisories = (response, spinner, hint, target, { verbose }) => {
       )}\n${chalk.gray(patch.url)}`
     );
   });
+
+  console.log();
 };
 
 module.exports = {
-  advisories
+  advise
 };

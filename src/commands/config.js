@@ -1,8 +1,9 @@
 const chalk = require('chalk');
 
-const { read, write, isBooleanInput, colorVariable } = require('./helpers');
+const { load, edit } = require('../config');
+const { isBooleanInput, colorVariable } = require('../helpers');
 
-const Flags = {
+const properties = {
   label: ['--label', 'label', '-l'],
   pattern: ['--pattern', 'pattern', '-p'],
   backup: ['--backup', 'backup', '-b'],
@@ -10,21 +11,29 @@ const Flags = {
   verbose: ['--verbose', 'verbose', '-v']
 };
 
-const configDir = __dirname;
-const configFile = '.config.json';
 const trueFalse = `${chalk.green('true')} / ${chalk.red('false')}`;
 
-const loadConfig = async () => {
-  const config = await read(configDir, configFile);
+const view = async spinner => {
+  const config = await manage(spinner);
 
-  config.steps = { total: 0, completed: 0 };
-  config.getStep = () => chalk.gray(`${config.steps.completed + 1}/${config.steps.total} `);
+  if (config) {
+    const keys = Object.keys(config).filter(key => key !== 'steps' && key !== 'getStep');
 
-  return config;
+    console.log();
+    keys.forEach(key => {
+      console.log(`${key}: ` + colorVariable(config[key]));
+    });
+
+    console.log(
+      chalk.gray(
+        '\nfor more information, please refer to the documentation\nhttps://github.com/grimmbraten/spinning-jenny#configuration'
+      )
+    );
+  }
 };
 
-const editConfig = async (spinner, inputs) => {
-  const config = await loadConfig();
+const manage = async (spinner, inputs) => {
+  const config = await load();
 
   if (!inputs) return config;
   inputs = inputs.slice(2);
@@ -36,31 +45,31 @@ const editConfig = async (spinner, inputs) => {
     if (index % 2 === 1) return;
     spinner.start('modifying configuration');
 
-    if (Flags.verbose.includes(input)) {
+    if (properties.verbose.includes(input)) {
       const value = isBooleanInput(inputs[index + 1]);
       if (value === undefined) return spinner.fail(`verbose can only be: ${trueFalse}`);
 
       config.verbose = value;
       spinner.succeed('verbose: ' + colorVariable(value));
-    } else if (Flags.frozen.includes(input)) {
+    } else if (properties.frozen.includes(input)) {
       const value = isBooleanInput(inputs[index + 1]);
       if (value === undefined) return spinner.fail(`frozen can only be: ${trueFalse}`);
 
       config.frozen = value;
       spinner.succeed('frozen: ' + colorVariable(value));
-    } else if (Flags.backup.includes(input)) {
+    } else if (properties.backup.includes(input)) {
       const value = isBooleanInput(inputs[index + 1]);
       if (value === undefined) return spinner.fail(`backup can only be: ${trueFalse}`);
 
       config.backup = value;
       spinner.succeed('backup: ' + colorVariable(value));
-    } else if (Flags.label.includes(input)) {
+    } else if (properties.label.includes(input)) {
       const value = isBooleanInput(inputs[index + 1]);
       if (value === undefined) return spinner.fail(`label can only be: ${trueFalse}`);
 
       config.label = value;
       spinner.succeed('label: ' + colorVariable(value));
-    } else if (Flags.pattern.includes(input)) {
+    } else if (properties.pattern.includes(input)) {
       let value = inputs[index + 1];
       if (!value) return spinner.fail('please pass a value');
 
@@ -84,10 +93,10 @@ const editConfig = async (spinner, inputs) => {
     console.log(`${key}: ` + colorVariable(config[key]));
   });
 
-  await write(configDir, configFile, config);
+  await edit(config);
 };
 
 module.exports = {
-  editConfig,
-  loadConfig
+  view,
+  manage
 };

@@ -1,4 +1,5 @@
-const { read, remove, loader, stepLabel } = require('../helpers');
+const { read, remove } = require('../common');
+const { loader, stepLabel } = require('../helpers');
 
 const clean = async (spinner, hint, target, { verbose, ...config }) => {
   const step = stepLabel(config);

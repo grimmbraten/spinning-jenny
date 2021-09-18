@@ -1,9 +1,9 @@
 const chalk = require('chalk');
-const { read } = require('../helpers');
+const { read } = require('../common');
 
 const backup = async (spinner, inputs) => {
   const project = inputs[2];
-  const backups = await read(__dirname, '../.backups.json');
+  const backups = await read(__dirname, '.resolutions.json');
 
   if (project) {
     const backup = Object.keys(backups).find(key => key === project);

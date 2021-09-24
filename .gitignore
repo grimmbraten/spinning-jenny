@@ -1,3 +1,5 @@
-reports
 .DS_Store
+
+reports
+coverage
 node_modules

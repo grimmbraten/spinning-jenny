@@ -1,6 +1,8 @@
 tests
 assets
 reports
+coverage
+
 .github
 .eslintrc
 .prettierrc

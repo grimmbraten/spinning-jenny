@@ -16,14 +16,20 @@ module.exports = {
   protect,
   advise,
   upgrade,
+  actions: {
+    advise: ['advise', '-a'],
+    clean: ['clean', '-c'],
+    install: ['install', '-i'],
+    protect: ['protect', '-p'],
+    restore: ['restore', '-r'],
+    scan: ['scan', '-s'],
+    upgrade: ['upgrade', '-u']
+  },
   flags: {
-    advisories: ['--advisories', '-a'],
     backup: ['--backup', '-b'],
-    clean: ['--clean', '-c'],
     directory: ['--directory', '-d'],
-    install: ['--install', '-i'],
-    protect: ['--protect', '-p'],
-    scan: ['--scan', '-s'],
-    upgrade: ['--upgrade', '-u']
+    frozen: ['--frozen', '-f'],
+    label: ['--label', '-l'],
+    verbose: ['--verbose', '-v']
   }
 };

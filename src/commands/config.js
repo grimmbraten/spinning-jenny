@@ -4,11 +4,11 @@ const { load, edit } = require('../config');
 const { isBooleanInput, colorVariable } = require('../helpers');
 
 const properties = {
-  label: ['--label', 'label', '-l'],
-  pattern: ['--pattern', 'pattern', '-p'],
-  backup: ['--backup', 'backup', '-b'],
-  frozen: ['--frozen', 'frozen', '-f'],
-  verbose: ['--verbose', 'verbose', '-v']
+  label: 'label',
+  pattern: 'pattern',
+  backup: 'backup',
+  frozen: 'frozen',
+  verbose: 'verbose'
 };
 
 const trueFalse = `${chalk.green('true')} / ${chalk.red('false')}`;
@@ -45,38 +45,37 @@ const manage = async (spinner, inputs) => {
     if (index % 2 === 1) return;
     spinner.start('modifying configuration');
 
-    if (properties.verbose.includes(input)) {
+    if (properties.verbose === input) {
       const value = isBooleanInput(inputs[index + 1]);
       if (value === undefined) return spinner.fail(`verbose can only be: ${trueFalse}`);
 
       config.verbose = value;
       spinner.succeed('verbose: ' + colorVariable(value));
-    } else if (properties.frozen.includes(input)) {
+    } else if (properties.frozen === input) {
       const value = isBooleanInput(inputs[index + 1]);
       if (value === undefined) return spinner.fail(`frozen can only be: ${trueFalse}`);
 
       config.frozen = value;
       spinner.succeed('frozen: ' + colorVariable(value));
-    } else if (properties.backup.includes(input)) {
+    } else if (properties.backup === input) {
       const value = isBooleanInput(inputs[index + 1]);
       if (value === undefined) return spinner.fail(`backup can only be: ${trueFalse}`);
 
       config.backup = value;
       spinner.succeed('backup: ' + colorVariable(value));
-    } else if (properties.label.includes(input)) {
+    } else if (properties.label === input) {
       const value = isBooleanInput(inputs[index + 1]);
       if (value === undefined) return spinner.fail(`label can only be: ${trueFalse}`);
 
       config.label = value;
       spinner.succeed('label: ' + colorVariable(value));
-    } else if (properties.pattern.includes(input)) {
+    } else if (properties.pattern === input) {
       let value = inputs[index + 1];
       if (!value) return spinner.fail('please pass a value');
 
       value = value.replace('-', '');
 
-      const allowed = ['exact', 'caret', 'tilde'];
-      if (!allowed.includes(value))
+      if (!['exact', 'caret', 'tilde'].includes(value))
         return spinner.fail(
           `pattern can only be: ${chalk.gray('--exact')} / ${chalk.gray('--tilde')} / ${chalk.gray(
             '--caret'

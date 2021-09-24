@@ -16,8 +16,8 @@ const getCommand = inputs => {
   else if (commands.repository === inputs[0]) return repository;
   else if (commands.help === inputs[0]) return help;
   else if (commands.config === inputs[0])
-    if (inputs[1] === 'set') return manage;
-    else return view;
+    if (!inputs[1]) return view;
+    else return manage;
 
   return undefined;
 };

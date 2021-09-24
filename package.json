@@ -7,8 +7,8 @@
     "node": ">= 8.5.0"
   },
   "scripts": {
-    "test": "jest",
-    "prepack": "yarn check:eslint",
+    "prepack": "yarn check:eslint && yarn check:jest",
+    "check:jest": "jest",
     "check:eslint": "yarn eslint .",
     "report:eslint": "yarn eslint . --output-file ./reports/eslint.html --format html"
   },

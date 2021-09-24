@@ -1,7 +1,7 @@
-const ora = require('ora');
 const { scan } = require('../../src/functions');
 
-const target = `${__dirname}/../project/`;
+const errorDir = `${__dirname}/../project/error/`;
+const secureDir = `${__dirname}/../project/secure/`;
 
 const config = {
   label: false,
@@ -12,8 +12,18 @@ const config = {
 };
 
 describe('scan()', () => {
-  it('find expected vulnerabilities in listed depedencies', async () => {
-    const response = await scan(ora(), '', target, config);
-    expect(response).toEqual('detected 339 vulnerabilities');
-  }, 15000);
+  it('fails if no target dir containing a package.json is provided', async () => {
+    const response = await scan('', '', '', config);
+    expect(response).toEqual('failed to extract audit summary');
+  });
+
+  it('finds expected vulnerabilities in listed depedencies', async () => {
+    const response = await scan('', '', errorDir, config);
+    expect(response).toContain('339');
+  });
+
+  it('does not find any vulnerabilities in listed depedencies', async () => {
+    const response = await scan('', '', secureDir, config);
+    expect(response).toEqual('all dependencies are secure');
+  });
 });

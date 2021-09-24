@@ -22,24 +22,16 @@ const scan = async (spinner, hint, target, { verbose, ...config }) => {
 
   const vulnerabilities = sum(summary.data.vulnerabilities);
 
-  if (vulnerabilities === 0)
-    return loader(
-      verbose,
-      spinner,
-      'succeed',
-      'all dependencies are secure',
-      step,
-      `${chalk.gray(` scanned ${scannedDependencies(parseJson(response))} dependencies`)}${hint}`
-    );
-  else
-    return loader(
-      verbose,
-      spinner,
-      'error',
-      `detected ${colorSize(vulnerabilities, ' vulnerabilities')}`,
-      step,
-      `${chalk.gray(` scanned ${scannedDependencies(parseJson(response))} dependencies`)}${hint}`
-    );
+  return loader(
+    verbose,
+    spinner,
+    vulnerabilities === 0 ? 'succeed' : 'error',
+    vulnerabilities === 0
+      ? 'all dependencies are secure'
+      : `detected ${colorSize(vulnerabilities, ' vulnerabilities')}`,
+    step,
+    `${chalk.gray(` scanned ${scannedDependencies(parseJson(response))} dependencies`)}${hint}`
+  );
 };
 
 module.exports = {

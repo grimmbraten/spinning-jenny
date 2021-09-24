@@ -17,16 +17,13 @@ const scan = async (spinner, hint, target, { verbose, ...config }) => {
   const [success, response] = await audit(spinner, hint, target, verbose, step);
   if (!success) return response || 'failed to audit package.json';
 
-  const parsedData = parseJson(response);
-  if (!parsedData) return 'failed to parse data';
-
-  const summary = extractAuditSummary(parsedData);
+  const summary = extractAuditSummary(parseJson(response));
   if (!summary) return 'failed to extract audit summary';
 
   const vulnerabilities = sum(summary.data.vulnerabilities);
 
-  if (vulnerabilities === 0) {
-    loader(
+  if (vulnerabilities === 0)
+    return loader(
       verbose,
       spinner,
       'succeed',
@@ -34,9 +31,8 @@ const scan = async (spinner, hint, target, { verbose, ...config }) => {
       step,
       `${chalk.gray(` scanned ${scannedDependencies(parseJson(response))} dependencies`)}${hint}`
     );
-    return 'all dependencies are secure';
-  } else {
-    loader(
+  else
+    return loader(
       verbose,
       spinner,
       'error',
@@ -44,8 +40,6 @@ const scan = async (spinner, hint, target, { verbose, ...config }) => {
       step,
       `${chalk.gray(` scanned ${scannedDependencies(parseJson(response))} dependencies`)}${hint}`
     );
-    return `detected ${vulnerabilities} vulnerabilities`;
-  }
 };
 
 module.exports = {

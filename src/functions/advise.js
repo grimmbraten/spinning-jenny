@@ -27,9 +27,9 @@ const advise = async (spinner, hint, target, { verbose, ...config }) => {
     })
     .filter(data => data);
 
-  const unique = [...new Set(advisories.map(package => package.module))];
+  const unique = [...new Set(advisories.map(advisory => advisory.module))];
 
-  const patches = unique.map(module => advisories.find(package => package.module === module));
+  const patches = unique.map(module => advisories.find(advisory => advisory.module === module));
   const patchCount = patches.length;
 
   if (patchCount === 0) return loader(verbose, spinner, 'fail', 'analyze failed', '', hint);

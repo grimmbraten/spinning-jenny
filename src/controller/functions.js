@@ -55,10 +55,7 @@ const getFunctions = (inputs, config) => {
     else if (actions.install.includes(input)) functions.push(install);
     else if (actions.upgrade.includes(input)) functions.push(upgrade);
     else if (actions.protect.includes(input)) functions.push(protect);
-    else {
-      suggestFunction(inputs, input);
-      return { functions: null };
-    }
+    else suggestFunction(inputs, input);
   });
 
   config.backup && functions.unshift(backup);
@@ -76,13 +73,13 @@ const suggestFunction = (inputs, input) => {
   ).search(input);
 
   console.log(
-    `\nsyntax error\nspinning-jenny ${inputs
-      .join()
-      .replace(input, chalk.red(input))}\n\nsuggestions:`
+    `\nsyntax error\nspinning-jenny ${inputs.join(' ').replace(input, chalk.red(input))}${
+      fuzzy.length > 0 ? '\n\nsuggestions:' : '\n'
+    }`
   );
 
   fuzzy.forEach(suggestion =>
-    console.log(`spinning-jenny ${inputs.join().replace(input, chalk.green(suggestion.item))}`)
+    console.log(`spinning-jenny ${inputs.join(' ').replace(input, chalk.green(suggestion.item))}`)
   );
 };
 

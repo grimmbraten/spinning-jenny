@@ -10,13 +10,12 @@ const [, , ...inputs] = process.argv;
 
 (async () => {
   const spinner = ora();
-  const config = await load();
+  const fileConfig = await load();
 
-  const { hint, target, functions, command } = interpret(inputs);
+  const { hint, target, config, command, functions } = interpret(inputs, fileConfig);
 
   if (command) return command(spinner, inputs);
-  if (!functions) return;
 
-  config.steps.total = functions.length;
-  await sequence(functions, [spinner, hint, target, config]);
+  // eslint-disable-next-line no-extra-parens
+  functions && (await sequence(functions, [spinner, hint, target, config]));
 })();

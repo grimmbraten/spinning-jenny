@@ -2,11 +2,6 @@
   "name": "insecure-dependencies",
   "description": "mocked package.json file",
   "license": "MIT",
-  "author": "Erik Grimmbråten",
-  "version": "1.0.0",
-  "engines": {
-    "node": ">= 8.5.0"
-  },
   "dependencies": {
     "@apollo/client": "^3.3.12",
     "@loadable/component": "^5.14.1",
@@ -56,11 +51,6 @@
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^3.11.2",
     "webpack-merge": "^5.7.3"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
   },
   "resolutions": {
     "postcss": ">=7.0.36 <8.0.0 || >=8.2.10",

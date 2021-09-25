@@ -6,8 +6,7 @@ const advise = async (spinner, hint, target, { verbose, ...config }) => {
   const step = stepLabel(config);
 
   const [success, response] = await audit(spinner, hint, target, verbose, step);
-
-  if (!success) return;
+  if (!success) return response;
 
   const json = parseJson(response);
 

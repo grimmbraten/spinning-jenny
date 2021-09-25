@@ -15,7 +15,7 @@ const scan = async (spinner, hint, target, { verbose, ...config }) => {
   const step = stepLabel(config);
 
   const [success, response] = await audit(spinner, hint, target, verbose, step);
-  if (!success) return response || 'failed to audit package.json';
+  if (!success) return response;
 
   const summary = extractAuditSummary(parseJson(response));
   if (!summary) return 'failed to extract audit summary';

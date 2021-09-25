@@ -1,15 +1,5 @@
 const { scan } = require('../../src/functions');
-
-const errorDir = `${__dirname}/../project/error/`;
-const secureDir = `${__dirname}/../project/secure/`;
-
-const config = {
-  label: false,
-  backup: false,
-  frozen: false,
-  verbose: false,
-  pattern: '--caret'
-};
+const { errorDir, secureDir, config } = require('../constants');
 
 describe('scan()', () => {
   it('fails if no target dir containing a package.json is provided', async () => {

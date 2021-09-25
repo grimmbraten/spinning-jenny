@@ -15,7 +15,7 @@ const backup = async (spinner, hint, target, { verbose, ...config }) => {
   backup[project] = { resolutions, date: new Date().toString() };
   await write(__dirname, '../.backups.json', backup);
 
-  loader(verbose, spinner, 'succeed', 'created backup', step, hint);
+  return loader(verbose, spinner, 'succeed', 'created backup', step, hint);
 };
 
 module.exports = {

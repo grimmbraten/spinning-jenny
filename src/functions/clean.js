@@ -11,7 +11,7 @@ const clean = async (spinner, hint, target, { verbose, ...config }) => {
   const response = await remove(target, 'package.json', 'resolutions');
   if (!response) return loader(verbose, spinner, 'fail', 'cleanup failed', step, hint);
 
-  loader(verbose, spinner, 'succeed', 'cleaned package.json', step, hint);
+  return loader(verbose, spinner, 'succeed', 'cleaned package.json', step, hint);
 };
 
 module.exports = {

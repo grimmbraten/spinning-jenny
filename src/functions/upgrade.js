@@ -10,7 +10,7 @@ const upgrade = async (spinner, hint, target, { verbose, pattern, frozen, ...con
       verbose,
       spinner,
       'warn',
-      'skipped install',
+      'skipped upgrade',
       step,
       `${hint} ${chalk.gray('[frozen: true]')}`
     );
@@ -19,15 +19,14 @@ const upgrade = async (spinner, hint, target, { verbose, pattern, frozen, ...con
 
   const [success, response] = await execute(`yarn --cwd ${target} upgrade ${pattern} --json`);
 
-  if (success) {
-    const outcome = extractUpgradeOutcome(parseJson(response));
-
-    if (!outcome) return undefined;
-
-    loader(verbose, spinner, 'succeed', outcome, step, hint);
-  } else loader(verbose, spinner, 'fail', 'upgrade failed', step, hint);
-
-  return success ? response : undefined;
+  return loader(
+    verbose,
+    spinner,
+    'succeed',
+    success ? extractUpgradeOutcome(parseJson(response)) || 'upgrade failed' : 'upgrade failed',
+    step,
+    hint
+  );
 };
 
 module.exports = {

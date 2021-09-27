@@ -17,12 +17,16 @@ const install = async (spinner, hint, target, { verbose, frozen, ...config }) =>
 
   loader(verbose, spinner, 'start', 'installing dependencies', step, hint);
 
-  const [success, response] = await execute(`yarn --cwd ${target} install`);
+  const [success] = await execute(`yarn --cwd ${target} install`);
 
-  if (success) loader(verbose, spinner, 'succeed', 'installed dependencies', step, hint);
-  else loader(verbose, spinner, 'fail', 'installation failed', step, hint);
-
-  return success ? response : undefined;
+  return loader(
+    verbose,
+    spinner,
+    success ? 'succeed' : 'fail',
+    success ? 'installed dependencies' : 'installation failed',
+    step,
+    hint
+  );
 };
 
 module.exports = {

@@ -4,13 +4,12 @@ const { loader, stepLabel, colorSize, parseJson, severityColor } = require('../h
 
 const advise = async (spinner, hint, target, { verbose, ...config }) => {
   const step = stepLabel(config);
+  loader(verbose, spinner, 'start', 'analyzing vulnerabilities', '', hint);
 
   const [success, response] = await audit(spinner, hint, target, verbose, step);
-  if (!success) return response;
+  if (!success) return;
 
   const json = parseJson(response);
-
-  loader(verbose, spinner, 'start', 'analyzing vulnerabilities', '', hint);
 
   const advisories = json
     .map(({ data, type }) => {
@@ -31,16 +30,7 @@ const advise = async (spinner, hint, target, { verbose, ...config }) => {
   const patches = unique.map(module => advisories.find(advisory => advisory.module === module));
   const patchCount = patches.length;
 
-  if (patchCount === 0) return loader(verbose, spinner, 'fail', 'analyze failed', '', hint);
-
-  loader(
-    verbose,
-    spinner,
-    'succeed',
-    `located ${colorSize(patchCount, `${patchCount > 1 ? ' advisories' : ' advisory'}`)}`,
-    '',
-    hint
-  );
+  if (patchCount === 0) return loader(verbose, spinner, 'warn', 'skipped advise', '', hint);
 
   patches.forEach(patch => {
     console.log(
@@ -55,6 +45,15 @@ const advise = async (spinner, hint, target, { verbose, ...config }) => {
   });
 
   console.log();
+
+  return loader(
+    verbose,
+    spinner,
+    'succeed',
+    `located ${colorSize(patchCount, `${patchCount > 1 ? ' advisories' : ' advisory'}`)}`,
+    '',
+    hint
+  );
 };
 
 module.exports = {

@@ -1,7 +1,5 @@
 module.exports = {
   target: 'mocked/target/directory/path',
-  errorDir: `${__dirname}/../project/error/`,
-  secureDir: `${__dirname}/../project/secure/`,
   config: {
     label: false,
     backup: false,

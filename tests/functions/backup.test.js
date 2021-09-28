@@ -1,11 +1,10 @@
 jest.mock('../../src/common');
 
 const { backup } = require('../../src/functions');
-const { errorDir, config } = require('../constants');
+const { target, config } = require('../constants');
 
 const { read, write } = require('../../src/common');
 
-const target = 'target';
 const file = 'package.json';
 const property = 'resolutions';
 

@@ -1,6 +1,4 @@
-const chalk = require('chalk');
-const { write } = require('../common');
-const { audit } = require('../common');
+const { write, audit } = require('../common');
 const { sum, loader, parseJson, extractAuditSummary, stepLabel } = require('../helpers');
 
 const protect = async (spinner, hint, target, { verbose, ...config }) => {
@@ -8,7 +6,6 @@ const protect = async (spinner, hint, target, { verbose, ...config }) => {
   const step = stepLabel(config);
 
   const [success, response] = await audit(spinner, hint, target, verbose, step);
-
   if (!success) return;
 
   const json = parseJson(response);
@@ -34,7 +31,6 @@ const protect = async (spinner, hint, target, { verbose, ...config }) => {
     })
     .filter(data => data);
 
-  const noPatch = resolutions.filter(({ patched }) => patched === '<0.0.0');
   resolutions = resolutions.filter(({ patched }) => patched !== '<0.0.0');
 
   if (resolutions.length === 0)
@@ -46,21 +42,7 @@ const protect = async (spinner, hint, target, { verbose, ...config }) => {
 
   await write(target, 'package.json', { resolutions: modules });
 
-  loader(verbose, spinner, 'succeed', 'patched known vulnerabilities', '', hint);
-
-  if (noPatch.length > 0)
-    loader(
-      verbose,
-      spinner,
-      'succeed',
-      `found ${noPatch.length} module${
-        noPatch.length > 1 ? 's' : ''
-      } without a patch\n\n${chalk.underline(
-        'recommended actions:'
-      )}\n\nspinning-jenny --advisories${target ? ` --directory ${target}` : ''}`,
-      '',
-      ''
-    );
+  return loader(verbose, spinner, 'succeed', 'patched known vulnerabilities', '', hint);
 };
 
 module.exports = {

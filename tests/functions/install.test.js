@@ -11,16 +11,16 @@ describe('install()', () => {
     jest.clearAllMocks();
   });
 
-  it('skips install if frozen config property is true', async () => {
+  it('skips if config frozen is true', async () => {
     expect(await run({ ...config, frozen: true })).toEqual('skipped install');
   });
 
-  it('fails if execute functions respondes with a success false', async () => {
+  it('fails if installation encountered an error', async () => {
     execute.mockImplementationOnce(() => [false]);
     expect(await run()).toEqual('installation failed');
   });
 
-  it('succeeds if everything is correct', async () => {
+  it('succeeds if installation completes without any issues', async () => {
     execute.mockImplementationOnce(() => [true]);
     expect(await run()).toEqual('installed dependencies');
   });

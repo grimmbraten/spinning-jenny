@@ -1,14 +1,15 @@
 const chalk = require('chalk');
 const { audit } = require('../common');
-const { loader, stepLabel, colorSize, parseJson, severityColor } = require('../helpers');
+const { loader, stepLabel, parseJson, severityColor } = require('../helpers');
 
 const advise = async (spinner, hint, target, { verbose, ...config }) => {
+  let auditAdvisory = '';
   const step = stepLabel(config);
 
   const [success, response] = await audit(spinner, hint, target, verbose, step);
-  if (!success) return;
+  if (!success) return loader(verbose, spinner, 'fail', 'scan failed', step, hint);
 
-  loader(verbose, spinner, 'start', 'analyzing vulnerabilities', '', hint);
+  loader(verbose, spinner, 'text', 'analyzing vulnerabilities', step, hint);
 
   const json = parseJson(response);
 
@@ -34,24 +35,20 @@ const advise = async (spinner, hint, target, { verbose, ...config }) => {
   if (patchCount === 0) return loader(verbose, spinner, 'warn', 'skipped advise', '', hint);
 
   patches.forEach(patch => {
-    console.log(
-      `\n${patch.module}\npatched: ${
-        patch.patched !== '<0.0.0'
-          ? `${chalk.green('true')} ${chalk.gray(`${patch.version}`)}`
-          : chalk.red('false')
-      }\nvulnerability: ${severityColor(patch.severity)} ${chalk.gray(
-        patch.title.toLowerCase()
-      )}\n${chalk.gray(patch.url)}`
-    );
+    auditAdvisory += `\n\n${patch.module}\npatched: ${
+      patch.patched !== '<0.0.0'
+        ? `${chalk.green('true')} ${chalk.gray(`${patch.version}`)}`
+        : chalk.red('false')
+    }\nvulnerability: ${severityColor(patch.severity)} ${chalk.gray(
+      patch.title.toLowerCase()
+    )}\n${chalk.gray(patch.url)}`;
   });
-
-  console.log();
 
   return loader(
     verbose,
     spinner,
     'succeed',
-    `located ${colorSize(patchCount, `${patchCount > 1 ? ' advisories' : ' advisory'}`)}`,
+    `located ${patchCount} ${patchCount > 1 ? 'advisories' : 'advisory'}` + auditAdvisory,
     '',
     hint
   );

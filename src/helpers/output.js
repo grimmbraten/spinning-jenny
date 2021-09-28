@@ -1,5 +1,8 @@
 const loader = (verbose, spinner, action, message, step, hint) => {
-  verbose && spinner[action](step + message + hint);
+  if (verbose)
+    if (action === 'text') spinner.text = step + message + hint;
+    else spinner[action](step + message + hint);
+
   return message;
 };
 

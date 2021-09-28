@@ -1,40 +1,42 @@
 jest.mock('../../src/common');
 
 const { backup } = require('../../src/functions');
-const { errorDir, secureDir, config } = require('../constants');
+const { errorDir, config } = require('../constants');
 
 const { read, write } = require('../../src/common');
+
+const target = 'target';
+const file = 'package.json';
+const property = 'resolutions';
 
 describe('backup()', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('skips backup if backup config property is false', async () => {
-    const response = await backup('', '', secureDir, config);
+  it('skips if config backup property is false', async () => {
+    const response = await backup(undefined, undefined, undefined, { ...config, backup: false });
+    expect(write).not.toHaveBeenCalled();
     expect(response).toEqual('skipped backup');
   });
 
   it('skips backup if no resolutions exits in package.json', async () => {
     read.mockImplementationOnce(() => undefined);
-    const response = await backup('', '', secureDir, { ...config, backup: true });
+    const response = await backup(undefined, undefined, target, { ...config, backup: true });
 
     expect(read).toHaveBeenCalledTimes(1);
-    expect(read).toHaveBeenCalledWith(secureDir, 'package.json', 'resolutions');
-
+    expect(read).toHaveBeenCalledWith(target, file, property);
     expect(write).not.toHaveBeenCalled();
     expect(response).toEqual('skipped backup');
   });
 
   it('creates backup if resolutions exits in package.json', async () => {
-    read.mockImplementationOnce(() => 'mocked resolutions');
-    const response = await backup('', '', errorDir, { ...config, backup: true });
+    read.mockImplementationOnce(() => 'mocked');
+    const response = await backup(undefined, undefined, target, { ...config, backup: true });
 
     expect(read).toHaveBeenCalledTimes(1);
-    expect(read).toHaveBeenCalledWith(errorDir, 'package.json', 'resolutions');
-
+    expect(read).toHaveBeenCalledWith(target, file, property);
     expect(write).toHaveBeenCalledTimes(1);
-    expect(read).toHaveBeenCalledWith(errorDir, 'package.json', 'resolutions');
     expect(response).toEqual('created backup');
   });
 });

@@ -17,7 +17,7 @@ const execute = command =>
       }
     );
   }).catch(error => {
-    console.log(`\n${colorError(error)}\n`);
+    console.log(`\n${colorError(error.message)}\n`);
     return [false, error];
   });
 

@@ -12,7 +12,7 @@ const restore = async (spinner, hint, target, { verbose, ...config }) => {
 
   await write(target, 'package.json', { resolutions });
 
-  loader(verbose, spinner, 'succeed', 'restored package.json', step, hint);
+  return loader(verbose, spinner, 'succeed', 'restored resolutions', step, hint);
 };
 
 module.exports = {

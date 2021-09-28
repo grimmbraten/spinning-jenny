@@ -13,7 +13,7 @@ const backup = async (spinner, hint, target, { verbose, ...config }) => {
 
   const project = target.split('/').pop();
   backup[project] = { resolutions, date: new Date().toString() };
-  await write(__dirname, '../.backups.json', backup);
+  await write(__dirname + '/../backup/', '.resolutions.json', backup);
 
   return loader(verbose, spinner, 'succeed', 'created backup', step, hint);
 };

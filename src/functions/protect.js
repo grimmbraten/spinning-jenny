@@ -6,7 +6,7 @@ const protect = async (spinner, hint, target, { verbose, ...config }) => {
   const step = stepLabel(config);
 
   const [success, response] = await audit(spinner, hint, target, verbose, step);
-  if (!success) return;
+  if (!success) return loader(verbose, spinner, 'fail', 'scan failed', step, hint);
 
   const json = parseJson(response);
   const { data } = extractAuditSummary(json);

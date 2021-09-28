@@ -1,19 +1,32 @@
+jest.mock('../../src/common/audit');
+jest.mock('../../src/helpers/data');
+const { audit } = require('../../src/common/audit');
+const { extractAuditSummary, sum } = require('../../src/helpers/data');
+
 const { scan } = require('../../src/functions');
-const { errorDir, secureDir, config } = require('../constants');
+const { target, config, mockedAuditSummary } = require('../constants');
+
+const run = async () => await scan(undefined, undefined, target, config);
 
 describe('scan()', () => {
-  it('fails if no target dir containing a package.json is provided', async () => {
-    const response = await scan('', '', '', config);
-    expect(response).toEqual('failed to extract audit summary');
+  it('fails if audit scan is unsuccessful', async () => {
+    audit.mockImplementationOnce(() => [false]);
+    expect(await run()).toEqual('scan failed');
   });
 
-  it('finds expected vulnerabilities in listed depedencies', async () => {
-    const response = await scan('', '', errorDir, config);
-    expect(response).toContain('339');
+  it('fails if one or more vulnerabilities are found', async () => {
+    audit.mockImplementationOnce(() => [true]);
+    extractAuditSummary.mockImplementationOnce(() => mockedAuditSummary);
+    sum.mockImplementationOnce(() => 3);
+
+    expect(await run()).toEqual('detected 3 vulnerabilities');
   });
 
-  it('does not find any vulnerabilities in listed depedencies', async () => {
-    const response = await scan('', '', secureDir, config);
-    expect(response).toEqual('all dependencies are secure');
+  it('succeeds if no vulnerabilities are found', async () => {
+    audit.mockImplementationOnce(() => [true]);
+    extractAuditSummary.mockImplementationOnce(() => mockedAuditSummary);
+    sum.mockImplementationOnce(() => 0);
+
+    expect(await run()).toEqual('all dependencies are secure');
   });
 });

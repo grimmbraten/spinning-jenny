@@ -14,6 +14,12 @@ module.exports = {
     package: '^0.7.0',
     dependency: '^1.1.10'
   },
+  mockedAuditSummary: {
+    type: 'auditSummary',
+    data: {
+      vulnerabilities: { info: 0, low: 1, high: 2 }
+    }
+  },
   mockedAuditAdvisory: {
     type: 'auditAdvisory',
     data: {

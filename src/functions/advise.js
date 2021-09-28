@@ -4,10 +4,11 @@ const { loader, stepLabel, colorSize, parseJson, severityColor } = require('../h
 
 const advise = async (spinner, hint, target, { verbose, ...config }) => {
   const step = stepLabel(config);
-  loader(verbose, spinner, 'start', 'analyzing vulnerabilities', '', hint);
 
   const [success, response] = await audit(spinner, hint, target, verbose, step);
   if (!success) return;
+
+  loader(verbose, spinner, 'start', 'analyzing vulnerabilities', '', hint);
 
   const json = parseJson(response);
 

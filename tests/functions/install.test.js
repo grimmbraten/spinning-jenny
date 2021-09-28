@@ -1,28 +1,27 @@
 jest.mock('../../src/common');
-jest.mock('../../src/helpers/data');
-
-const { install } = require('../../src/functions');
-const { errorDir, secureDir, config } = require('../constants');
-
 const { execute } = require('../../src/common');
 
+const { config } = require('../constants');
+const { install } = require('../../src/functions');
+
+const run = async (conf = config) => await install(undefined, undefined, undefined, conf);
+
 describe('install()', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('skips install if frozen config property is true', async () => {
-    const response = await install('', '', secureDir, { ...config, frozen: true });
-    expect(response).toEqual('skipped install');
+    expect(await run({ ...config, frozen: true })).toEqual('skipped install');
   });
 
   it('fails if execute functions respondes with a success false', async () => {
     execute.mockImplementationOnce(() => [false]);
-
-    const response = await install('', '', secureDir, config);
-    expect(response).toEqual('installation failed');
+    expect(await run()).toEqual('installation failed');
   });
 
   it('succeeds if everything is correct', async () => {
     execute.mockImplementationOnce(() => [true]);
-
-    const response = await install('', '', secureDir, config);
-    expect(response).toEqual('installed dependencies');
+    expect(await run()).toEqual('installed dependencies');
   });
 });

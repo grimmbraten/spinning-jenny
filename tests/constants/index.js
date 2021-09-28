@@ -9,6 +9,11 @@ module.exports = {
     verbose: false,
     pattern: '--caret'
   },
+  mockedResolutions: {
+    module: '^2.1.0',
+    package: '^0.7.0',
+    dependency: '^1.1.10'
+  },
   mockedAuditAdvisory: {
     type: 'auditAdvisory',
     data: {

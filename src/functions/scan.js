@@ -21,7 +21,7 @@ const scan = async (spinner, hint, target, { verbose, ...config }) => {
   return loader(
     verbose,
     spinner,
-    vulnerabilities === 0 ? 'succeed' : 'error',
+    vulnerabilities === 0 ? 'succeed' : 'fail',
     vulnerabilities === 0
       ? 'all dependencies are secure'
       : `detected ${vulnerabilities} vulnerabilities`,

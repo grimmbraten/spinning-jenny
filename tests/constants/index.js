@@ -5,7 +5,10 @@ module.exports = {
     backup: false,
     frozen: false,
     verbose: false,
-    pattern: '--caret'
+    pattern: '--caret',
+    steps: {
+      completed: 0
+    }
   },
   mockedResolutions: {
     module: '^2.1.0',

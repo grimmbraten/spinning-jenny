@@ -13,7 +13,7 @@ const {
 const scan = async (spinner, hint, target, { verbose, ...config }) => {
   const step = stepLabel(config);
 
-  const [success, response] = await audit(spinner, hint, target, verbose, step);
+  const [success, response] = await audit(spinner, hint, target, verbose, step, '--summary');
   if (!success) return loader(verbose, spinner, 'fail', 'scan failed', step, hint);
 
   const vulnerabilities = sum(extractAuditSummary(parseJson(response)).data.vulnerabilities);

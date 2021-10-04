@@ -1,5 +1,5 @@
 const { loader, stepLabel } = require('./output');
-const { colorSize, colorError, colorVariable, severityColor } = require('./colors');
+const { colorProperty, colorSeverity } = require('./colors');
 const {
   sum,
   parseJson,
@@ -18,8 +18,6 @@ module.exports = {
   extractAuditSummary,
   scannedDependencies,
   extractUpgradeOutcome,
-  colorSize,
-  colorError,
-  colorVariable,
-  severityColor
+  colorProperty,
+  colorSeverity
 };

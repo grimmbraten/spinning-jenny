@@ -1,5 +1,4 @@
 const shell = require('shelljs');
-const { colorError } = require('../helpers');
 
 const test = (option, value) => shell.test(option, value);
 
@@ -17,7 +16,7 @@ const execute = command =>
       }
     );
   }).catch(error => {
-    console.log(`\n${colorError(error.message)}\n`);
+    console.log(`\n${error.message}\n`);
     return [false, error];
   });
 

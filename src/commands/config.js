@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 
 const { load, edit } = require('../config');
-const { isBooleanInput, colorVariable } = require('../helpers');
+const { isBooleanInput, colorProperty } = require('../helpers');
 
 const properties = {
   label: 'label',
@@ -21,7 +21,7 @@ const view = async spinner => {
 
     console.log();
     keys.forEach(key => {
-      console.log(`${key}: ` + colorVariable(config[key]));
+      console.log(`${key}: ` + colorProperty(config[key]));
     });
 
     console.log(
@@ -50,25 +50,25 @@ const manage = async (spinner, inputs) => {
       if (value === undefined) return spinner.fail(`verbose can only be: ${trueFalse}`);
 
       config.verbose = value;
-      spinner.succeed('verbose: ' + colorVariable(value));
+      spinner.succeed('verbose: ' + colorProperty(value));
     } else if (properties.frozen === input) {
       const value = isBooleanInput(inputs[index + 1]);
       if (value === undefined) return spinner.fail(`frozen can only be: ${trueFalse}`);
 
       config.frozen = value;
-      spinner.succeed('frozen: ' + colorVariable(value));
+      spinner.succeed('frozen: ' + colorProperty(value));
     } else if (properties.backup === input) {
       const value = isBooleanInput(inputs[index + 1]);
       if (value === undefined) return spinner.fail(`backup can only be: ${trueFalse}`);
 
       config.backup = value;
-      spinner.succeed('backup: ' + colorVariable(value));
+      spinner.succeed('backup: ' + colorProperty(value));
     } else if (properties.label === input) {
       const value = isBooleanInput(inputs[index + 1]);
       if (value === undefined) return spinner.fail(`label can only be: ${trueFalse}`);
 
       config.label = value;
-      spinner.succeed('label: ' + colorVariable(value));
+      spinner.succeed('label: ' + colorProperty(value));
     } else if (properties.pattern === input) {
       let value = inputs[index + 1];
       if (!value) return spinner.fail('please pass a value');
@@ -83,13 +83,13 @@ const manage = async (spinner, inputs) => {
         );
 
       config.pattern = value;
-      spinner.succeed('pattern: ', colorVariable(value));
+      spinner.succeed('pattern: ', colorProperty(value));
     } else return spinner.fail(`${input} is not a valid configuration property`);
   });
 
   console.log();
   Object.keys(config).forEach(key => {
-    console.log(`${key}: ` + colorVariable(config[key]));
+    console.log(`${key}: ` + colorProperty(config[key]));
   });
 
   await edit(config);

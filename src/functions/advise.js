@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 const { audit } = require('../common');
-const { loader, stepLabel, parseJson, severityColor } = require('../helpers');
+const { loader, stepLabel, parseJson, colorSeverity } = require('../helpers');
 
 const advise = async (spinner, hint, target, { verbose, ...config }) => {
   let auditAdvisory = '';
@@ -39,7 +39,7 @@ const advise = async (spinner, hint, target, { verbose, ...config }) => {
       patch.patched !== '<0.0.0'
         ? `${chalk.green('true')} ${chalk.gray(`${patch.version}`)}`
         : chalk.red('false')
-    }\nvulnerability: ${severityColor(patch.severity)} ${chalk.gray(
+    }\nvulnerability: ${colorSeverity(patch.severity)} ${chalk.gray(
       patch.title.toLowerCase()
     )}\n${chalk.gray(patch.url)}`;
   });

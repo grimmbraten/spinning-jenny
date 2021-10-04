@@ -1,10 +1,10 @@
 const chalk = require('chalk');
 const { audit } = require('../common');
-const { loader, stepLabel, parseJson, colorSeverity } = require('../helpers');
+const { loader, prefix, parseJson, colorSeverity } = require('../helpers');
 
 const advise = async (spinner, hint, target, { verbose, ...config }) => {
   let auditAdvisory = '';
-  const step = stepLabel(config);
+  const step = prefix(config);
 
   const [success, response] = await audit(spinner, hint, target, verbose, step);
   if (!success) return loader(verbose, spinner, 'fail', 'scan failed', step, hint);

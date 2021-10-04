@@ -1,9 +1,9 @@
 const chalk = require('chalk');
 const { execute } = require('../common');
-const { loader, stepLabel } = require('../helpers');
+const { loader, prefix } = require('../helpers');
 
 const install = async (spinner, hint, target, { verbose, frozen, ...config }) => {
-  const step = stepLabel(config);
+  const step = prefix(config);
 
   if (frozen)
     return loader(

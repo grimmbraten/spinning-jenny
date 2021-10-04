@@ -1,9 +1,9 @@
 const chalk = require('chalk');
 const { execute } = require('../common');
-const { loader, stepLabel, parseJson, extractUpgradeOutcome } = require('../helpers');
+const { loader, prefix, parseJson, extractUpgradeOutcome } = require('../helpers');
 
 const upgrade = async (spinner, hint, target, { verbose, pattern, frozen, ...config }) => {
-  const step = stepLabel(config);
+  const step = prefix(config);
 
   if (frozen)
     return loader(

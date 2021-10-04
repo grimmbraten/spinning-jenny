@@ -1,9 +1,9 @@
 const { write, audit } = require('../common');
-const { sum, loader, parseJson, extractAuditSummary, stepLabel } = require('../helpers');
+const { sum, loader, parseJson, extractAuditSummary, prefix } = require('../helpers');
 
 const protect = async (spinner, hint, target, { verbose, ...config }) => {
   const modules = {};
-  const step = stepLabel(config);
+  const step = prefix(config);
 
   const [success, response] = await audit(spinner, hint, target, verbose, step);
   if (!success) return loader(verbose, spinner, 'fail', 'scan failed', step, hint);

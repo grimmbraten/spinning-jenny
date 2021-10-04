@@ -1,8 +1,8 @@
 const { read, remove } = require('../common');
-const { loader, stepLabel } = require('../helpers');
+const { loader, prefix } = require('../helpers');
 
 const clean = async (spinner, hint, target, { verbose, ...config }) => {
-  const step = stepLabel(config);
+  const step = prefix(config);
   loader(verbose, spinner, 'start', 'cleaning package.json', step, hint);
 
   const resolutions = await read(target, 'package.json', 'resolutions');

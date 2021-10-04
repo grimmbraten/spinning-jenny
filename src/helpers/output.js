@@ -6,15 +6,13 @@ const loader = (verbose, spinner, action, message, step, hint) => {
   return message;
 };
 
-const stepLabel = ({ label, steps, getStep }) => {
-  if (!label) return '';
-
-  const step = getStep();
+const prefix = ({ label, steps, getStep }) => {
+  const step = label ? getStep() : '';
   steps.completed++;
   return step;
 };
 
 module.exports = {
   loader,
-  stepLabel
+  prefix
 };

@@ -4,14 +4,14 @@ const { audit } = require('../common');
 const {
   sum,
   loader,
-  stepLabel,
+  prefix,
   parseJson,
   scannedDependencies,
   extractAuditSummary
 } = require('../helpers');
 
 const scan = async (spinner, hint, target, { verbose, ...config }) => {
-  const step = stepLabel(config);
+  const step = prefix(config);
 
   const [success, response] = await audit(spinner, hint, target, verbose, step, '--summary');
   if (!success) return loader(verbose, spinner, 'fail', 'scan failed', step, hint);

@@ -1,9 +1,9 @@
 const { read, write } = require('../common');
-const { loader, stepLabel } = require('../helpers');
+const { loader, prefix } = require('../helpers');
 
 const backup = async (spinner, hint, target, { verbose, ...config }) => {
   const backup = {};
-  const step = stepLabel(config);
+  const step = prefix(config);
 
   loader(verbose, spinner, 'start', 'creating backup', step, hint);
 

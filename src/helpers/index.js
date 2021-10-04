@@ -1,4 +1,4 @@
-const { loader, stepLabel } = require('./output');
+const { loader, prefix } = require('./output');
 const { colorProperty, colorSeverity } = require('./colors');
 const {
   sum,
@@ -11,7 +11,7 @@ const {
 
 module.exports = {
   loader,
-  stepLabel,
+  prefix,
   sum,
   parseJson,
   isBooleanInput,

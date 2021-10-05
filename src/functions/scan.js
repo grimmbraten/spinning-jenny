@@ -1,14 +1,7 @@
 const chalk = require('chalk');
 const { audit } = require('../common');
 
-const {
-  sum,
-  loader,
-  prefix,
-  parseJson,
-  scannedDependencies,
-  extractAuditSummary
-} = require('../helpers');
+const { reduce, loader, prefix, countDependencies, findAuditSummary } = require('../helpers');
 
 const scan = async (spinner, hint, target, { verbose, ...config }) => {
   const step = prefix(config);
@@ -16,7 +9,7 @@ const scan = async (spinner, hint, target, { verbose, ...config }) => {
   const [success, response] = await audit(spinner, hint, target, verbose, step, '--summary');
   if (!success) return loader(verbose, spinner, 'fail', 'scan failed', step, hint);
 
-  const vulnerabilities = sum(extractAuditSummary(parseJson(response)).data.vulnerabilities);
+  const vulnerabilities = reduce(findAuditSummary(response).data.vulnerabilities);
 
   return loader(
     verbose,
@@ -26,7 +19,7 @@ const scan = async (spinner, hint, target, { verbose, ...config }) => {
       ? 'all dependencies are secure'
       : `detected ${vulnerabilities} vulnerabilities`,
     step,
-    `${chalk.gray(` scanned ${scannedDependencies(parseJson(response))} dependencies`)}${hint}`
+    `${chalk.gray(` scanned ${countDependencies(response)} dependencies`)}${hint}`
   );
 };
 

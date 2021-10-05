@@ -3,18 +3,22 @@ jest.mock('../../src/common/json');
 jest.mock('../../src/helpers/data');
 const { write } = require('../../src/common/json');
 const { audit } = require('../../src/common/audit');
-const { sum, parseJson, extractAuditSummary } = require('../../src/helpers/data');
+const { reduce, findAdvisories, findAuditSummary } = require('../../src/helpers/data');
 
 const { protect } = require('../../src/functions');
 const { target, config, mockedAuditAdvisory } = require('../constants');
 
 const run = async () => await protect(undefined, undefined, target, config);
 
-extractAuditSummary.mockImplementation(() => ({
+findAuditSummary.mockImplementation(() => ({
   data: 'mocked'
 }));
 
 describe('protect()', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('fails if audit scan is unsuccessful', async () => {
     audit.mockImplementationOnce(() => [false]);
     expect(await run()).toEqual('scan failed');
@@ -22,23 +26,23 @@ describe('protect()', () => {
 
   it('succeeds if package.json contains no vulnerabilities', async () => {
     audit.mockImplementationOnce(() => [true]);
-    sum.mockImplementationOnce(() => 0);
+    reduce.mockImplementationOnce(() => 0);
 
     expect(await run()).toEqual('all dependencies are secure');
   });
 
   it('fails if audit scan is unsuccessful', async () => {
     audit.mockImplementationOnce(() => [true]);
-    sum.mockImplementationOnce(() => 1);
-    parseJson.mockImplementationOnce(() => [{}]);
+    reduce.mockImplementationOnce(() => 1);
+    findAdvisories.mockImplementationOnce(() => []);
 
     expect(await run()).toEqual('patching failed');
   });
 
   it('succeeds if one or more patches are available', async () => {
     audit.mockImplementationOnce(() => [true]);
-    sum.mockImplementationOnce(() => 1);
-    parseJson.mockImplementationOnce(() => [mockedAuditAdvisory]);
+    reduce.mockImplementationOnce(() => 1);
+    findAdvisories.mockImplementationOnce(() => [mockedAuditAdvisory]);
 
     const response = await run();
 

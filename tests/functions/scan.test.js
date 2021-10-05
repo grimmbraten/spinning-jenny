@@ -1,7 +1,7 @@
 jest.mock('../../src/common/audit');
 jest.mock('../../src/helpers/data');
 const { audit } = require('../../src/common/audit');
-const { extractAuditSummary, sum } = require('../../src/helpers/data');
+const { reduce, findAuditSummary } = require('../../src/helpers/data');
 
 const { scan } = require('../../src/functions');
 const { target, config, mockedAuditSummary } = require('../constants');
@@ -16,16 +16,16 @@ describe('scan()', () => {
 
   it('fails if one or more vulnerabilities are found', async () => {
     audit.mockImplementationOnce(() => [true]);
-    extractAuditSummary.mockImplementationOnce(() => mockedAuditSummary);
-    sum.mockImplementationOnce(() => 3);
+    findAuditSummary.mockImplementationOnce(() => mockedAuditSummary);
+    reduce.mockImplementationOnce(() => 3);
 
     expect(await run()).toEqual('detected 3 vulnerabilities');
   });
 
   it('succeeds if no vulnerabilities are found', async () => {
     audit.mockImplementationOnce(() => [true]);
-    extractAuditSummary.mockImplementationOnce(() => mockedAuditSummary);
-    sum.mockImplementationOnce(() => 0);
+    findAuditSummary.mockImplementationOnce(() => mockedAuditSummary);
+    reduce.mockImplementationOnce(() => 0);
 
     expect(await run()).toEqual('all dependencies are secure');
   });

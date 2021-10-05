@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 const { audit } = require('../common');
-const { loader, prefix, parseJson, colorSeverity } = require('../helpers');
+const { loader, prefix, colorSeverity, findAdvisories } = require('../helpers');
 
 const advise = async (spinner, hint, target, { verbose, ...config }) => {
   let auditAdvisory = '';
@@ -11,21 +11,7 @@ const advise = async (spinner, hint, target, { verbose, ...config }) => {
 
   loader(verbose, spinner, 'text', 'analyzing vulnerabilities', step, hint);
 
-  const json = parseJson(response);
-
-  const advisories = json
-    .map(({ data, type }) => {
-      if (type === 'auditAdvisory')
-        return {
-          title: data.advisory.title,
-          module: data.advisory.module_name,
-          version: data.advisory.vulnerable_versions,
-          patched: data.advisory.patched_versions,
-          severity: data.advisory.severity,
-          url: data.advisory.url
-        };
-    })
-    .filter(data => data);
+  const advisories = findAdvisories(response);
 
   const unique = [...new Set(advisories.map(advisory => advisory.module))];
 

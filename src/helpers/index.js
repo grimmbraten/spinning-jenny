@@ -1,23 +1,23 @@
 const { loader, prefix } = require('./output');
 const { colorProperty, colorSeverity } = require('./colors');
 const {
-  sum,
-  parseJson,
-  isBooleanInput,
-  extractAuditSummary,
-  scannedDependencies,
-  extractUpgradeOutcome
+  reduce,
+  parseBoolean,
+  findAdvisories,
+  findAuditSummary,
+  countDependencies,
+  findSuccessEvent
 } = require('./data');
 
 module.exports = {
   loader,
   prefix,
-  sum,
-  parseJson,
-  isBooleanInput,
-  extractAuditSummary,
-  scannedDependencies,
-  extractUpgradeOutcome,
+  reduce,
+  parseBoolean,
   colorProperty,
-  colorSeverity
+  colorSeverity,
+  findAdvisories,
+  findAuditSummary,
+  findSuccessEvent,
+  countDependencies
 };

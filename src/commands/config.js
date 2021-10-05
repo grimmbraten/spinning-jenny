@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 
 const { load, edit } = require('../config');
-const { isBooleanInput, colorProperty } = require('../helpers');
+const { parseBoolean, colorProperty } = require('../helpers');
 
 const properties = {
   label: 'label',
@@ -46,25 +46,25 @@ const manage = async (spinner, inputs) => {
     spinner.start('modifying configuration');
 
     if (properties.verbose === input) {
-      const value = isBooleanInput(inputs[index + 1]);
+      const value = parseBoolean(inputs[index + 1]);
       if (value === undefined) return spinner.fail(`verbose can only be: ${trueFalse}`);
 
       config.verbose = value;
       spinner.succeed('verbose: ' + colorProperty(value));
     } else if (properties.frozen === input) {
-      const value = isBooleanInput(inputs[index + 1]);
+      const value = parseBoolean(inputs[index + 1]);
       if (value === undefined) return spinner.fail(`frozen can only be: ${trueFalse}`);
 
       config.frozen = value;
       spinner.succeed('frozen: ' + colorProperty(value));
     } else if (properties.backup === input) {
-      const value = isBooleanInput(inputs[index + 1]);
+      const value = parseBoolean(inputs[index + 1]);
       if (value === undefined) return spinner.fail(`backup can only be: ${trueFalse}`);
 
       config.backup = value;
       spinner.succeed('backup: ' + colorProperty(value));
     } else if (properties.label === input) {
-      const value = isBooleanInput(inputs[index + 1]);
+      const value = parseBoolean(inputs[index + 1]);
       if (value === undefined) return spinner.fail(`label can only be: ${trueFalse}`);
 
       config.label = value;

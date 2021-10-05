@@ -1,5 +1,5 @@
 const { write, audit } = require('../common');
-const { sum, loader, parseJson, extractAuditSummary, prefix } = require('../helpers');
+const { reduce, loader, findAuditSummary, findAdvisories, prefix } = require('../helpers');
 
 const protect = async (spinner, hint, target, { verbose, ...config }) => {
   const modules = {};
@@ -8,35 +8,21 @@ const protect = async (spinner, hint, target, { verbose, ...config }) => {
   const [success, response] = await audit(spinner, hint, target, verbose, step);
   if (!success) return loader(verbose, spinner, 'fail', 'scan failed', step, hint);
 
-  const json = parseJson(response);
-  const { data } = extractAuditSummary(json);
-  const vulnerabilities = sum(data.vulnerabilities);
+  const { data } = findAuditSummary(response);
+  const vulnerabilities = reduce(data.vulnerabilities);
 
   if (vulnerabilities === 0)
     return loader(verbose, spinner, 'succeed', 'all dependencies are secure', '', hint);
 
   loader(verbose, spinner, 'start', 'applying patches', '', hint);
 
-  let resolutions = json
-    .map(({ data, type }) => {
-      if (type === 'auditAdvisory')
-        return {
-          title: data.advisory.title,
-          module: data.advisory.module_name,
-          version: data.advisory.vulnerable_versions,
-          patched: data.advisory.patched_versions,
-          severity: data.advisory.severity,
-          url: data.advisory.url
-        };
-    })
-    .filter(data => data);
+  let advisories = findAdvisories(response);
 
-  resolutions = resolutions.filter(({ patched }) => patched !== '<0.0.0');
+  advisories = advisories.filter(({ patched }) => patched !== '<0.0.0');
 
-  if (resolutions.length === 0)
-    return loader(verbose, spinner, 'fail', 'patching failed', '', hint);
+  if (advisories.length === 0) return loader(verbose, spinner, 'fail', 'patching failed', '', hint);
 
-  resolutions.forEach(({ module, patched }) => {
+  advisories.forEach(({ module, patched }) => {
     modules[module] = patched;
   });
 

@@ -1,7 +1,7 @@
 jest.mock('../../src/common/audit');
 jest.mock('../../src/helpers/data');
 const { audit } = require('../../src/common/audit');
-const { parseJson } = require('../../src/helpers/data');
+const { findAdvisories } = require('../../src/helpers/data');
 
 const { advise } = require('../../src/functions');
 const { config, mockedAuditAdvisory } = require('../constants');
@@ -16,14 +16,14 @@ describe('advise()', () => {
 
   it('skips if no patches are available', async () => {
     audit.mockImplementationOnce(() => [true]);
-    parseJson.mockImplementationOnce(() => [{}]);
+    findAdvisories.mockImplementationOnce(() => []);
 
     expect(await run()).toEqual('skipped advise');
   });
 
   it('succeeds if one or more patches are available', async () => {
     audit.mockImplementationOnce(() => [true]);
-    parseJson.mockImplementationOnce(() => [mockedAuditAdvisory]);
+    findAdvisories.mockImplementationOnce(() => [mockedAuditAdvisory]);
 
     expect(await run()).toContain('located 1 advisory');
   });

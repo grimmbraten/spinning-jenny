@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 const { execute } = require('../common');
-const { loader, prefix, parseJson, extractUpgradeOutcome } = require('../helpers');
+const { loader, prefix, findSuccessEvent } = require('../helpers');
 
 const upgrade = async (spinner, hint, target, { verbose, pattern, frozen, ...config }) => {
   const step = prefix(config);
@@ -23,7 +23,7 @@ const upgrade = async (spinner, hint, target, { verbose, pattern, frozen, ...con
     verbose,
     spinner,
     'succeed',
-    success ? extractUpgradeOutcome(parseJson(response)) || 'upgrade failed' : 'upgrade failed',
+    success ? findSuccessEvent(response) || 'upgrade failed' : 'upgrade failed',
     step,
     hint
   );

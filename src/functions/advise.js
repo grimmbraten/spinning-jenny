@@ -20,6 +20,8 @@ const advise = async (spinner, hint, target, { verbose, ...config }) => {
 
   if (patchCount === 0) return loader(verbose, spinner, 'warn', 'skipped advise', '', hint);
 
+  console.log(patches);
+
   patches.forEach(patch => {
     auditAdvisory += `\n\n${patch.module}\npatched: ${
       patch.patched !== '<0.0.0'

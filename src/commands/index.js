@@ -1,6 +1,6 @@
 const { help } = require('./help');
 const { view, manage } = require('./config');
-const { bin, version, description, repository } = require('./package');
+const { bin, version, repository } = require('./package');
 
 module.exports = {
   help,
@@ -8,14 +8,12 @@ module.exports = {
   view,
   manage,
   version,
-  description,
   repository,
   commands: {
     help: '--help',
     config: '--config',
     bin: '--bin',
     version: '--version',
-    description: '--description',
     repository: '--repository'
   }
 };

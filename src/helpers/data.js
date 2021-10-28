@@ -5,7 +5,7 @@ const findAuditSummary = json =>
 
 const parseBoolean = value => (value === 'true' ? true : value === 'false' ? false : undefined);
 
-const countDependencies = json => findAuditSummary(formatYarnResponse(json)).data.totalDependencies;
+const countDependencies = json => findAuditSummary(json).data.totalDependencies;
 
 const formatYarnResponse = json =>
   json

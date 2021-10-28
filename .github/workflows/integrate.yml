@@ -2,11 +2,14 @@ name: Node Continuous Integration
 
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - master
 
 jobs:
   quality-assurance:
+    name: Running quality assurance
     runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2

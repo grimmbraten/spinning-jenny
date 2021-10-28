@@ -1,7 +1,7 @@
 jest.mock('../../src/common');
 jest.mock('../../src/helpers/data');
 const { execute } = require('../../src/common');
-const { extractUpgradeOutcome } = require('../../src/helpers/data');
+const { findSuccessEvent } = require('../../src/helpers/data');
 
 const { upgrade } = require('../../src/functions');
 const { target, config } = require('../constants');
@@ -21,7 +21,7 @@ describe('upgrade()', () => {
 
   it('fails if upgrade outcome can not be extracted', async () => {
     execute.mockImplementationOnce(() => [true]);
-    extractUpgradeOutcome.mockImplementation(() => undefined);
+    findSuccessEvent.mockImplementation(() => undefined);
 
     expect(await run()).toEqual('upgrade failed');
   });
@@ -30,7 +30,7 @@ describe('upgrade()', () => {
     const mockedResponse = { data: '' };
 
     execute.mockImplementationOnce(() => [true, mockedResponse]);
-    extractUpgradeOutcome.mockImplementation(() => ({
+    findSuccessEvent.mockImplementation(() => ({
       data: ''
     }));
 

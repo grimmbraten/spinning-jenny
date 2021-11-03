@@ -1,5 +1,3 @@
-<img src="https://raw.githubusercontent.com/grimmbraten/spinning-jenny/master/assets/demo.gif" width="100%" />
-
 A cli package.json resolution assistant that helps you with those pesky yarn audit vulnerabilities.
 
 ## Installation

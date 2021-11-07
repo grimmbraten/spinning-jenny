@@ -15,7 +15,5 @@ const [, , ...inputs] = process.argv;
   const { hint, target, config, command, functions } = interpret(inputs, fileConfig);
 
   if (command) return command(spinner, inputs);
-
-  // eslint-disable-next-line no-extra-parens
-  functions && (await sequence(functions, [spinner, hint, target, config]));
+  if (functions) await sequence(functions, [spinner, hint, target, config]);
 })();

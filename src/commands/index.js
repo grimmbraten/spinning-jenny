@@ -1,11 +1,11 @@
 const { help } = require('./help');
-const { view, manage } = require('./config');
+const { list, manage } = require('./config');
 const { bin, version, repository } = require('./package');
 
 module.exports = {
   help,
   bin,
-  view,
+  list,
   manage,
   version,
   repository,

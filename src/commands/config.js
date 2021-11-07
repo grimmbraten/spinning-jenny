@@ -1,6 +1,7 @@
 const chalk = require('chalk');
 
 const { load, edit } = require('../config');
+const { trueFalse } = require('../constants');
 const { parseBoolean, colorProperty } = require('../helpers');
 
 const properties = {
@@ -11,9 +12,7 @@ const properties = {
   verbose: 'verbose'
 };
 
-const trueFalse = `${chalk.green('true')} / ${chalk.red('false')}`;
-
-const view = async spinner => {
+const list = async spinner => {
   const config = await manage(spinner);
 
   if (config) {
@@ -23,12 +22,6 @@ const view = async spinner => {
     keys.forEach(key => {
       console.log(`${key}: ` + colorProperty(config[key]));
     });
-
-    console.log(
-      chalk.gray(
-        '\nfor more information, please refer to the documentation\nhttps://github.com/grimmbraten/spinning-jenny#configuration'
-      )
-    );
   }
 };
 
@@ -96,6 +89,6 @@ const manage = async (spinner, inputs) => {
 };
 
 module.exports = {
-  view,
+  list,
   manage
 };

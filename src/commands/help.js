@@ -9,7 +9,7 @@ const help = (_, inputs) => {
 
   const packageInfo = `\n${name} ${chalk.gray(version)}\n${description.toLocaleLowerCase()}\n\n`;
 
-  if (inputs[1] === 'actions') {
+  if (inputs[1] === 'actions')
     console.log(
       `${packageInfo}clean ${chalk.gray('cleanup pre-existing resolutions')}` +
         `\nadvise ${chalk.gray(
@@ -22,7 +22,7 @@ const help = (_, inputs) => {
         `\nscan ${chalk.gray('find modules with known vulnerabilities')}` +
         `\nupgrade ${chalk.gray('upgrade dependencies following pattern restriction')}`
     );
-  } else if (inputs[1] === 'flags')
+  else if (inputs[1] === 'flags')
     console.log(
       `${packageInfo}--backup ${chalk.gray('save backup of resolutions')}` +
         `\n--directory ${chalk.gray('overwrite current working directory scope')}` +

@@ -22,7 +22,7 @@ const upgrade = async (spinner, hint, target, { verbose, pattern, frozen, ...con
   return loader(
     verbose,
     spinner,
-    'succeed',
+    success ? 'succeed' : 'fail',
     success ? findSuccessEvent(response) || 'upgrade failed' : 'upgrade failed',
     step,
     hint

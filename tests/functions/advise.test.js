@@ -28,13 +28,13 @@ describe('advise()', () => {
       { ...mockedAuditAdvisory, module: 'second' }
     ]);
 
-    expect(await run()).toContain('located 2 advisories');
+    expect(await run()).toContain('found 2 advisories');
   });
 
   it('succeeds if one or more patches are available even if no patch is avaiable', async () => {
     audit.mockImplementationOnce(() => [true]);
     findAdvisories.mockImplementationOnce(() => [{ ...mockedAuditAdvisory, patched: '<0.0.0' }]);
 
-    expect(await run()).toContain('located 1 advisory');
+    expect(await run()).toContain('found 1 advisory');
   });
 });

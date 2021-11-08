@@ -20,7 +20,7 @@ const advise = async (spinner, hint, target, { verbose, ...config }) => {
 
   if (patchCount === 0) return loader(verbose, spinner, 'warn', 'skipped advise', '', hint);
 
-  console.log(patches);
+  patches.sort((a, b) => a.severity.localeCompare(b.severity));
 
   patches.forEach(patch => {
     auditAdvisory += `\n\n${patch.module}\npatched: ${
@@ -29,14 +29,16 @@ const advise = async (spinner, hint, target, { verbose, ...config }) => {
         : chalk.red('false')
     }\nvulnerability: ${colorSeverity(patch.severity)} ${chalk.gray(
       patch.title.toLowerCase()
-    )}\n${chalk.gray(patch.url)}`;
+    )}\n${chalk.grey.underline(patch.url)}`;
   });
+
+  console.log(`${auditAdvisory}\n`);
 
   return loader(
     verbose,
     spinner,
     'succeed',
-    `located ${patchCount} ${patchCount > 1 ? 'advisories' : 'advisory'}` + auditAdvisory,
+    `found ${patchCount} ${patchCount > 1 ? 'advisories' : 'advisory'}`,
     '',
     hint
   );

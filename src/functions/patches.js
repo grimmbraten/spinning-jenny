@@ -2,7 +2,7 @@ const chalk = require('chalk');
 const { audit } = require('../common');
 const { loader, prefix, colorSeverity, findAdvisories } = require('../helpers');
 
-const advise = async (spinner, hint, target, { verbose, ...config }) => {
+const patches = async (spinner, hint, target, { verbose, ...config }) => {
   let auditAdvisory = '';
   const step = prefix(config);
 
@@ -18,7 +18,7 @@ const advise = async (spinner, hint, target, { verbose, ...config }) => {
   const patches = unique.map(module => advisories.find(advisory => advisory.module === module));
   const patchCount = patches.length;
 
-  if (patchCount === 0) return loader(verbose, spinner, 'warn', 'skipped advise', '', hint);
+  if (patchCount === 0) return loader(verbose, spinner, 'warn', 'skipped patches', '', hint);
 
   patches.sort((a, b) => a.severity.localeCompare(b.severity));
 
@@ -45,5 +45,5 @@ const advise = async (spinner, hint, target, { verbose, ...config }) => {
 };
 
 module.exports = {
-  advise
+  patches
 };

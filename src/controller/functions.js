@@ -6,9 +6,9 @@ const {
   scan,
   clean,
   install,
-  protect,
+  fix,
   backup,
-  advise,
+  patches,
   upgrade,
   actions,
   flags
@@ -17,12 +17,13 @@ const {
 const getFunctions = (inputs, config) => {
   let skipIndex;
   let hint = '';
+  let bail = false;
   let target = process.cwd();
 
   const functions = [];
 
   inputs.forEach((input, index) => {
-    if (skipIndex === index) return;
+    if (bail || skipIndex === index) return;
 
     if (flags.label.includes(input))
       if (inputs[index + 1] === 'true' || inputs[index + 1] === 'false') {
@@ -50,18 +51,21 @@ const getFunctions = (inputs, config) => {
       hint = chalk.gray(` in ${target}`);
     } else if (actions.scan.includes(input)) functions.push(scan);
     else if (actions.clean.includes(input)) functions.push(clean);
-    else if (actions.advise.includes(input)) functions.push(advise);
+    else if (actions.patches.includes(input)) functions.push(patches);
     else if (actions.restore.includes(input)) functions.push(restore);
     else if (actions.install.includes(input)) functions.push(install);
     else if (actions.upgrade.includes(input)) functions.push(upgrade);
-    else if (actions.protect.includes(input)) functions.push(protect);
-    else suggestFunction(inputs, input);
+    else if (actions.fix.includes(input)) functions.push(fix);
+    else {
+      bail = true;
+      suggestFunction(inputs, input);
+    }
   });
 
   if (functions.length > 0) config.backup && functions.unshift(backup);
   config.steps.total = functions.length;
 
-  return { hint, functions: functions.length > 0 ? functions : null, target, config };
+  return { hint, bail, functions: functions.length > 0 ? functions : null, target, config };
 };
 
 const suggestFunction = (inputs, input) => {

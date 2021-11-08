@@ -12,8 +12,9 @@ const [, , ...inputs] = process.argv;
   const spinner = ora();
   const fileConfig = await load();
 
-  const { hint, target, config, command, functions } = interpret(inputs, fileConfig);
+  const { hint, bail, target, config, command, functions } = interpret(inputs, fileConfig);
 
+  if (bail) return;
   if (command) return command(spinner, inputs);
   if (functions) await sequence(functions, [spinner, hint, target, config]);
 })();

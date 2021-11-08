@@ -5,16 +5,16 @@ const { write } = require('../../src/common/json');
 const { audit } = require('../../src/common/audit');
 const { reduce, findAdvisories, findAuditSummary } = require('../../src/helpers/data');
 
-const { protect } = require('../../src/functions');
+const { fix } = require('../../src/functions');
 const { target, config, mockedAuditAdvisory } = require('../constants');
 
-const run = async () => await protect(undefined, undefined, target, config);
+const run = async () => await fix(undefined, undefined, target, config);
 
 findAuditSummary.mockImplementation(() => ({
   data: 'mocked'
 }));
 
-describe('protect()', () => {
+describe('fix()', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });

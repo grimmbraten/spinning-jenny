@@ -1,6 +1,6 @@
 const { backup } = require('./backup');
-const { protect } = require('./protect');
-const { advise } = require('./advise');
+const { fix } = require('./fix');
+const { patches } = require('./patches');
 const { scan } = require('./scan');
 const { restore } = require('./restore');
 const { clean } = require('./clean');
@@ -13,23 +13,23 @@ module.exports = {
   scan,
   backup,
   restore,
-  protect,
-  advise,
+  fix,
+  patches,
   upgrade,
   actions: {
-    advise: ['advise', '-a'],
+    patches: ['patches', '-p'],
     clean: ['clean', '-c'],
     install: ['install', '-i'],
-    protect: ['protect', '-p'],
+    fix: ['fix', '-f'],
     restore: ['restore', '-r'],
-    scan: ['scan', '-s'],
+    scan: ['audit', '-a'],
     upgrade: ['upgrade', '-u']
   },
   flags: {
-    backup: ['--backup', '-b'],
-    directory: ['--directory', '-d'],
-    frozen: ['--frozen', '-f'],
-    label: ['--label', '-l'],
-    verbose: ['--verbose', '-v']
+    backup: ['--backup'],
+    directory: ['--directory'],
+    frozen: ['--frozen'],
+    label: ['--label'],
+    verbose: ['--verbose']
   }
 };

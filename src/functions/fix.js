@@ -1,7 +1,7 @@
 const { write, audit } = require('../common');
 const { reduce, loader, findAuditSummary, findAdvisories, prefix } = require('../helpers');
 
-const protect = async (spinner, hint, target, { verbose, ...config }) => {
+const fix = async (spinner, hint, target, { verbose, ...config }) => {
   const modules = {};
   const step = prefix(config);
 
@@ -32,5 +32,5 @@ const protect = async (spinner, hint, target, { verbose, ...config }) => {
 };
 
 module.exports = {
-  protect
+  fix
 };

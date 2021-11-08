@@ -58,7 +58,7 @@ const getFunctions = (inputs, config) => {
     else suggestFunction(inputs, input);
   });
 
-  config.backup && functions.unshift(backup);
+  if (functions.length > 0) config.backup && functions.unshift(backup);
   config.steps.total = functions.length;
 
   return { hint, functions: functions.length > 0 ? functions : null, target, config };
@@ -72,11 +72,7 @@ const suggestFunction = (inputs, input) => {
     { threshold: 0.4 }
   ).search(input);
 
-  console.log(
-    `\nsyntax error\nspinning-jenny ${inputs.join(' ').replace(input, chalk.red(input))}${
-      fuzzy.length > 0 ? '\n\nsuggestions:' : '\n'
-    }`
-  );
+  console.log(`\nspinning-jenny ${inputs.join(' ').replace(input, chalk.red(input))}`);
 
   fuzzy.forEach(suggestion =>
     console.log(`spinning-jenny ${inputs.join(' ').replace(input, chalk.green(suggestion.item))}`)

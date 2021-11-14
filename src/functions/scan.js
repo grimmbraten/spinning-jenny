@@ -10,6 +10,7 @@ const scan = async (spinner, hint, target, { verbose, ...config }) => {
   if (!success) return loader(verbose, spinner, 'fail', 'scan failed', step, hint);
 
   const vulnerabilities = reduce(findAuditSummary(response).data.vulnerabilities);
+  const dependencies = countDependencies(response);
 
   return loader(
     verbose,
@@ -17,9 +18,11 @@ const scan = async (spinner, hint, target, { verbose, ...config }) => {
     vulnerabilities === 0 ? 'succeed' : 'fail',
     vulnerabilities === 0
       ? 'all dependencies are secure'
-      : `detected ${vulnerabilities} vulnerabilities`,
+      : `detected ${vulnerabilities} ${vulnerabilities > 1 ? 'vulnerabilities' : 'vulnerability'}`,
     step,
-    `${chalk.gray(` scanned ${countDependencies(response)} dependencies`)}${hint}`
+    `${chalk.gray(
+      ` scanned ${dependencies} ${dependencies > 1 ? 'dependencies' : 'dependency'}`
+    )}${hint}`
   );
 };
 

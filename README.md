@@ -1,3 +1,5 @@
+<img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/chain.gif?raw=true" width="100%" />
+
 A cli package.json resolution assistant that helps you with those pesky yarn audit vulnerabilities.
 
 ## Installation
@@ -22,21 +24,9 @@ npm update -g spinning-jenny
 
 For more information, please refer to the [npm](https://docs.npmjs.com/cli/v6/commands/npm-update) or [yarn](https://classic.yarnpkg.com/en/docs/cli/upgrade) documentation.
 
-## Usage
-
-```bash
-spinning-jenny upgrade scan
-```
-
-Upgrade all dependencies following the set upgrade pattern restriction from the configuration file, then scan the package.json file for any vulnerabilities.
-
-```bash
-spinning-jenny clean protect install
-```
-
-Cleanup any pre-existing resolution, scan package.json file for vulnerabilities and try to protect against them, and lastly execute yarn install.
-
 ### Actions
+
+A list of all the available actions with spinning-jenny:
 
 <table>
 <tr>
@@ -139,6 +129,8 @@ upgrade dependencies following pattern restriction
 </table>
 
 ### Flags
+
+A list of all the available flags for spinning-jenny:
 
 <table>
 <tr>

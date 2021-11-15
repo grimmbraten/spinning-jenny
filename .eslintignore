@@ -1,3 +1,4 @@
 *.md
 *.json
+tests
 node_modules

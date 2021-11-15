@@ -2,12 +2,13 @@
   "name": "spinning-jenny",
   "description": "Handle yarn audit vulnerabilites with ease",
   "author": "Erik Grimmbråten <79856585+grimmbraten@users.noreply.github.com>",
-  "version": "2.0.5",
+  "version": "3.0.0",
   "engines": {
     "node": ">= 8.5.0"
   },
   "scripts": {
-    "prepack": "yarn check:eslint",
+    "prepack": "yarn check:eslint && yarn check:jest",
+    "check:jest": "jest",
     "check:eslint": "yarn eslint .",
     "report:eslint": "yarn eslint . --output-file ./reports/eslint.html --format html"
   },
@@ -47,6 +48,7 @@
     "eslint": "^7.31.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
+    "jest": "^27.2.1",
     "prettier": "^2.3.2"
   }
 }

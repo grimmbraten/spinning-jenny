@@ -1,6 +1,6 @@
 <img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/chain.gif?raw=true" width="100%" />
 
-A cli package.json resolution assistant that helps you with those pesky yarn audit vulnerabilities.
+A cli package.json resolution assistant that helps you with those pesky node package vulnerabilities.
 
 [![Source Quality Assurance](https://github.com/grimmbraten/spinning-jenny/actions/workflows/integrate.yml/badge.svg)](https://github.com/grimmbraten/spinning-jenny/actions/workflows/integrate.yml)
 
@@ -33,9 +33,19 @@ npm update -g spinning-jenny
 
 For more information, please refer to the [npm](https://docs.npmjs.com/cli/v6/commands/npm-update) or [yarn](https://classic.yarnpkg.com/en/docs/cli/upgrade) documentation.
 
+## Usage
+
+```bash
+spinning-jenny --help
+```
+
+Don't forget to use the help flag if you forget any action syntaxes or available flags to take full advantage of spinning-jenny.
+
 ### Actions
 
-A list of all the available actions with spinning-jenny:
+<img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/patches.gif?raw=true" width="100%" />
+
+spinning-jenny offers a handful of different actions that can help you resolve these pesky package vulnerabilities.
 
 <table>
 <tr>
@@ -139,7 +149,9 @@ upgrade dependencies following pattern restriction
 
 ### Flags
 
-A list of all the available flags for spinning-jenny:
+<img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/flags.gif?raw=true" width="100%" />
+
+Did you know that you can change the behavior of spinning-jenny by including different flags next to your actions?
 
 <table>
 <tr>

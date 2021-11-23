@@ -297,3 +297,6 @@ yarn global remove spinning-jenny
 ```bash
 npm uninstall -g spinning-jenny
 ```
+
+![GitHub Repo stars](https://img.shields.io/github/stars/grimmbraten/spinning-jenny?style=social)
+![npm](https://img.shields.io/npm/dt/spinning-jenny?logo=npm&style=social)

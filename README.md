@@ -19,9 +19,9 @@ npm install -g spinning-jenny
 
 ## Upgrade
 
-![npms.io (maintenance)](https://img.shields.io/npms-io/maintenance-score/spinning-jenny?style=flat&color=green)
-![GitHub last commit](https://img.shields.io/github/last-commit/grimmbraten/spinning-jenny?style=flat&color=#41bb13)
-![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/grimmbraten/spinning-jenny/latest/master?style=flat&color=green)
+![npms.io (maintenance)](https://img.shields.io/npms-io/maintenance-score/spinning-jenny?style=flat&color=blue)
+![GitHub last commit](https://img.shields.io/github/last-commit/grimmbraten/spinning-jenny?style=flat&color=blue)
+![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/grimmbraten/spinning-jenny/latest/master?style=flat&color=blue)
 
 ```bash
 yarn global upgrade spinning-jenny --latest

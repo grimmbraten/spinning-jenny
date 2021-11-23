@@ -2,7 +2,12 @@
 
 A cli package.json resolution assistant that helps you with those pesky yarn audit vulnerabilities.
 
-## Installation
+[![Source Quality Assurance](https://github.com/grimmbraten/spinning-jenny/actions/workflows/integrate.yml/badge.svg)](https://github.com/grimmbraten/spinning-jenny/actions/workflows/integrate.yml)
+
+## Install
+
+![npm](https://img.shields.io/npm/v/spinning-jenny?style=flat&color=blue)
+![NPM](https://img.shields.io/npm/l/spinning-jenny?style=flat&color=blue)
 
 ```bash
 yarn global add spinning-jenny
@@ -13,6 +18,10 @@ npm install -g spinning-jenny
 ```
 
 ## Upgrade
+
+![npms.io (maintenance)](https://img.shields.io/npms-io/maintenance-score/spinning-jenny?style=flat&color=green)
+![GitHub last commit](https://img.shields.io/github/last-commit/grimmbraten/spinning-jenny?style=flat&color=#41bb13)
+![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/grimmbraten/spinning-jenny/latest/master?style=flat&color=green)
 
 ```bash
 yarn global upgrade spinning-jenny --latest

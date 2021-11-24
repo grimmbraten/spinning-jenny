@@ -2,7 +2,7 @@
   "name": "spinning-jenny",
   "description": "Resolve node package vulnerabilites with ease",
   "author": "Erik Grimmbråten <79856585+grimmbraten@users.noreply.github.com>",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "engines": {
     "node": ">= 8.5.0"
   },

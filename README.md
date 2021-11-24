@@ -62,14 +62,15 @@ Description
 
 <tr>
 <td>
-advise
+audit
 </td>
 <td>
 -a
 </td>
 <td>
-find published advisories for modules with known vulnerabilities
+find modules with known vulnerabilities
 </td>
+</tr>
 </tr>
 
 <tr>
@@ -81,6 +82,18 @@ clean
 </td>
 <td>
 cleanup pre-existing resolutions
+</td>
+</tr>
+
+<tr>
+<td>
+fix
+</td>
+<td>
+-f
+</td>
+<td>
+resolve modules with known vulnerabilities
 </td>
 </tr>
 
@@ -98,13 +111,13 @@ install dependencies
 
 <tr>
 <td>
-protect
+patches
 </td>
 <td>
 -p
 </td>
 <td>
-protect modules against known vulnerabilities
+find published patch information for modules with known vulnerabilities
 </td>
 </tr>
 
@@ -118,19 +131,6 @@ restore
 <td>
 restore saved resolutions for the current directory scope
 </td>
-</tr>
-
-<tr>
-<td>
-scan
-</td>
-<td>
--s
-</td>
-<td>
-find modules with known vulnerabilities
-</td>
-</tr>
 </tr>
 
 <tr>

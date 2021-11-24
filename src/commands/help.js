@@ -11,15 +11,14 @@ const help = (_, inputs) => {
 
   if (inputs[1] === 'actions')
     console.log(
-      `${packageInfo}clean ${chalk.gray('cleanup pre-existing resolutions')}` +
-        `\nadvise ${chalk.gray(
-          'find published advisories for modules with known vulnerabilities'
-        )}` +
+      `${packageInfo}audit ${chalk.gray('find modules with known vulnerabilities')}` +
         `\nclean ${chalk.gray('cleanup pre-existing resolutions')}` +
+        `\nfix ${chalk.gray('resolve modules with known vulnerabilities')}` +
         `\ninstall ${chalk.gray('install dependencies')}` +
-        `\nprotect ${chalk.gray('protect modules against known vulnerabilities')}` +
+        `\npatches ${chalk.gray(
+          'find published patch information for modules with known vulnerabilities'
+        )}` +
         `\nrestore ${chalk.gray('restore saved resolutions for the current directory scope')}` +
-        `\nscan ${chalk.gray('find modules with known vulnerabilities')}` +
         `\nupgrade ${chalk.gray('upgrade dependencies following pattern restriction')}`
     );
   else if (inputs[1] === 'flags')

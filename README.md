@@ -33,7 +33,7 @@ npm update -g spinning-jenny
 
 For more information, please refer to the [npm](https://docs.npmjs.com/cli/v6/commands/npm-update) or [yarn](https://classic.yarnpkg.com/en/docs/cli/upgrade) documentation.
 
-## Usage
+## Use
 
 ```bash
 spinning-jenny --help
@@ -43,9 +43,9 @@ Don't forget to use the help flag if you forget any action syntaxes or available
 
 ### Actions
 
-<img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/patches.gif?raw=true" width="100%" />
-
 spinning-jenny offers a handful of different actions that can help you resolve these pesky package vulnerabilities.
+
+<img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/patches.gif?raw=true" width="100%" />
 
 <table>
 <tr>
@@ -65,7 +65,7 @@ Description
 audit
 </td>
 <td>
--a
+a
 </td>
 <td>
 find modules with known vulnerabilities
@@ -78,7 +78,7 @@ find modules with known vulnerabilities
 clean
 </td>
 <td>
--c
+c
 </td>
 <td>
 cleanup pre-existing resolutions
@@ -90,7 +90,7 @@ cleanup pre-existing resolutions
 fix
 </td>
 <td>
--f
+f
 </td>
 <td>
 resolve modules with known vulnerabilities
@@ -102,7 +102,7 @@ resolve modules with known vulnerabilities
 install
 </td>
 <td>
--i
+i
 </td>
 <td>
 install dependencies
@@ -114,7 +114,7 @@ install dependencies
 patches
 </td>
 <td>
--p
+p
 </td>
 <td>
 find published patch information for modules with known vulnerabilities
@@ -126,7 +126,7 @@ find published patch information for modules with known vulnerabilities
 restore
 </td>
 <td>
--r
+r
 </td>
 <td>
 restore saved resolutions for the current directory scope
@@ -138,7 +138,7 @@ restore saved resolutions for the current directory scope
 upgrade
 </td>
 <td>
--u
+u
 </td>
 <td>
 upgrade dependencies following pattern restriction
@@ -149,9 +149,9 @@ upgrade dependencies following pattern restriction
 
 ### Flags
 
-<img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/flags.gif?raw=true" width="100%" />
-
 Did you know that you can change the behavior of spinning-jenny by including different flags next to your actions?
+
+<img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/flags.gif?raw=true" width="100%" />
 
 <table>
 <tr>

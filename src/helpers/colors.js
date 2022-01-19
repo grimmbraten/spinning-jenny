@@ -9,14 +9,14 @@ const colorProperty = value =>
 
 const colorSeverity = severity =>
   severity === 'critical'
-    ? chalk.magenta(severity)
+    ? chalk.magenta(`(${severity})`)
     : severity === 'high'
-    ? chalk.red(severity)
+    ? chalk.red(`(${severity})`)
     : severity === 'moderate'
-    ? chalk.yellow(severity)
+    ? chalk.yellow(`(${severity})`)
     : severity === 'low'
-    ? chalk.green(severity)
-    : chalk.blue(severity);
+    ? chalk.green(`(${severity})`)
+    : chalk.blue(`(${severity})`);
 
 module.exports = {
   colorProperty,

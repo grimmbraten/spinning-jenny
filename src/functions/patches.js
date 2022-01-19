@@ -3,7 +3,7 @@ const { audit } = require('../common');
 const { loader, prefix, colorSeverity, findAdvisories } = require('../helpers');
 
 const patches = async (spinner, hint, target, { verbose, ...config }) => {
-  let auditAdvisory = '';
+  let output = '';
   const step = prefix(config);
 
   const [success, response] = await audit(spinner, hint, target, verbose, step);
@@ -20,19 +20,19 @@ const patches = async (spinner, hint, target, { verbose, ...config }) => {
 
   if (patchCount === 0) return loader(verbose, spinner, 'warn', 'skipped patches', '', hint);
 
-  patches.sort((a, b) => a.severity.localeCompare(b.severity));
+  patches.sort((a, b) => a.time - b.time);
 
   patches.forEach(patch => {
-    auditAdvisory += `\n\n${patch.module}\npatched: ${
-      patch.patched !== '<0.0.0'
-        ? `${chalk.green('true')} ${chalk.gray(`${patch.version}`)}`
-        : chalk.red('false')
-    }\nvulnerability: ${colorSeverity(patch.severity)} ${chalk.gray(
-      patch.title.toLowerCase()
-    )}\n${chalk.grey.underline(patch.url)}`;
+    output += `\n\n${patch.module} @ ${patch.version} ${colorSeverity(patch.severity)}\n${
+      patch.recommendation !== 'none' ? patch.recommendation : 'could not find any recommendation'
+    } ${
+      patch.patchedVersions !== '<0.0.0' ? `${chalk.green('(patched)')}` : chalk.red('(unsolved)')
+    }\n${patch.references}\n${chalk.gray(
+      `${patch.foundBy ? `${patch.foundBy} @ ` : ''}${patch.updated || patch.created}`
+    )}`;
   });
 
-  console.log(`${auditAdvisory}\n`);
+  console.log(`${output}\n`);
 
   return loader(
     verbose,

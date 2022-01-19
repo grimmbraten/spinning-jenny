@@ -25,11 +25,18 @@ const findAdvisories = json =>
       if (type === 'auditAdvisory')
         return {
           title: data.advisory.title,
+          version: data.advisory.findings[0].version,
           module: data.advisory.module_name,
-          version: data.advisory.vulnerable_versions,
-          patched: data.advisory.patched_versions,
+          vulnerableVersions: data.advisory.vulnerable_versions,
+          patchedVersions: data.advisory.patched_versions,
           severity: data.advisory.severity,
-          url: data.advisory.url
+          url: data.advisory.url,
+          recommendation: data.advisory.recommendation.toLowerCase(),
+          created: new Date(data.advisory.created).toUTCString(),
+          updated: new Date(data.advisory.updated).toUTCString(),
+          time: new Date(data.advisory.updated || data.advisory.created).getTime(),
+          foundBy: data.advisory.foundBy,
+          references: data.advisory.references
         };
     })
     .filter(data => data);

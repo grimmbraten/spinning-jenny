@@ -2,7 +2,7 @@
   "name": "spinning-jenny",
   "description": "Resolve node package vulnerabilites with ease",
   "author": "Erik Grimmbråten <79856585+grimmbraten@users.noreply.github.com>",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "engines": {
     "node": ">= 8.5.0"
   },
@@ -35,7 +35,7 @@
     "fuse.js": "^6.4.6",
     "json-file-plus": "^3.3.1",
     "ora": "^5.4.1",
-    "shelljs": "^0.8.4"
+    "shelljs": "0.8.5"
   },
   "bugs": {
     "url": "https://github.com/grimmbraten/spinning-jenny/issues"

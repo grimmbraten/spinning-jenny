@@ -9,6 +9,8 @@ const { config, mockedAuditAdvisory } = require('../constants');
 const run = async () => await patches(undefined, undefined, undefined, config);
 
 describe('patches()', () => {
+  console.log = jest.fn();
+
   it('fails if audit scan is unsuccessful', async () => {
     audit.mockImplementationOnce(() => [false]);
     expect(await run()).toEqual('scan failed');

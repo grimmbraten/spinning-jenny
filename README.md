@@ -1,13 +1,10 @@
 <img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/chain.gif?raw=true" width="100%" />
 
-A cli package.json resolution assistant that helps you with those pesky node package vulnerabilities.
-
-[![Source Quality Assurance](https://github.com/grimmbraten/spinning-jenny/actions/workflows/integrate.yml/badge.svg)](https://github.com/grimmbraten/spinning-jenny/actions/workflows/integrate.yml)
-
 ## Install
 
-![npm](https://img.shields.io/npm/v/spinning-jenny?style=flat&color=blue)
-![NPM](https://img.shields.io/npm/l/spinning-jenny?style=flat&color=blue)
+[![Source Quality Assurance](https://github.com/grimmbraten/spinning-jenny/actions/workflows/integrate.yml/badge.svg)](https://github.com/grimmbraten/spinning-jenny/actions/workflows/integrate.yml)
+![npm](https://img.shields.io/npm/dt/spinning-jenny?logo=npm&style=social)
+![GitHub Repo stars](https://img.shields.io/github/stars/grimmbraten/spinning-jenny?style=social)
 
 ```bash
 yarn global add spinning-jenny
@@ -19,9 +16,9 @@ npm install -g spinning-jenny
 
 ## Upgrade
 
-![npms.io (maintenance)](https://img.shields.io/npms-io/maintenance-score/spinning-jenny?style=flat&color=blue)
-![GitHub last commit](https://img.shields.io/github/last-commit/grimmbraten/spinning-jenny?style=flat&color=blue)
-![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/grimmbraten/spinning-jenny/latest/master?style=flat&color=blue)
+![npm](https://img.shields.io/npm/v/spinning-jenny?style=flat&color=gray)
+![npms.io (maintenance)](https://img.shields.io/npms-io/maintenance-score/spinning-jenny?style=flat&color=gray)
+![GitHub last commit](https://img.shields.io/github/last-commit/grimmbraten/spinning-jenny?style=flat&color=gray)
 
 ```bash
 yarn global upgrade spinning-jenny --latest
@@ -36,14 +33,10 @@ For more information, please refer to the [npm](https://docs.npmjs.com/cli/v6/co
 ## Use
 
 ```bash
-spinning-jenny --help
+spinning-jenny [actions/command] [--flags]
 ```
 
-Don't forget to use the help flag if you forget any action syntaxes or available flags to take full advantage of spinning-jenny.
-
 ### Actions
-
-spinning-jenny offers a handful of different actions that can help you resolve these pesky package vulnerabilities.
 
 <img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/patches.gif?raw=true" width="100%" />
 
@@ -147,9 +140,65 @@ upgrade dependencies following pattern restriction
 
 </table>
 
-### Flags
+### Commands
 
-Did you know that you can change the behavior of spinning-jenny by including different flags next to your actions?
+<table>
+<tr>
+<th align="left" width="204">
+Name
+</th>
+<th align="left" width="584">
+Description
+</th>
+</tr>
+
+<tr>
+<td>
+aliases
+</td>
+<td>
+list available package run aliases
+</td>
+</tr>
+
+<tr>
+<td>
+config
+</td>
+<td>
+list/manage package configuration
+</td>
+</tr>
+
+<tr>
+<td>
+help
+</td>
+<td>
+learn more about how to utilize spinning-jenny
+</td>
+</tr>
+
+<tr>
+<td>
+repository
+</td>
+<td>
+display the source code repository url
+</td>
+</tr>
+
+<tr>
+<td>
+version
+</td>
+<td>
+display the installed version of spinning-jenny
+</td>
+</tr>
+</table>
+
+### Flags
 
 <img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/flags.gif?raw=true" width="100%" />
 
@@ -180,30 +229,6 @@ save backup of resolutions
 
 <tr>
 <td>
---bin
-</td>
-<td>
-
-</td>
-<td>
-list available package run aliases
-</td>
-</tr>
-
-<tr>
-<td>
---config
-</td>
-<td>
-
-</td>
-<td>
-list/manage package configuration
-</td>
-</tr>
-
-<tr>
-<td>
 --directory
 </td>
 <td>
@@ -228,18 +253,6 @@ prevent yarn.lock modifications
 
 <tr>
 <td>
---help
-</td>
-<td>
-
-</td>
-<td>
-learn more about how to utilize spinning-jenny
-</td>
-</tr>
-
-<tr>
-<td>
 --label
 </td>
 <td>
@@ -247,18 +260,6 @@ learn more about how to utilize spinning-jenny
 </td>
 <td>
 display action counter
-</td>
-</tr>
-
-<tr>
-<td>
---repository
-</td>
-<td>
-
-</td>
-<td>
-display the source code repository url
 </td>
 </tr>
 
@@ -273,19 +274,6 @@ display the source code repository url
 run spinning-jenny verbosely
 </td>
 </tr>
-
-<tr>
-<td>
---version
-</td>
-<td>
-
-</td>
-<td>
-display the installed version of spinning-jenny
-</td>
-</tr>
-
 </table>
 
 ## Uninstall
@@ -297,6 +285,3 @@ yarn global remove spinning-jenny
 ```bash
 npm uninstall -g spinning-jenny
 ```
-
-![GitHub Repo stars](https://img.shields.io/github/stars/grimmbraten/spinning-jenny?style=social)
-![npm](https://img.shields.io/npm/dt/spinning-jenny?logo=npm&style=social)

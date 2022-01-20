@@ -2,12 +2,11 @@ const chalk = require('chalk');
 const { execute } = require('../common');
 const { loader, prefix } = require('../helpers');
 
-const install = async (spinner, hint, target, { verbose, frozen, ...config }) => {
+const install = async (spinner, hint, target, { frozen, ...config }) => {
   const step = prefix(config);
 
   if (frozen)
     return loader(
-      verbose,
       spinner,
       'warn',
       'skipped install',
@@ -15,12 +14,11 @@ const install = async (spinner, hint, target, { verbose, frozen, ...config }) =>
       `${hint} ${chalk.gray('[frozen: true]')}`
     );
 
-  loader(verbose, spinner, 'start', 'installing dependencies', step, hint);
+  loader(spinner, 'start', 'installing dependencies', step, hint);
 
   const [success] = await execute(`yarn --cwd ${target} install`);
 
   return loader(
-    verbose,
     spinner,
     success ? 'succeed' : 'fail',
     success ? 'installed dependencies' : 'installation failed',

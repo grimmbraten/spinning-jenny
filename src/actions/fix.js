@@ -13,14 +13,13 @@ const fix = async (spinner, hint, target, { verbose, ...config }) => {
   const step = prefix(config);
 
   const [success, response] = await audit(spinner, hint, target, verbose, step);
-  if (!success) return loader(verbose, spinner, 'fail', 'scan failed', step, hint);
+  if (!success) return loader(spinner, 'fail', 'scan failed', step, hint);
 
   const { data } = findAuditSummary(response);
   const vulnerabilities = reduce(data.vulnerabilities);
 
   if (vulnerabilities === 0)
     return loader(
-      verbose,
       spinner,
       'succeed',
       'no vulnerabilities found, dependencies are secure',
@@ -34,7 +33,7 @@ const fix = async (spinner, hint, target, { verbose, ...config }) => {
 
   verbose && console.log('\n\nloaded in package.json dependencies\n', dependencies);
 
-  loader(verbose, spinner, 'text', 'analyzing advisories', step, hint);
+  loader(spinner, 'text', 'analyzing advisories', step, hint);
 
   const advisories = findAdvisories(response);
 
@@ -63,22 +62,21 @@ const fix = async (spinner, hint, target, { verbose, ...config }) => {
   verbose && console.log('\nunsolved vulnerabilities', unsolved.length), console.log();
 
   if (upgrades.length > 0) {
-    loader(verbose, spinner, 'text', 'upgrading dependencies', step, hint);
+    loader(spinner, 'text', 'upgrading dependencies', step, hint);
     const [success, response] = await execute(`yarn --cwd ${target} upgrade ${upgrades.join(' ')}`);
     if (!success) console.log(`yarn upgrade failed`, response);
   }
 
   if (Object.keys(resolutions).length > 0) {
-    loader(verbose, spinner, 'text', 'applying resolutions', step, hint);
+    loader(spinner, 'text', 'applying resolutions', step, hint);
     await write(target, 'package.json', { resolutions });
 
-    loader(verbose, spinner, 'text', 'installing with new resolutions', step, hint);
+    loader(spinner, 'text', 'installing with new resolutions', step, hint);
     const [success] = await execute(`yarn --cwd ${target} install`);
     if (!success) console.log(`yarn install failed`);
   }
 
   loader(
-    verbose,
     spinner,
     unsolved.length > 0 && total === unsolved.length
       ? 'fail'

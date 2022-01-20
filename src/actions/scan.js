@@ -7,13 +7,12 @@ const scan = async (spinner, hint, target, { verbose, ...config }) => {
   const step = prefix(config);
 
   const [success, response] = await audit(spinner, hint, target, verbose, step, '--summary');
-  if (!success) return loader(verbose, spinner, 'fail', 'scan failed', step, hint);
+  if (!success) return loader(spinner, 'fail', 'scan failed', step, hint);
 
   const vulnerabilities = reduce(findAuditSummary(response).data.vulnerabilities);
   const dependencies = countDependencies(response);
 
   return loader(
-    verbose,
     spinner,
     vulnerabilities === 0 ? 'succeed' : 'fail',
     vulnerabilities === 0

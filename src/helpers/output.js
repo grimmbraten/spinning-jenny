@@ -1,7 +1,6 @@
-const loader = (verbose, spinner, action, message, step, hint) => {
-  if (verbose)
-    if (action === 'text') spinner.text = step + message + hint;
-    else spinner[action](step + message + hint);
+const loader = (spinner, action, message, step, hint) => {
+  if (action === 'text') spinner.text = step + message + hint;
+  else spinner[action](step + message + hint);
 
   return message;
 };

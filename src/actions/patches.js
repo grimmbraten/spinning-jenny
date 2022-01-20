@@ -7,9 +7,9 @@ const patches = async (spinner, hint, target, { verbose, ...config }) => {
   const step = prefix(config);
 
   const [success, response] = await audit(spinner, hint, target, verbose, step);
-  if (!success) return loader(verbose, spinner, 'fail', 'scan failed', step, hint);
+  if (!success) return loader(spinner, 'fail', 'scan failed', step, hint);
 
-  loader(verbose, spinner, 'text', 'analyzing vulnerabilities', step, hint);
+  loader(spinner, 'text', 'analyzing vulnerabilities', step, hint);
 
   const advisories = findAdvisories(response);
 
@@ -18,7 +18,7 @@ const patches = async (spinner, hint, target, { verbose, ...config }) => {
   const patches = unique.map(module => advisories.find(advisory => advisory.module === module));
   const patchCount = patches.length;
 
-  if (patchCount === 0) return loader(verbose, spinner, 'warn', 'skipped patches', '', hint);
+  if (patchCount === 0) return loader(spinner, 'warn', 'skipped patches', '', hint);
 
   patches.sort((a, b) => a.time - b.time);
 
@@ -35,7 +35,6 @@ const patches = async (spinner, hint, target, { verbose, ...config }) => {
   console.log(`${output}\n`);
 
   return loader(
-    verbose,
     spinner,
     'succeed',
     `found ${patchCount} ${patchCount > 1 ? 'advisories' : 'advisory'}`,

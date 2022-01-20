@@ -1,6 +1,6 @@
 jest.mock('../../src/common');
 
-const { backup } = require('../../src/functions');
+const { backup } = require('../../src/actions');
 const { target, config } = require('../constants');
 
 const { read, write } = require('../../src/common');

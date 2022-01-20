@@ -2,7 +2,7 @@ jest.mock('../../src/common');
 const { read, remove } = require('../../src/common');
 
 const { target, config } = require('../constants');
-const { clean } = require('../../src/functions');
+const { clean } = require('../../src/actions');
 
 const file = 'package.json';
 const property = 'resolutions';

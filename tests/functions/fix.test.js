@@ -5,7 +5,7 @@ const { write } = require('../../src/common/json');
 const { audit } = require('../../src/common/audit');
 const { reduce, findAdvisories, findAuditSummary } = require('../../src/helpers/data');
 
-const { fix } = require('../../src/functions');
+const { fix } = require('../../src/actions');
 const { target, config, mockedAuditAdvisory } = require('../constants');
 
 const run = async () => await fix(undefined, undefined, target, config);

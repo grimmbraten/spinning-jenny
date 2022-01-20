@@ -3,7 +3,7 @@ jest.mock('../../src/helpers/data');
 const { execute } = require('../../src/common');
 const { findSuccessEvent } = require('../../src/helpers/data');
 
-const { upgrade } = require('../../src/functions');
+const { upgrade } = require('../../src/actions');
 const { target, config } = require('../constants');
 
 const run = async () => await upgrade(undefined, undefined, target, config);

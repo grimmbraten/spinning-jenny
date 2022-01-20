@@ -3,7 +3,7 @@ jest.mock('../../src/helpers/data');
 const { audit } = require('../../src/common/audit');
 const { reduce, findAuditSummary } = require('../../src/helpers/data');
 
-const { scan } = require('../../src/functions');
+const { scan } = require('../../src/actions');
 const { target, config, mockedAuditSummary } = require('../constants');
 
 const run = async () => await scan(undefined, undefined, target, config);

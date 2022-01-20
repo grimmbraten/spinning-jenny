@@ -12,9 +12,9 @@ const {
   upgrade,
   actions,
   flags
-} = require('../functions');
+} = require('../actions');
 
-const getFunctions = (inputs, config) => {
+const getActions = (inputs, config) => {
   let skipIndex;
   let hint = '';
   let bail = false;
@@ -65,7 +65,7 @@ const getFunctions = (inputs, config) => {
   if (functions.length > 0) config.backup && functions.unshift(backup);
   config.steps.total = functions.length;
 
-  return { hint, bail, functions: functions.length > 0 ? functions : null, target, config };
+  return { hint, bail, actions: functions.length > 0 ? functions : null, target, config };
 };
 
 const suggestFunction = (inputs, input) => {
@@ -84,5 +84,5 @@ const suggestFunction = (inputs, input) => {
 };
 
 module.exports = {
-  getFunctions
+  getActions
 };

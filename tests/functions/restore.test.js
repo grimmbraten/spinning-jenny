@@ -1,8 +1,8 @@
 jest.mock('../../src/common/json');
 const { read, write } = require('../../src/common/json');
 
+const { restore } = require('../../src/actions');
 const { target, config, mockedResolutions } = require('../constants');
-const { restore } = require('../../src/functions');
 
 const file = 'package.json';
 

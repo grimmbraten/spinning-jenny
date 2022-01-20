@@ -2,7 +2,7 @@ jest.mock('../../src/common');
 const { execute } = require('../../src/common');
 
 const { config } = require('../constants');
-const { install } = require('../../src/functions');
+const { install } = require('../../src/actions');
 
 const run = async (conf = config) => await install(undefined, undefined, undefined, conf);
 

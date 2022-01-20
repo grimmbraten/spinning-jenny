@@ -10,10 +10,10 @@ module.exports = {
   version,
   repository,
   commands: {
-    help: '--help',
-    config: '--config',
-    bin: '--bin',
-    version: '--version',
-    repository: '--repository'
+    help: 'help',
+    alias: 'alias',
+    config: 'config',
+    version: 'version',
+    repository: 'repository'
   }
 };

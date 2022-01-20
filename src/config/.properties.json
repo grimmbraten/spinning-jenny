@@ -2,6 +2,6 @@
   "label": true,
   "backup": true,
   "frozen": false,
-  "verbose": true,
+  "verbose": false,
   "pattern": "--caret"
 }

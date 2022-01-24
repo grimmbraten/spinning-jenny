@@ -14,7 +14,7 @@ const upgrade = async (hint, target, { verbose, pattern, frozen, ...config }) =>
 
   if (verbose) verbosely('upgrading pattern', pattern);
 
-  const [success, response] = await execute(`yarn --cwd ${target} upgrade ${pattern} --json`);
+  const [success, response] = await execute(`yarn --cwd ${target} upgrade ${pattern}`);
 
   if (success) {
     spinner.succeed(step + findSuccessEvent(response) + hint);

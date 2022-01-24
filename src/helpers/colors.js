@@ -2,7 +2,7 @@ const chalk = require('chalk');
 
 const colorProperty = value =>
   typeof value === 'string'
-    ? chalk.gray(`${value}`)
+    ? chalk.blue(`${value}`)
     : value
     ? chalk.green(`${value}`)
     : chalk.red(`${value}`);

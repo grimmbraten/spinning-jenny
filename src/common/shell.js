@@ -9,7 +9,6 @@ const execute = command =>
       },
       (_, stdout, stderr) => {
         if (!stdout || stderr.includes('error')) return reject([false, stderr]);
-
         resolve([true, stdout]);
       }
     );

@@ -26,7 +26,7 @@ const patches = async (hint, target, { verbose, ...config }) => {
   patches.sort((a, b) => a.time - b.time);
 
   patches.forEach((patch, index) => {
-    list += `\n${index > 0 && '\n'}${patch.module} @ ${patch.version} ${colorSeverity(
+    list += `\n${index > 0 ? '\n' : ''}${patch.module} @ ${patch.version} ${colorSeverity(
       patch.severity
     )}\n${
       patch.recommendation !== 'none' ? patch.recommendation : 'could not find any recommendation'

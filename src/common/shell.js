@@ -1,7 +1,5 @@
 const shell = require('shelljs');
 
-const test = (option, value) => shell.test(option, value);
-
 const execute = command =>
   new Promise((resolve, reject) => {
     shell.exec(
@@ -21,6 +19,5 @@ const execute = command =>
   });
 
 module.exports = {
-  test,
   execute
 };

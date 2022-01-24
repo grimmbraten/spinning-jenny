@@ -1,18 +1,24 @@
+const ora = require('ora');
+const { prefix, verbosely } = require('../helpers');
 const { read, write } = require('../common');
-const { loader, prefix } = require('../helpers');
 
-const restore = async (spinner, hint, target, config) => {
+const restore = async (hint, target, { verbose, ...config }) => {
   const step = prefix(config);
-  loader(spinner, 'start', 'restoring package.json', step, hint);
+  const spinner = ora(step + 'restoring package.json' + hint).start();
 
   const project = target.split('/').pop();
   const { resolutions } = await read(__dirname, '../.backups.json', project);
 
-  if (!resolutions) return loader(spinner, 'fail', 'restoration failed', step, hint);
+  if (!resolutions) {
+    spinner.warn(step + 'skipped backup' + hint);
+    if (verbose) verbosely('skip reason', 'no resolutions found', 'last');
+    return 1;
+  } else if (verbose) verbosely(`fetched resolutions from ${target}/package.json`, resolutions);
 
   await write(target, 'package.json', { resolutions });
 
-  return loader(spinner, 'succeed', 'restored resolutions', step, hint);
+  spinner.succeed(step + 'restored resolutions' + hint);
+  return 0;
 };
 
 module.exports = {

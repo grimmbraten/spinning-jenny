@@ -1,20 +1,13 @@
 #!/usr/bin/env node
 
-const ora = require('ora');
-const { sequence } = require('all-aboard');
-
 const { load } = require('./config');
+const { sequence } = require('all-aboard');
 const { interpret } = require('./controller');
 
-const [, , ...inputs] = process.argv;
+const [, , ...args] = process.argv;
 
 (async () => {
-  const spinner = ora();
   const fileConfig = await load();
-
-  const { hint, bail, target, config, command, actions } = interpret(inputs, fileConfig);
-
-  if (bail) return;
-  if (command) return command(spinner, inputs);
-  if (actions) await sequence(actions, [spinner, hint, target, config]);
+  const { hint, bail, target, config, command, actions } = interpret(args, fileConfig);
+  return bail ? 1 : command ? command(args) : await sequence(actions, [hint, target, config]);
 })();

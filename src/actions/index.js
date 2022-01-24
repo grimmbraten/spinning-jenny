@@ -17,19 +17,19 @@ module.exports = {
   patches,
   upgrade,
   actions: {
-    patches: ['patches', 'p'],
-    clean: ['clean', 'c'],
-    install: ['install', 'i'],
-    fix: ['fix', 'f'],
-    restore: ['restore', 'r'],
-    scan: ['audit', 'a'],
-    upgrade: ['upgrade', 'u']
+    fix: ['fix'],
+    scan: ['audit'],
+    clean: ['clean'],
+    patches: ['patches'],
+    install: ['install'],
+    restore: ['restore'],
+    upgrade: ['upgrade']
   },
   flags: {
-    backup: ['--backup', '-b'],
-    directory: ['--directory', '-d'],
-    frozen: ['--frozen', '-f'],
     label: ['--label', '-l'],
-    verbose: ['--verbose', '-l']
+    frozen: ['--frozen', '-f'],
+    backup: ['--backup', '-b'],
+    verbose: ['--verbose', '-v'],
+    directory: ['--directory', '-d']
   }
 };

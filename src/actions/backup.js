@@ -1,21 +1,29 @@
+const ora = require('ora');
 const { read, write } = require('../common');
-const { loader, prefix } = require('../helpers');
+const { prefix, verbosely } = require('../helpers');
 
-const backup = async (spinner, hint, target, config) => {
+const backup = async (hint, target, { verbose, ...config }) => {
   const backup = {};
   const step = prefix(config);
-
-  loader(spinner, 'start', 'creating backup', step, hint);
+  const spinner = ora(step + 'collecting resolutions' + hint).start();
 
   const resolutions = await read(target, 'package.json', 'resolutions');
 
-  if (!resolutions) return loader(spinner, 'warn', 'skipped backup', step, hint);
+  if (!resolutions) {
+    spinner.warn(step + 'skipped backup' + hint);
+    if (verbose) verbosely('skip reason', 'no resolutions found', 'last');
+    return 1;
+  } else if (verbose) verbosely(`fetched resolutions from ${target}/package.json`, resolutions);
 
   const project = target.split('/').pop();
-  backup[project] = { resolutions, date: new Date().toString() };
+  if (verbose) verbosely('fetched project name from path', project);
+
+  backup[project] = { resolutions, path: target, created: new Date().toString() };
   await write(__dirname + '/../backup/', '.resolutions.json', backup);
 
-  return loader(spinner, 'succeed', 'created backup', step, hint);
+  spinner.succeed(step + 'created backup' + hint);
+  if (verbose) verbosely('backup created at', new Date().toString(), 'last');
+  return 0;
 };
 
 module.exports = {

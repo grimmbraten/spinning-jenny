@@ -1,29 +1,34 @@
+const ora = require('ora');
 const chalk = require('chalk');
 const { audit } = require('../common');
-const { loader, prefix, colorSeverity, findAdvisories } = require('../helpers');
+const { prefix, verbosely, colorSeverity, findAdvisories } = require('../helpers');
 
-const patches = async (spinner, hint, target, { verbose, ...config }) => {
-  let output = '';
+const patches = async (hint, target, { verbose, ...config }) => {
+  let list = '';
   const step = prefix(config);
+  const spinner = ora(step + 'analyzing vulnerabilities' + hint).start();
 
-  const [success, response] = await audit(spinner, hint, target, verbose, step);
-  if (!success) return loader(spinner, 'fail', 'scan failed', step, hint);
+  const [success, response] = await audit(target);
 
-  loader(spinner, 'text', 'analyzing vulnerabilities', step, hint);
+  if (!success) {
+    spinner.fail(step + 'scan failed' + hint);
+    verbosely('fail reason', response, 'last');
+    return 2;
+  }
 
   const advisories = findAdvisories(response);
+  if (verbose) verbosely('advisory count', advisories.length);
 
   const unique = [...new Set(advisories.map(advisory => advisory.module))];
+  if (verbose) verbosely('advisory count (unique)', unique.length);
 
   const patches = unique.map(module => advisories.find(advisory => advisory.module === module));
-  const patchCount = patches.length;
-
-  if (patchCount === 0) return loader(spinner, 'warn', 'skipped patches', '', hint);
-
   patches.sort((a, b) => a.time - b.time);
 
-  patches.forEach(patch => {
-    output += `\n\n${patch.module} @ ${patch.version} ${colorSeverity(patch.severity)}\n${
+  patches.forEach((patch, index) => {
+    list += `\n${index > 0 && '\n'}${patch.module} @ ${patch.version} ${colorSeverity(
+      patch.severity
+    )}\n${
       patch.recommendation !== 'none' ? patch.recommendation : 'could not find any recommendation'
     } ${
       patch.patchedVersions !== '<0.0.0' ? `${chalk.green('(patched)')}` : chalk.red('(unsolved)')
@@ -32,15 +37,13 @@ const patches = async (spinner, hint, target, { verbose, ...config }) => {
     )}`;
   });
 
-  console.log(`${output}\n`);
-
-  return loader(
-    spinner,
-    'succeed',
-    `found ${patchCount} ${patchCount > 1 ? 'advisories' : 'advisory'}`,
-    '',
-    hint
+  spinner.succeed(
+    step + `found ${patches.length} ${patches.length === 1 ? 'advisory' : 'advisories'}` + hint
   );
+
+  console.log(list);
+
+  return 0;
 };
 
 module.exports = {

@@ -1,5 +1,5 @@
 const { audit } = require('./audit');
-const { test, execute } = require('./shell');
+const { execute } = require('./shell');
 const { read, write, remove } = require('./json');
 
 module.exports = {
@@ -7,6 +7,5 @@ module.exports = {
   write,
   remove,
   audit,
-  test,
   execute
 };

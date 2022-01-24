@@ -1,30 +1,29 @@
-const chalk = require('chalk');
+const ora = require('ora');
 const { execute } = require('../common');
-const { loader, prefix, findSuccessEvent } = require('../helpers');
+const { prefix, verbosely, findSuccessEvent } = require('../helpers');
 
-const upgrade = async (spinner, hint, target, { pattern, frozen, ...config }) => {
+const upgrade = async (hint, target, { verbose, pattern, frozen, ...config }) => {
   const step = prefix(config);
+  const spinner = ora(step + 'upgrading dependencies' + hint).start();
 
-  if (frozen)
-    return loader(
-      spinner,
-      'warn',
-      'skipped upgrade',
-      step,
-      `${hint} ${chalk.gray('[frozen: true]')}`
-    );
+  if (frozen) {
+    spinner.warn(step + 'skipped upgrade' + hint);
+    if (verbose) verbosely('skip reason', 'frozen mode (true)', 'last');
+    return 1;
+  }
 
-  loader(spinner, 'start', 'upgrading dependencies', step, hint);
+  if (verbose) verbosely('upgrading pattern', pattern);
 
   const [success, response] = await execute(`yarn --cwd ${target} upgrade ${pattern} --json`);
 
-  return loader(
-    spinner,
-    success ? 'succeed' : 'fail',
-    success ? findSuccessEvent(response) || 'upgrade failed' : 'upgrade failed',
-    step,
-    hint
-  );
+  if (success) {
+    spinner.succeed(step + findSuccessEvent(response) + hint);
+    return 0;
+  } else {
+    spinner.fail(step + 'upgrade failed' + hint);
+    verbosely('fail reason', response, 'last');
+    return 2;
+  }
 };
 
 module.exports = {

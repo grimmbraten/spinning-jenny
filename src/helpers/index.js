@@ -1,4 +1,4 @@
-const { loader, prefix } = require('./output');
+const { prefix, verbosely } = require('./output');
 const { colorProperty, colorSeverity } = require('./colors');
 const {
   reduce,
@@ -10,9 +10,9 @@ const {
 } = require('./data');
 
 module.exports = {
-  loader,
   prefix,
   reduce,
+  verbosely,
   parseBoolean,
   colorProperty,
   colorSeverity,

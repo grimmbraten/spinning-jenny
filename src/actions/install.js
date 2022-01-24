@@ -1,30 +1,27 @@
-const chalk = require('chalk');
+const ora = require('ora');
 const { execute } = require('../common');
-const { loader, prefix } = require('../helpers');
+const { prefix, verbosely } = require('../helpers');
 
-const install = async (spinner, hint, target, { frozen, ...config }) => {
+const install = async (hint, target, { verbose, frozen, ...config }) => {
   const step = prefix(config);
+  const spinner = ora(step + 'installing dependencies' + hint).start();
 
-  if (frozen)
-    return loader(
-      spinner,
-      'warn',
-      'skipped install',
-      step,
-      `${hint} ${chalk.gray('[frozen: true]')}`
-    );
+  if (frozen) {
+    spinner.warn(step + 'skipped install' + hint);
+    if (verbose) verbosely('skip reason', 'frozen mode (true)', 'last');
+    return 1;
+  }
 
-  loader(spinner, 'start', 'installing dependencies', step, hint);
+  const [success, response] = await execute(`yarn --cwd ${target} install`);
 
-  const [success] = await execute(`yarn --cwd ${target} install`);
+  if (!success) {
+    spinner.fail(step + 'installation failed' + hint);
+    if (verbose) verbosely('fail reason', response, 'last');
+    return 2;
+  }
 
-  return loader(
-    spinner,
-    success ? 'succeed' : 'fail',
-    success ? 'installed dependencies' : 'installation failed',
-    step,
-    hint
-  );
+  spinner.succeed(step + 'installed dependencies' + hint);
+  return 0;
 };
 
 module.exports = {

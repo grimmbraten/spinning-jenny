@@ -1,51 +1,47 @@
-/* eslint-disable no-extra-parens */
-
-const chalk = require('chalk');
-
+const ora = require('ora');
 const { read, write, audit, execute } = require('../common');
-const { reduce, loader, findAuditSummary, findAdvisories, prefix } = require('../helpers');
+const { reduce, findAuditSummary, findAdvisories, prefix, verbosely } = require('../helpers');
 
-const fix = async (spinner, hint, target, { verbose, ...config }) => {
+const fix = async (hint, target, { verbose, ...config }) => {
   const unsolved = [];
   const upgrades = [];
   const resolutions = {};
 
   const step = prefix(config);
+  const spinner = ora(step + 'auditing dependencies' + hint).start();
 
-  const [success, response] = await audit(spinner, hint, target, verbose, step);
-  if (!success) return loader(spinner, 'fail', 'scan failed', step, hint);
+  const [success, response] = await audit(target);
+  if (!success) {
+    spinner.fail(step + 'fix failed' + hint);
+    if (verbose) verbosely('fail reason', response, 'last');
+    return 2;
+  }
+
+  spinner.text = step + 'analyzing vulnerabilities' + hint;
 
   const { data } = findAuditSummary(response);
   const vulnerabilities = reduce(data.vulnerabilities);
 
-  if (vulnerabilities === 0)
-    return loader(
-      spinner,
-      'succeed',
-      'no vulnerabilities found, dependencies are secure',
-      '',
-      hint
-    );
+  if (vulnerabilities === 0) {
+    spinner.succeed(step + 'all dependencies are secure' + hint);
+    return 1;
+  }
 
   const modules = await read(target, 'package.json', 'dependencies');
   const devModules = await read(target, 'package.json', 'devDependencies');
   const dependencies = Object.keys(modules).concat(Object.keys(devModules));
 
-  verbose && console.log('\n\nloaded in package.json dependencies\n', dependencies);
-
-  loader(spinner, 'text', 'analyzing advisories', step, hint);
+  if (verbose) verbosely('loaded in package.json dependencies', dependencies);
 
   const advisories = findAdvisories(response);
-
-  verbose && console.log('\ntotal count of found advisories', advisories.length);
+  if (verbose) verbosely('advisory count', advisories.length);
 
   const unique = [...new Set(advisories.map(advisory => advisory.module))];
-
-  verbose && console.log('\ntotal count of unique advisories', unique.length);
+  if (verbose) verbosely('advisory count (unique)', unique.length);
 
   const patches = unique.map(module => advisories.find(advisory => advisory.module === module));
 
-  verbose && console.log('\nextracted patches from yarn audit\n', patches);
+  if (verbose) verbosely('patches (raw)', patches);
 
   patches.forEach(advisory => {
     if (advisory.patchedVersions === '<0.0.0')
@@ -57,71 +53,67 @@ const fix = async (spinner, hint, target, { verbose, ...config }) => {
 
   const total = unsolved.length + upgrades.length + Object.keys(resolutions).length;
 
-  verbose && console.log('\nresolutions to add', Object.keys(resolutions).length);
-  verbose && console.log('\nmodules to upgrade', upgrades.length);
-  verbose && console.log('\nunsolved vulnerabilities', unsolved.length), console.log();
+  if (verbose) verbosely('resolution count', Object.keys(resolutions).length);
+  if (verbose) verbosely('upgrade count', upgrades.length);
+  if (verbose) verbosely('unsolved count', unsolved.length);
 
   if (upgrades.length > 0) {
-    loader(spinner, 'text', 'upgrading dependencies', step, hint);
+    spinner.text = step + 'upgrading dependencies' + hint;
     const [success, response] = await execute(`yarn --cwd ${target} upgrade ${upgrades.join(' ')}`);
-    if (!success) console.log(`yarn upgrade failed`, response);
+    if (!success) {
+      spinner.fail(step + 'upgrade failed' + hint);
+      if (verbose) verbosely('fail reason', response, 'last');
+    }
+    return 2;
   }
 
   if (Object.keys(resolutions).length > 0) {
-    loader(spinner, 'text', 'applying resolutions', step, hint);
+    spinner.text = step + 'applying resolutions' + hint;
     await write(target, 'package.json', { resolutions });
 
-    loader(spinner, 'text', 'installing with new resolutions', step, hint);
-    const [success] = await execute(`yarn --cwd ${target} install`);
-    if (!success) console.log(`yarn install failed`);
+    spinner.text = step + 'installing with new resolutions' + hint;
+    const [success, response] = await execute(`yarn --cwd ${target} install`);
+    if (!success) {
+      spinner.fail(step + 'install failed' + hint);
+      if (verbose) verbosely('fail reason', response, 'last');
+      return 2;
+    }
   }
 
-  loader(
-    spinner,
-    unsolved.length > 0 && total === unsolved.length
-      ? 'fail'
-      : unsolved.length === 0
-      ? 'succeed'
-      : 'warn',
-    unsolved.length > 0 && total === unsolved.length
-      ? `could not fix known ${unsolved.length === 1 ? 'vulnerability' : 'vulnerabilities'}`
-      : unsolved.length === 0
-      ? 'fixed known vulnerabilities without any issues'
-      : `fixed known vulnerabilities but encountered ${
-          unsolved.length === 1 ? 'an ' : ''
-        }unsolved ${unsolved.length === 1 ? 'vulnerability' : 'vulnerabilities'}`,
-    step,
-    hint
-  );
-
-  !verbose &&
-    console.log(
-      `${
-        Object.keys(resolutions).length > 0
-          ? chalk.green(
-              `\n➜ applied ${Object.keys(resolutions).length} module resolution${
-                Object.keys(resolutions).length === 1 ? '' : 's'
-              } (${Math.round((Object.keys(resolutions).length / total) * 100 * 10) / 10}%)`
-            )
-          : ''
-      }${
-        upgrades.length > 0
-          ? chalk.yellow(
-              `\n⇡ upgraded ${upgrades.length} project ${
-                upgrades.length === 1 ? 'dependency' : 'dependencies'
-              } (${Math.round((upgrades.length / total) * 100 * 10) / 10}%)`
-            )
-          : ''
-      }${
-        unsolved.length > 0
-          ? chalk.red(
-              `\n✘ skipped ${unsolved.length} unsolved ${
-                unsolved.length === 1 ? 'vulnerability' : 'vulnerabilities'
-              } (${Math.round((unsolved.length / total) * 100 * 10) / 10}%)`
-            )
-          : ''
-      }`
+  if (unsolved.length > 0 && total === unsolved.length)
+    spinner.fail(step + 'secured none of the known vulnerabilities' + hint);
+  else if (unsolved.length === 0)
+    spinner.succeed(step + 'secured all known vulnerabilities' + hint);
+  else
+    spinner.warn(
+      step +
+        `secured ${total - unsolved.length} ${
+          total - unsolved.length === 1 ? 'known vulnerability' : 'of the known vulnerabilities'
+        }` +
+        hint
     );
+
+  if (verbose) {
+    console.log(
+      `applied resolution${Object.keys(resolutions).length === 1 ? '' : 's'}`,
+      // eslint-disable-next-line no-extra-parens
+      `(${Math.round((Object.keys(resolutions).length / total) * 100 * 10) / 10}%)`
+    );
+
+    console.log(
+      `upgraded ${upgrades.length === 1 ? 'dependency' : 'dependencies'}`,
+      // eslint-disable-next-line no-extra-parens
+      `(${Math.round((upgrades.length / total) * 100 * 10) / 10}%)`
+    );
+
+    console.log(
+      `unsolved ${unsolved.length === 1 ? 'vulnerability' : 'vulnerabilities'}`,
+      // eslint-disable-next-line no-extra-parens
+      `(${Math.round((unsolved.length / total) * 100 * 10) / 10}%)\n`
+    );
+  }
+
+  return 0;
 };
 
 module.exports = {

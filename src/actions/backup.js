@@ -19,7 +19,7 @@ const backup = async (hint, target, { verbose, ...config }) => {
   if (verbose) verbosely('fetched project name from path', project);
 
   backup[project] = { resolutions, path: target, created: new Date().toString() };
-  await write(__dirname + '/../backup/', '.resolutions.json', backup);
+  await write(__dirname + '/../backup/', 'resolutions.json', backup);
 
   spinner.succeed(step + 'created backup' + hint);
   if (verbose) verbosely('backup created at', new Date().toString(), 'last');

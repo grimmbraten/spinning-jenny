@@ -76,7 +76,7 @@ const suggestFunction = (inputs, input) => {
     { threshold: 0.4 }
   ).search(input);
 
-  console.log(`\nspinning-jenny ${inputs.join(' ').replace(input, chalk.red(input))}`);
+  console.log('\ndid you mean?');
 
   fuzzy.forEach(suggestion =>
     console.log(`spinning-jenny ${inputs.join(' ').replace(input, chalk.green(suggestion.item))}`)

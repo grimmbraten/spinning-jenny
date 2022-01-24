@@ -1,12 +1,13 @@
 const ora = require('ora');
-const { audit } = require('../common');
+const { execute } = require('../common');
 const { reduce, prefix, verbosely, countDependencies, findAuditSummary } = require('../helpers');
 
-const scan = async (hint, target, { verbose, ...config }) => {
+const audit = async (hint, target, { verbose, ...config }) => {
   const step = prefix(config);
   const spinner = ora(step + 'auditing module dependencies' + hint).start();
 
-  const [success, response] = await audit(target, '--summary');
+  const [success, response] = await execute(`yarn --cwd ${target} audit --json --summary`);
+
   if (!success) {
     spinner.fail(step + 'audit failed' + hint);
     if (verbose) verbosely('fail reason', response, 'last');
@@ -37,5 +38,5 @@ const scan = async (hint, target, { verbose, ...config }) => {
 };
 
 module.exports = {
-  scan
+  audit
 };

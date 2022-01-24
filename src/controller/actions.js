@@ -2,8 +2,8 @@ const chalk = require('chalk');
 const Fuse = require('fuse.js');
 
 const {
+  audit,
   restore,
-  scan,
   clean,
   install,
   fix,
@@ -49,7 +49,7 @@ const getActions = (inputs, config) => {
       skipIndex = index + 1;
       target = inputs[skipIndex];
       hint = chalk.gray(` in ${target}`);
-    } else if (actions.scan.includes(input)) functions.push(scan);
+    } else if (actions.audit.includes(input)) functions.push(audit);
     else if (actions.clean.includes(input)) functions.push(clean);
     else if (actions.patches.includes(input)) functions.push(patches);
     else if (actions.restore.includes(input)) functions.push(restore);

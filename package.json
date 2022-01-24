@@ -19,13 +19,16 @@
   "license": "MIT",
   "keywords": [
     "cli",
-    "scan",
     "yarn",
     "audit",
+    "modules",
+    "secure",
+    "patches",
     "protect",
     "terminal",
     "advisories",
     "resolutions",
+    "dependencies",
     "package.json",
     "vulnerabilites"
   ],

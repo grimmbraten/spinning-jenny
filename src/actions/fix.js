@@ -1,5 +1,5 @@
 const ora = require('ora');
-const { read, write, audit, execute } = require('../common');
+const { read, write, execute } = require('../common');
 const { reduce, findAuditSummary, findAdvisories, prefix, verbosely } = require('../helpers');
 
 const fix = async (hint, target, { verbose, ...config }) => {
@@ -10,7 +10,8 @@ const fix = async (hint, target, { verbose, ...config }) => {
   const step = prefix(config);
   const spinner = ora(step + 'auditing dependencies' + hint).start();
 
-  const [success, response] = await audit(target);
+  const [success, response] = await execute(`yarn --cwd ${target} audit --json`);
+
   if (!success) {
     spinner.fail(step + 'fix failed' + hint);
     if (verbose) verbosely('fail reason', response, 'last');

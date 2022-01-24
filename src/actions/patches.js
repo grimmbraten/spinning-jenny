@@ -1,6 +1,6 @@
 const ora = require('ora');
 const chalk = require('chalk');
-const { audit } = require('../common');
+const { execute } = require('../common');
 const { prefix, verbosely, colorSeverity, findAdvisories } = require('../helpers');
 
 const patches = async (hint, target, { verbose, ...config }) => {
@@ -8,10 +8,10 @@ const patches = async (hint, target, { verbose, ...config }) => {
   const step = prefix(config);
   const spinner = ora(step + 'analyzing vulnerabilities' + hint).start();
 
-  const [success, response] = await audit(target);
+  const [success, response] = await execute(`yarn --cwd ${target} audit --json`);
 
   if (!success) {
-    spinner.fail(step + 'scan failed' + hint);
+    spinner.fail(step + 'audit failed' + hint);
     verbosely('fail reason', response, 'last');
     return 2;
   }

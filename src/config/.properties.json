@@ -3,5 +3,5 @@
   "backup": true,
   "frozen": false,
   "verbose": false,
-  "pattern": "--caret"
+  "pattern": "--tilde"
 }

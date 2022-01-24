@@ -33,7 +33,7 @@ For more information, please refer to the [npm](https://docs.npmjs.com/cli/v6/co
 ## Use
 
 ```bash
-spinning-jenny [actions/command] [--flags]
+spinning-jenny [command] | [action | --flag]
 ```
 
 ### Actions
@@ -45,9 +45,6 @@ spinning-jenny [actions/command] [--flags]
 <th align="left" width="204">
 Name
 </th>
-<th align="left" width="104">
-Short
-</th>
 <th align="left" width="584">
 Description
 </th>
@@ -56,9 +53,6 @@ Description
 <tr>
 <td>
 audit
-</td>
-<td>
-a
 </td>
 <td>
 find modules with known vulnerabilities
@@ -71,9 +65,6 @@ find modules with known vulnerabilities
 clean
 </td>
 <td>
-c
-</td>
-<td>
 cleanup pre-existing resolutions
 </td>
 </tr>
@@ -81,9 +72,6 @@ cleanup pre-existing resolutions
 <tr>
 <td>
 fix
-</td>
-<td>
-f
 </td>
 <td>
 resolve modules with known vulnerabilities
@@ -95,9 +83,6 @@ resolve modules with known vulnerabilities
 install
 </td>
 <td>
-i
-</td>
-<td>
 install dependencies
 </td>
 </tr>
@@ -105,9 +90,6 @@ install dependencies
 <tr>
 <td>
 patches
-</td>
-<td>
-p
 </td>
 <td>
 find published patch information for modules with known vulnerabilities
@@ -119,9 +101,6 @@ find published patch information for modules with known vulnerabilities
 restore
 </td>
 <td>
-r
-</td>
-<td>
 restore saved resolutions for the current directory scope
 </td>
 </tr>
@@ -129,9 +108,6 @@ restore saved resolutions for the current directory scope
 <tr>
 <td>
 upgrade
-</td>
-<td>
-u
 </td>
 <td>
 upgrade dependencies following pattern restriction
@@ -154,16 +130,16 @@ Description
 
 <tr>
 <td>
-aliases
+alias
 </td>
 <td>
-list available package run aliases
+list available package aliases
 </td>
 </tr>
 
 <tr>
 <td>
-config
+config [properties values]
 </td>
 <td>
 list/manage package configuration
@@ -172,7 +148,7 @@ list/manage package configuration
 
 <tr>
 <td>
-help
+help [subject]
 </td>
 <td>
 learn more about how to utilize spinning-jenny
@@ -223,7 +199,7 @@ Description
 -b
 </td>
 <td>
-save backup of resolutions
+run/skip backup of resolutions in package.json before first action
 </td>
 </tr>
 
@@ -235,7 +211,7 @@ save backup of resolutions
 -d
 </td>
 <td>
-overwrite current working directory scope
+overwrite current working directory scope with a custom path
 </td>
 </tr>
 
@@ -247,7 +223,7 @@ overwrite current working directory scope
 -f
 </td>
 <td>
-prevent yarn.lock modifications
+allow/prevent yarn.lock modifications from action executions
 </td>
 </tr>
 
@@ -259,7 +235,7 @@ prevent yarn.lock modifications
 -l
 </td>
 <td>
-display action counter
+show/hide the action counter prefix for the loader message
 </td>
 </tr>
 
@@ -271,7 +247,7 @@ display action counter
 -v
 </td>
 <td>
-run spinning-jenny verbosely
+include/exclude detailed outputs from actions
 </td>
 </tr>
 </table>

@@ -21,6 +21,14 @@ const help = inputs => {
         `\nrestore\n${chalk.gray('restore saved resolutions for the current directory scope')}\n` +
         `\nupgrade\n${chalk.gray('upgrade dependencies following the set pattern restriction')}`
     );
+  else if (inputs[1] === 'commands')
+    console.log(
+      `${packageInfo}alias\n${chalk.gray('list available package aliases')}\n` +
+        `\nconfig [properties values]\n${chalk.gray('list/manage package configuration')}\n` +
+        `\nhelp [subject]\n${chalk.gray('learn more about how to utilize spinning-jenny')}\n` +
+        `\nrepository\n${chalk.gray('display the source code repository url')}\n` +
+        `\nversion\n${chalk.gray('display the installed version of spinning-jenny')}`
+    );
   else if (inputs[1] === 'flags')
     console.log(
       `${packageInfo}--backup: boolean (default: ${chalk.green('true')})\n${chalk.gray(
@@ -62,7 +70,7 @@ const help = inputs => {
   else
     console.log(
       `${packageInfo}${chalk.gray(
-        `${alias} [actions/command] [--flags]\n` +
+        `${alias} [command] | [action | --flag]\n` +
           `\n${alias} alias` +
           `\n${alias} config` +
           `\n${alias} version` +

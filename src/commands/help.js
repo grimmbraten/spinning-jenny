@@ -1,53 +1,75 @@
 const chalk = require('chalk');
+const { trueFalse } = require('../constants');
 const { bin, name, description, version } = require('../../package.json');
 
 const packageVersion = () => console.log(`\n${name} ${chalk.gray(version)}`);
 
-const help = (_, inputs) => {
+const help = inputs => {
   const alias = Object.keys(bin)[1];
-  const trueFalse = `${chalk.green('true')} ${chalk.red('false')}`;
 
-  const packageInfo = `\n${name} ${chalk.gray(version)}\n${description.toLocaleLowerCase()}\n\n`;
+  const packageInfo = `\n${name} @ ${version}\n${description.toLocaleLowerCase()}\n\n`;
 
   if (inputs[1] === 'actions')
     console.log(
-      `${packageInfo}audit ${chalk.gray('find modules with known vulnerabilities')}` +
-        `\nclean ${chalk.gray('cleanup pre-existing resolutions')}` +
-        `\nfix ${chalk.gray('resolve modules with known vulnerabilities')}` +
-        `\ninstall ${chalk.gray('install dependencies')}` +
-        `\npatches ${chalk.gray(
+      `${packageInfo}audit\n${chalk.gray('find modules with known vulnerabilities')}\n` +
+        `\nclean\n${chalk.gray('cleanup pre-existing resolutions')}\n` +
+        `\nfix\n${chalk.gray('resolve modules with known vulnerabilities')}\n` +
+        `\ninstall\n${chalk.gray('install dependencies')}\n` +
+        `\npatches\n${chalk.gray(
           'find published patch information for modules with known vulnerabilities'
-        )}` +
-        `\nrestore ${chalk.gray('restore saved resolutions for the current directory scope')}` +
-        `\nupgrade ${chalk.gray('upgrade dependencies following pattern restriction')}`
+        )}\n` +
+        `\nrestore\n${chalk.gray('restore saved resolutions for the current directory scope')}\n` +
+        `\nupgrade\n${chalk.gray('upgrade dependencies following the set pattern restriction')}`
     );
   else if (inputs[1] === 'flags')
     console.log(
-      `${packageInfo}--backup ${chalk.gray('save backup of resolutions')}` +
-        `\n--directory ${chalk.gray('overwrite current working directory scope')}` +
-        `\n--frozen ${chalk.gray('prevent yarn.lock modifications')}` +
-        `\n--label ${chalk.gray('display action counter')}` +
-        `\n--verbose ${chalk.gray('run spinning-jenny verbosely')}`
+      `${packageInfo}--backup: boolean (default: ${chalk.green('true')})\n${chalk.gray(
+        'run/skip backup of resolutions in package.json before first action'
+      )}\n` +
+        `\n--directory: string\n${chalk.gray(
+          'overwrite current working directory scope with a custom path'
+        )}\n` +
+        `\n--frozen: boolean (default: ${chalk.green('true')})\n${chalk.gray(
+          'allow/prevent yarn.lock modifications from action executions'
+        )}\n` +
+        `\n--label: boolean (default: ${chalk.green('true')})\n${chalk.gray(
+          'show/hide the action counter prefix for the loader message'
+        )}\n` +
+        `\n--verbose: boolean (default: ${chalk.green('true')})\n${chalk.gray(
+          'include/exclude detailed outputs from actions'
+        )}`
     );
   else if (inputs[1] === 'config')
     console.log(
-      `${packageInfo}label [${trueFalse}] ${chalk.gray('display action counter')}` +
-        `\nbackup [${trueFalse}] ${chalk.gray('save backup of resolutions')}` +
-        `\nfrozen [${trueFalse}] ${chalk.gray('prevent yarn.lock modifications')}` +
-        `\nverbose [${trueFalse}] ${chalk.gray(`run ${name} verbosely`)} ` +
-        `\npattern [${chalk.blue('--caret')} ${chalk.blue('--tilde')} ${chalk.blue(
-          '--exact'
-        )}] ${chalk.gray('restrict upgrades to set pattern')}`
+      `${packageInfo}label:  boolean (${trueFalse})\n${chalk.gray(
+        'show/hide the action counter prefix for the loader message'
+      )}\n` +
+        `\nbackup: boolean (${trueFalse})\n${chalk.gray(
+          'run/skip backup of resolutions in package.json before first action'
+        )}\n` +
+        `\nfrozen: boolean (${trueFalse})\n${chalk.gray(
+          'allow/prevent yarn.lock modifications from action executions'
+        )}\n` +
+        `\nverbose: boolean (${trueFalse})\n${chalk.gray(
+          `include/exclude detailed outputs from actions`
+        )}\n` +
+        `\npattern: distinct value (${chalk.blue('--caret')}, ${chalk.blue(
+          '--tilde'
+        )}, or ${chalk.blue('--exact')})\n${chalk.gray(
+          'specify what upgrade pattern actions should use'
+        )}`
     );
   else
     console.log(
       `${packageInfo}${chalk.gray(
-        `${alias} --bin` +
-          `\n${alias} --config` +
-          `\n${alias} --repository` +
-          `\n${alias} --version` +
-          `\n${alias} --help actions` +
-          `\n${alias} --help flags`
+        `${alias} [actions/command] [--flags]\n` +
+          `\n${alias} alias` +
+          `\n${alias} config` +
+          `\n${alias} version` +
+          `\n${alias} repository` +
+          `\n${alias} help actions` +
+          `\n${alias} help commands` +
+          `\n${alias} help flags`
       )}`
     );
 };

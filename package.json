@@ -1,6 +1,6 @@
 {
   "name": "spinning-jenny",
-  "description": "Resolve node package vulnerabilites with ease",
+  "description": "A cli assistant that helps you resolve those pesky node module security vulnerabilities",
   "author": "Erik Grimmbråten <79856585+grimmbraten@users.noreply.github.com>",
   "version": "3.2.0",
   "engines": {

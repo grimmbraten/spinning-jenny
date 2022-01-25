@@ -32,7 +32,7 @@ const fix = async (hint, target, { verbose, ...config }) => {
   const devModules = await read(target, 'package.json', 'devDependencies');
   const dependencies = Object.keys(modules).concat(Object.keys(devModules));
 
-  if (verbose) verbosely('loaded in package.json dependencies', dependencies);
+  if (verbose) verbosely('loaded in package.json dependencies', dependencies, 'first');
 
   const advisories = findAdvisories(response);
   if (verbose) verbosely('advisory count', advisories.length);

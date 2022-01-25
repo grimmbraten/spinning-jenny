@@ -19,7 +19,7 @@ const audit = async (hint, target, { verbose, ...config }) => {
 
   if (verbose)
     verbosely(
-      `audited ${dependencies === 1 ? 'dependency' : 'dependencies'} count`,
+      `\naudited ${dependencies === 1 ? 'dependency' : 'dependencies'} count`,
       dependencies,
       'last'
     );

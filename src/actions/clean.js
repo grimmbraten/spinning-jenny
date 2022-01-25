@@ -12,7 +12,8 @@ const clean = async (hint, target, { verbose, ...config }) => {
     spinner.warn(step + 'skipped cleanup' + hint);
     if (verbose) verbosely('skip reason', 'no resolutions found', 'last');
     return 1;
-  } else if (verbose) verbosely(`fetched resolutions from ${target}/package.json`, resolutions);
+  } else if (verbose)
+    verbosely(`fetched resolutions from ${target}/package.json`, resolutions, 'first');
 
   const response = await remove(target, 'package.json', 'resolutions');
 

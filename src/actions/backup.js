@@ -13,10 +13,11 @@ const backup = async (hint, target, { verbose, ...config }) => {
     spinner.warn(step + 'skipped backup' + hint);
     if (verbose) verbosely('skip reason', 'no resolutions found', 'last');
     return 1;
-  } else if (verbose) verbosely(`fetched resolutions from ${target}/package.json`, resolutions);
+  } else if (verbose)
+    verbosely(`fetched resolutions from ${target}/package.json`, resolutions, 'first');
 
   const project = target.split('/').pop();
-  if (verbose) verbosely('fetched project name from path', project);
+  if (verbose) verbosely('fetched project name from path', project, 'last');
 
   backup[project] = { resolutions, path: target, created: new Date().toString() };
   await write(__dirname + '/../backup/', 'resolutions.json', backup);

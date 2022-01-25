@@ -13,7 +13,7 @@ const upgrade = async (hint, target, { verbose, pattern, frozen, ...config }) =>
     return 1;
   }
 
-  if (verbose) verbosely('upgrading pattern', pattern);
+  if (verbose) verbosely('used upgrading pattern', pattern, 'first');
 
   timeouts.push(
     timely(

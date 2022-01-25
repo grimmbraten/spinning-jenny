@@ -17,7 +17,7 @@ const patches = async (hint, target, { verbose, ...config }) => {
   }
 
   const advisories = findAdvisories(response);
-  if (verbose) verbosely('advisory count', advisories.length);
+  if (verbose) verbosely('advisory count', advisories.length, 'first');
 
   const unique = [...new Set(advisories.map(advisory => advisory.module))];
   if (verbose) verbosely('advisory count (unique)', unique.length);

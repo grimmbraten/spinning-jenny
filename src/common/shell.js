@@ -12,10 +12,7 @@ const execute = command =>
         resolve([true, stdout]);
       }
     );
-  }).catch(error => {
-    console.log(`\n${error.message}\n`);
-    return [false, error];
-  });
+  }).catch(error => [false, error]);
 
 module.exports = {
   execute

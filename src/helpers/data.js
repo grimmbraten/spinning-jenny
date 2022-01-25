@@ -13,11 +13,13 @@ const formatYarnResponse = json =>
     .map(step => (step ? JSON.parse(step) : undefined))
     .filter(data => data);
 
-const findSuccessEvent = json =>
-  formatYarnResponse(json)
+const findSuccessEvent = json => {
+  const count = formatYarnResponse(json)
     .filter(data => data.type === 'success')[1]
     .data?.replace('.', '')
-    .replace('S', 's') || undefined;
+    .split(' ')[1];
+  return `upgraded ${count} ${count === 1 ? 'dependency' : 'dependencies'}`;
+};
 
 const findAdvisories = json =>
   formatYarnResponse(json)

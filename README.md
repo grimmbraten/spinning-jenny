@@ -1,4 +1,4 @@
-<img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/chain.gif?raw=true" width="100%" />
+<img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/fix.gif?raw=true" width="100%" />
 
 ## Install
 
@@ -176,7 +176,7 @@ display the installed version of spinning-jenny
 
 ### Flags
 
-<img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/flags.gif?raw=true" width="100%" />
+<img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/restore.gif?raw=true" width="100%" />
 
 <table>
 <tr>
@@ -253,6 +253,8 @@ include/exclude detailed outputs from actions
 </table>
 
 ## Uninstall
+
+<img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/audit.gif?raw=true" width="100%" />
 
 ```bash
 yarn global remove spinning-jenny

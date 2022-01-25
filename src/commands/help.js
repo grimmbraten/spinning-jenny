@@ -70,7 +70,7 @@ const help = inputs => {
   else
     console.log(
       `${packageInfo}${chalk.gray(
-        `${alias} [command] | [action | --flag]\n` +
+        `${alias} <command> | <action [--flags]>\n` +
           `\n${alias} alias` +
           `\n${alias} config` +
           `\n${alias} version` +

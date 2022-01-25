@@ -33,7 +33,7 @@ For more information, please refer to the [npm](https://docs.npmjs.com/cli/v6/co
 ## Use
 
 ```bash
-spinning-jenny [command] | [action | --flag]
+spinning-jenny <command> | <action [--flags]>
 ```
 
 ### Actions

@@ -7,7 +7,7 @@ const restore = async (hint, target, { verbose, ...config }) => {
   const spinner = ora(step + 'restoring package.json' + hint).start();
 
   const project = target.split('/').pop();
-  const { resolutions } = await read(__dirname, '../.backups.json', project);
+  const { resolutions } = await read(__dirname + '/../backup/', 'resolutions.json', project);
 
   if (!resolutions) {
     spinner.warn(step + 'skipped backup' + hint);

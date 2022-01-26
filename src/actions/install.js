@@ -21,6 +21,8 @@ const install = async (hint, target, { verbose, frozen, ...config }) => {
 
   const [success, response] = await execute(`yarn --cwd ${target} install`);
 
+  timeouts.forEach(timeout => clearTimeout(timeout));
+
   if (!success) {
     spinner.fail(step + 'installation failed' + hint);
     if (verbose) verbosely('fail reason', response, 'last');

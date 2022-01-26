@@ -1,6 +1,14 @@
 const ora = require('ora');
 const { execute } = require('../common');
-const { prefix, timely, verbosely, findSuccessEvent } = require('../helpers');
+const {
+  prefix,
+  timely,
+  verbosely,
+  randomHold,
+  randomFact,
+  randomEndgame,
+  findSuccessEvent
+} = require('../helpers');
 
 const upgrade = async (hint, target, { verbose, pattern, frozen, ...config }) => {
   const step = prefix(config);
@@ -15,49 +23,11 @@ const upgrade = async (hint, target, { verbose, pattern, frozen, ...config }) =>
 
   if (verbose) verbosely('used upgrading pattern', pattern, 'first');
 
-  timeouts.push(
-    timely(
-      spinner,
-      step,
-      'upgrading dependencies',
-      'this may take a while, please be patient',
-      5000
-    )
-  );
-
-  timeouts.push(
-    timely(
-      spinner,
-      step,
-      'upgrading dependencies',
-      'do not worry, jenny is still upgrading dependencies',
-      30000
-    )
-  );
-
-  timeouts.push(
-    timely(
-      spinner,
-      step,
-      'upgrading dependencies',
-      'did you know that a plateau is the highest form of flattery?',
-      60000
-    )
-  );
-
-  timeouts.push(
-    timely(
-      spinner,
-      step,
-      'upgrading dependencies',
-      'how old did you say that this project was again?',
-      90000
-    )
-  );
-
-  timeouts.push(
-    timely(spinner, step, 'upgrading dependencies', 'At least there is no "I" in Denial', 90000)
-  );
+  timeouts.push(timely(spinner, step, 'upgrading dependencies', randomHold(), 5000));
+  timeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 30000));
+  timeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 60000));
+  timeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 90000));
+  timeouts.push(timely(spinner, step, 'upgrading dependencies', randomEndgame(), 1200000));
 
   const [success, response] = await execute(`yarn --cwd ${target} upgrade --json`);
 

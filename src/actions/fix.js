@@ -1,11 +1,23 @@
 const ora = require('ora');
 const { read, write, execute } = require('../common');
-const { reduce, findAuditSummary, findAdvisories, prefix, verbosely } = require('../helpers');
+const {
+  reduce,
+  timely,
+  randomHold,
+  randomFact,
+  randomEndgame,
+  findAuditSummary,
+  findAdvisories,
+  prefix,
+  verbosely
+} = require('../helpers');
 
 const fix = async (hint, target, { verbose, ...config }) => {
   const unsolved = [];
   const upgrades = [];
   const resolutions = {};
+  const upgradeTimeouts = [];
+  const installTimeouts = [];
 
   const step = prefix(config);
   const spinner = ora(step + 'auditing dependencies' + hint).start();
@@ -60,7 +72,17 @@ const fix = async (hint, target, { verbose, ...config }) => {
 
   if (upgrades.length > 0) {
     spinner.text = step + 'upgrading dependencies' + hint;
+
+    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomHold(), 5000));
+    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 30000));
+    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 60000));
+    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 90000));
+    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomEndgame(), 1200000));
+
     const [success, response] = await execute(`yarn --cwd ${target} upgrade ${upgrades.join(' ')}`);
+
+    upgradeTimeouts.forEach(timeout => clearTimeout(timeout));
+
     if (!success) {
       spinner.fail(step + 'upgrade failed' + hint);
       if (verbose) verbosely('fail reason', response, 'last');
@@ -72,8 +94,20 @@ const fix = async (hint, target, { verbose, ...config }) => {
     spinner.text = step + 'applying resolutions' + hint;
     await write(target, 'package.json', { resolutions });
 
-    spinner.text = step + 'installing with new resolutions' + hint;
+    spinner.text = step + 'installing dependencies' + hint;
+
+    installTimeouts.push(timely(spinner, step, 'installing dependencies', randomHold(), 5000));
+    installTimeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 30000));
+    installTimeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 60000));
+    installTimeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 90000));
+    installTimeouts.push(
+      timely(spinner, step, 'installing dependencies', randomEndgame(), 1200000)
+    );
+
     const [success, response] = await execute(`yarn --cwd ${target} install`);
+
+    installTimeouts.forEach(timeout => clearTimeout(timeout));
+
     if (!success) {
       spinner.fail(step + 'install failed' + hint);
       if (verbose) verbosely('fail reason', response, 'last');

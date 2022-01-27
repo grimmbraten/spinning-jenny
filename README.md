@@ -1,4 +1,6 @@
-<img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/fix.gif?raw=true" width="100%" />
+<img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/demo.gif?raw=true" width="100%" />
+
+A cli assistant that helps you resolve those pesky node module security vulnerabilities
 
 ## Install
 
@@ -37,8 +39,6 @@ spinning-jenny <command> | <action [--flags]>
 ```
 
 ### Actions
-
-<img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/patches.gif?raw=true" width="100%" />
 
 <table>
 <tr>
@@ -176,8 +176,6 @@ display the installed version of spinning-jenny
 
 ### Flags
 
-<img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/restore.gif?raw=true" width="100%" />
-
 <table>
 <tr>
 <th align="left" width="204">
@@ -253,8 +251,6 @@ include/exclude detailed outputs from actions
 </table>
 
 ## Uninstall
-
-<img src="https://github.com/grimmbraten/spinning-jenny/blob/master/assets/audit.gif?raw=true" width="100%" />
 
 ```bash
 yarn global remove spinning-jenny

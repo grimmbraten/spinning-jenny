@@ -1,9 +1,9 @@
 const ora = require('ora');
 const chalk = require('chalk');
 const { execute } = require('../common');
-const { prefix, verbosely, colorSeverity, findAdvisories } = require('../helpers');
+const { prefix, colorSeverity, findAdvisories } = require('../helpers');
 
-const patches = async (hint, target, { verbose, ...config }) => {
+const patches = async (hint, target, config) => {
   let list = '';
   const step = prefix(config);
   const spinner = ora(step + 'analyzing vulnerabilities' + hint).start();
@@ -11,16 +11,12 @@ const patches = async (hint, target, { verbose, ...config }) => {
   const [success, response] = await execute(`yarn --cwd ${target} audit --json`);
 
   if (!success) {
-    spinner.fail(step + 'audit failed' + hint);
-    verbosely('fail reason', response, 'last');
+    spinner.fail(step + `audit failed\n\n${response}` + hint);
     return 2;
   }
 
   const advisories = findAdvisories(response);
-  if (verbose) verbosely('advisory count', advisories.length, 'first');
-
   const unique = [...new Set(advisories.map(advisory => advisory.module))];
-  if (verbose) verbosely('advisory count (unique)', unique.length);
 
   const patches = unique.map(module => advisories.find(advisory => advisory.module === module));
   patches.sort((a, b) => a.time - b.time);

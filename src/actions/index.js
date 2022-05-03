@@ -29,7 +29,7 @@ module.exports = {
     label: ['--label', '-l'],
     frozen: ['--frozen', '-f'],
     backup: ['--backup', '-b'],
-    verbose: ['--verbose', '-v'],
+    upgrade: ['--upgrade', '-u'],
     directory: ['--directory', '-d']
   }
 };

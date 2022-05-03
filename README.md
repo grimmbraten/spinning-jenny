@@ -239,13 +239,13 @@ show/hide the action counter prefix for the loader message
 
 <tr>
 <td>
---verbose
+--upgrade
 </td>
 <td>
--v
+-u
 </td>
 <td>
-include/exclude detailed outputs from actions
+allow/disallow upgrades of dependencies
 </td>
 </tr>
 </table>

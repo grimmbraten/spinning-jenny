@@ -1,4 +1,4 @@
-const { prefix, timely, verbosely, randomHold, randomFact, randomEndgame } = require('./output');
+const { prefix, timely, randomHold, randomFact, randomEndgame } = require('./output');
 const { colorProperty, colorSeverity } = require('./colors');
 const {
   reduce,
@@ -13,7 +13,6 @@ module.exports = {
   prefix,
   timely,
   reduce,
-  verbosely,
   randomFact,
   randomHold,
   parseBoolean,

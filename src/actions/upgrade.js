@@ -3,25 +3,26 @@ const { execute } = require('../common');
 const {
   prefix,
   timely,
-  verbosely,
   randomHold,
   randomFact,
   randomEndgame,
   findSuccessEvent
 } = require('../helpers');
 
-const upgrade = async (hint, target, { verbose, pattern, frozen, ...config }) => {
+const upgrade = async (hint, target, { frozen, upgrade, ...config }) => {
   const step = prefix(config);
   const timeouts = [];
   const spinner = ora(step + 'upgrading dependencies' + hint).start();
 
-  if (frozen) {
+  if (!upgrade) {
     spinner.warn(step + 'skipped upgrade' + hint);
-    if (verbose) verbosely('skip reason', 'frozen mode (true)', 'last');
     return 1;
   }
 
-  if (verbose) verbosely('used upgrading pattern', pattern, 'first');
+  if (frozen) {
+    spinner.warn(step + 'skipped upgrade' + hint);
+    return 1;
+  }
 
   timeouts.push(timely(spinner, step, 'upgrading dependencies', randomHold(), 5000));
   timeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 30000));
@@ -39,8 +40,7 @@ const upgrade = async (hint, target, { verbose, pattern, frozen, ...config }) =>
     );
     return 0;
   } else {
-    spinner.fail(step + 'upgrade failed' + hint);
-    verbosely('fail reason', response, 'last');
+    spinner.fail(step + `upgrade failed\n\n${response}` + hint);
     return 2;
   }
 };

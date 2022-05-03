@@ -43,8 +43,8 @@ const help = inputs => {
         `\n--label: boolean (default: ${chalk.green('true')})\n${chalk.gray(
           'show/hide the action counter prefix for the loader message'
         )}\n` +
-        `\n--verbose: boolean (default: ${chalk.green('true')})\n${chalk.gray(
-          'include/exclude detailed outputs from actions'
+        `\n--upgrade: boolean (default: ${chalk.green('true')})\n${chalk.gray(
+          'allow/disallow upgrades of dependencies'
         )}`
     );
   else if (inputs[1] === 'config')
@@ -58,8 +58,8 @@ const help = inputs => {
         `\nfrozen: boolean (${trueFalse})\n${chalk.gray(
           'allow/prevent yarn.lock modifications from action executions'
         )}\n` +
-        `\nverbose: boolean (${trueFalse})\n${chalk.gray(
-          `include/exclude detailed outputs from actions`
+        `\nupgrade: boolean (${trueFalse})\n${chalk.gray(
+          `allow/disallow upgrades of dependencies`
         )}\n` +
         `\npattern: distinct value (${chalk.blue('--caret')}, ${chalk.blue(
           '--tilde'

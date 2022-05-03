@@ -10,7 +10,7 @@ const properties = {
   pattern: 'pattern',
   backup: 'backup',
   frozen: 'frozen',
-  verbose: 'verbose'
+  upgrade: 'upgrade'
 };
 
 const list = async () => {
@@ -42,18 +42,7 @@ const manage = async inputs => {
   inputs.forEach((input, index) => {
     if (index % 2 === 1) return;
 
-    if (properties.verbose === input) {
-      const value = parseBoolean(inputs[index + 1]);
-
-      if (value === undefined) {
-        spinner.fail(`verbose can only be a boolean (${trueFalse})`);
-        return 2;
-      }
-
-      config.verbose = value;
-      spinner.succeed('set verbose as ' + colorProperty(value));
-      return 0;
-    } else if (properties.frozen === input) {
+    if (properties.frozen === input) {
       const value = parseBoolean(inputs[index + 1]);
       if (value === undefined) {
         spinner.fail(`frozen can only be a boolean (${trueFalse})`);
@@ -62,6 +51,16 @@ const manage = async inputs => {
 
       config.frozen = value;
       spinner.succeed('set frozen as ' + colorProperty(value));
+      return 0;
+    } else if (properties.upgrade === input) {
+      const value = parseBoolean(inputs[index + 1]);
+      if (value === undefined) {
+        spinner.fail(`upgrade can only be a boolean (${trueFalse})`);
+        return 2;
+      }
+
+      config.upgrade = value;
+      spinner.succeed('set upgrade as ' + colorProperty(value));
       return 0;
     } else if (properties.backup === input) {
       const value = parseBoolean(inputs[index + 1]);

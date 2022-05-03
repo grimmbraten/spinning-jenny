@@ -9,13 +9,18 @@ const { findSuccessEvent } = require('../../src/helpers/data');
 const run = async () => await upgrade(undefined, target, config);
 
 describe('upgrade()', () => {
+  it('skips if config upgrade property is false', async () => {
+    const response = await upgrade(undefined, target, { ...config, upgrade: false });
+    expect(response).toEqual(1);
+  });
+
   it('skips if config frozen property is true', async () => {
     const response = await upgrade(undefined, target, { ...config, frozen: true });
     expect(response).toEqual(1);
   });
 
   it('fails if upgrade encountered an error', async () => {
-    execute.mockImplementationOnce(() => [false]);
+    execute.mockImplementationOnce(() => [false, {}]);
     expect(await run()).toEqual(2);
   });
 

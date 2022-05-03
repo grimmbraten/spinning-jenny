@@ -8,11 +8,10 @@ const {
   randomEndgame,
   findAuditSummary,
   findAdvisories,
-  prefix,
-  verbosely
+  prefix
 } = require('../helpers');
 
-const fix = async (hint, target, { verbose, ...config }) => {
+const fix = async (hint, target, { upgrade, ...config }) => {
   const unsolved = [];
   const upgrades = [];
   const resolutions = {};
@@ -25,8 +24,7 @@ const fix = async (hint, target, { verbose, ...config }) => {
   const [success, response] = await execute(`yarn --cwd ${target} audit --json`);
 
   if (!success) {
-    spinner.fail(step + 'fix failed' + hint);
-    if (verbose) verbosely('fail reason', response, 'last');
+    spinner.fail(step + response + hint);
     return 2;
   }
 
@@ -44,33 +42,39 @@ const fix = async (hint, target, { verbose, ...config }) => {
   const devModules = await read(target, 'package.json', 'devDependencies');
   const dependencies = Object.keys(modules).concat(Object.keys(devModules));
 
-  if (verbose) verbosely('loaded in package.json dependencies', dependencies, 'first');
-
   const advisories = findAdvisories(response);
-  if (verbose) verbosely('advisory count', advisories.length);
-
   const unique = [...new Set(advisories.map(advisory => advisory.module))];
-  if (verbose) verbosely('advisory count (unique)', unique.length);
-
   const patches = unique.map(module => advisories.find(advisory => advisory.module === module));
 
-  if (verbose) verbosely('patches (raw)', patches);
-
-  patches.forEach(advisory => {
+  const promises = patches.map(async advisory => {
     if (advisory.patchedVersions === '<0.0.0')
       unsolved.push(`${advisory.module}@${advisory.version}`);
-    else if (dependencies.includes(advisory.module))
-      upgrades.push(`${advisory.module}@${advisory.patchedVersions.replace(/(>|<|=)/g, '')}`);
-    else resolutions[advisory.module] = advisory.patchedVersions;
+    else if (dependencies.includes(advisory.module)) {
+      upgrades.push(
+        `${advisory.module}@${advisory.patchedVersions
+          .replace(/(>=|>)/g, '^')
+          .replace(/(<|<=)/g, '')}`
+      );
+
+      const [success, response] = await execute(
+        `yarn --cwd ${target} why ${advisory.module} --json`
+      );
+
+      if (!success) {
+        spinner.fail(step + `analyzing failed\n\n${response}` + hint);
+        return 2;
+      }
+
+      if (response.includes(`#${advisory.module}`))
+        resolutions[advisory.module] = advisory.patchedVersions;
+    } else resolutions[advisory.module] = advisory.patchedVersions;
   });
+
+  await Promise.all(promises);
 
   const total = unsolved.length + upgrades.length + Object.keys(resolutions).length;
 
-  if (verbose) verbosely('resolution count', Object.keys(resolutions).length);
-  if (verbose) verbosely('upgrade count', upgrades.length);
-  if (verbose) verbosely('unsolved count', unsolved.length);
-
-  if (upgrades.length > 0) {
+  if (upgrades.length > 0 && upgrade) {
     spinner.text = step + 'upgrading dependencies' + hint;
 
     upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomHold(), 5000));
@@ -84,16 +88,15 @@ const fix = async (hint, target, { verbose, ...config }) => {
     upgradeTimeouts.forEach(timeout => clearTimeout(timeout));
 
     if (!success) {
-      spinner.fail(step + 'upgrade failed' + hint);
-      if (verbose) verbosely('fail reason', response, 'last');
+      spinner.fail(step + `upgrade failed\n\n${response}` + hint);
+      return 2;
     }
-    return 2;
   }
 
   if (Object.keys(resolutions).length > 0) {
-    spinner.text = step + 'applying resolutions' + hint;
     await write(target, 'package.json', { resolutions });
 
+    // eslint-disable-next-line require-atomic-updates
     spinner.text = step + 'installing dependencies' + hint;
 
     installTimeouts.push(timely(spinner, step, 'installing dependencies', randomHold(), 5000));
@@ -109,8 +112,7 @@ const fix = async (hint, target, { verbose, ...config }) => {
     installTimeouts.forEach(timeout => clearTimeout(timeout));
 
     if (!success) {
-      spinner.fail(step + 'install failed' + hint);
-      if (verbose) verbosely('fail reason', response, 'last');
+      spinner.fail(step + `install failed\n\n${response}` + hint);
       return 2;
     }
   }
@@ -127,26 +129,6 @@ const fix = async (hint, target, { verbose, ...config }) => {
         }` +
         hint
     );
-
-  if (verbose) {
-    console.log(
-      `applied resolution${Object.keys(resolutions).length === 1 ? '' : 's'}`,
-      // eslint-disable-next-line no-extra-parens
-      `(${Math.round((Object.keys(resolutions).length / total) * 100 * 10) / 10}%)`
-    );
-
-    console.log(
-      `upgraded ${upgrades.length === 1 ? 'dependency' : 'dependencies'}`,
-      // eslint-disable-next-line no-extra-parens
-      `(${Math.round((upgrades.length / total) * 100 * 10) / 10}%)`
-    );
-
-    console.log(
-      `unsolved ${unsolved.length === 1 ? 'vulnerability' : 'vulnerabilities'}`,
-      // eslint-disable-next-line no-extra-parens
-      `(${Math.round((unsolved.length / total) * 100 * 10) / 10}%)\n`
-    );
-  }
 
   return 0;
 };

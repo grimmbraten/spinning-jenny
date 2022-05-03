@@ -35,16 +35,16 @@ const getActions = (inputs, config) => {
         skipIndex = index + 1;
         config.frozen = inputs[skipIndex] === 'true';
       } else config.frozen = true;
+    else if (flags.upgrade.includes(input))
+      if (inputs[index + 1] === 'true' || inputs[index + 1] === 'false') {
+        skipIndex = index + 1;
+        config.upgrade = inputs[skipIndex] === 'true';
+      } else config.upgrade = true;
     else if (flags.backup.includes(input))
       if (inputs[index + 1] === 'true' || inputs[index + 1] === 'false') {
         skipIndex = index + 1;
         config.backup = inputs[skipIndex] === 'true';
       } else config.backup = true;
-    else if (flags.verbose.includes(input))
-      if (inputs[index + 1] === 'true' || inputs[index + 1] === 'false') {
-        skipIndex = index + 1;
-        config.verbose = inputs[skipIndex] === 'true';
-      } else config.verbose = true;
     else if (flags.directory.includes(input)) {
       skipIndex = index + 1;
       target = inputs[skipIndex];

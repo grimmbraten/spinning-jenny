@@ -4,7 +4,7 @@ module.exports = {
     label: false,
     backup: false,
     frozen: false,
-    verbose: false,
+    upgrade: true,
     pattern: '--caret',
     steps: {
       completed: 0

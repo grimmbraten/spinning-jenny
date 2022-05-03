@@ -1,15 +1,14 @@
 const ora = require('ora');
 const { execute } = require('../common');
-const { prefix, timely, randomHold, randomFact, randomEndgame, verbosely } = require('../helpers');
+const { prefix, timely, randomHold, randomFact, randomEndgame } = require('../helpers');
 
-const install = async (hint, target, { verbose, frozen, ...config }) => {
+const install = async (hint, target, { frozen, ...config }) => {
   const timeouts = [];
   const step = prefix(config);
   const spinner = ora(step + 'installing dependencies' + hint).start();
 
   if (frozen) {
     spinner.warn(step + 'skipped install' + hint);
-    if (verbose) verbosely('skip reason', 'frozen mode (true)', 'last');
     return 1;
   }
 
@@ -24,8 +23,7 @@ const install = async (hint, target, { verbose, frozen, ...config }) => {
   timeouts.forEach(timeout => clearTimeout(timeout));
 
   if (!success) {
-    spinner.fail(step + 'installation failed' + hint);
-    if (verbose) verbosely('fail reason', response, 'last');
+    spinner.fail(step + `installation failed\n\n${response}` + hint);
     return 2;
   }
 

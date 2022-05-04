@@ -7,7 +7,6 @@ const { parseBoolean, colorProperty } = require('../helpers');
 
 const properties = {
   label: 'label',
-  pattern: 'pattern',
   backup: 'backup',
   frozen: 'frozen',
   upgrade: 'upgrade'
@@ -81,22 +80,6 @@ const manage = async inputs => {
 
       config.label = value;
       spinner.succeed('set label as ' + colorProperty(value));
-      return 0;
-    } else if (properties.pattern === input) {
-      let value = inputs[index + 1];
-      value = value?.replace('-', '');
-
-      if (!['exact', 'caret', 'tilde'].includes(value)) {
-        spinner.fail(
-          `pattern can only be a a distinct value (${chalk.blue('--exact')}, ${chalk.blue(
-            '--tilde'
-          )}, or ${chalk.blue('--caret')})`
-        );
-        return 2;
-      }
-
-      config.pattern = value;
-      spinner.succeed('set pattern as ', colorProperty(value));
       return 0;
     } else {
       spinner.fail(`invalid configuration property ${chalk.red(`(${input})`)}`);

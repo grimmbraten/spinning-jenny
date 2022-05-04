@@ -9,7 +9,6 @@ const {
   fix,
   backup,
   patches,
-  upgrade,
   actions,
   flags
 } = require('../actions');
@@ -54,7 +53,6 @@ const getActions = (inputs, config) => {
     else if (actions.patches.includes(input)) functions.push(patches);
     else if (actions.restore.includes(input)) functions.push(restore);
     else if (actions.install.includes(input)) functions.push(install);
-    else if (actions.upgrade.includes(input)) functions.push(upgrade);
     else if (actions.fix.includes(input)) functions.push(fix);
     else {
       bail = true;

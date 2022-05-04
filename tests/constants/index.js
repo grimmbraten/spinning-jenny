@@ -5,7 +5,6 @@ module.exports = {
     backup: false,
     frozen: false,
     upgrade: true,
-    pattern: '--caret',
     steps: {
       completed: 0
     }

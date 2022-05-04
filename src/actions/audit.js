@@ -21,7 +21,9 @@ const audit = async (hint, target, config) => {
   } else {
     spinner.warn(
       step +
-        `detected ${vulnerabilities} ${vulnerabilities > 1 ? 'vulnerabilities' : 'vulnerability'}` +
+        `found potential security ${vulnerabilities} ${
+          vulnerabilities > 1 ? 'vulnerabilities' : 'vulnerability'
+        } in your dependencies` +
         hint
     );
     return 1;

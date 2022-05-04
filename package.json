@@ -2,7 +2,7 @@
   "name": "spinning-jenny",
   "description": "A cli assistant that helps you resolve those pesky node module security vulnerabilities",
   "author": "Erik Grimmbråten <79856585+grimmbraten@users.noreply.github.com>",
-  "version": "3.3.0",
+  "version": "4.0.0",
   "engines": {
     "node": ">= 8.5.0"
   },

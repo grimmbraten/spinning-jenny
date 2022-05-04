@@ -5,7 +5,6 @@ const { audit } = require('./audit');
 const { restore } = require('./restore');
 const { clean } = require('./clean');
 const { install } = require('./install');
-const { upgrade } = require('./upgrade');
 
 module.exports = {
   clean,
@@ -15,15 +14,13 @@ module.exports = {
   restore,
   fix,
   patches,
-  upgrade,
   actions: {
     fix: ['fix'],
     audit: ['audit'],
     clean: ['clean'],
     patches: ['patches'],
     install: ['install'],
-    restore: ['restore'],
-    upgrade: ['upgrade']
+    restore: ['restore']
   },
   flags: {
     label: ['--label', '-l'],

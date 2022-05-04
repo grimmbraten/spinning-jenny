@@ -18,8 +18,7 @@ const help = inputs => {
         `\npatches\n${chalk.gray(
           'find published patch information for modules with known vulnerabilities'
         )}\n` +
-        `\nrestore\n${chalk.gray('restore saved resolutions for the current directory scope')}\n` +
-        `\nupgrade\n${chalk.gray('upgrade dependencies following the set pattern restriction')}`
+        `\nrestore\n${chalk.gray('restore saved resolutions for the current directory scope')}`
     );
   else if (inputs[1] === 'commands')
     console.log(
@@ -60,11 +59,6 @@ const help = inputs => {
         )}\n` +
         `\nupgrade: boolean (${trueFalse})\n${chalk.gray(
           `allow/disallow upgrades of dependencies`
-        )}\n` +
-        `\npattern: distinct value (${chalk.blue('--caret')}, ${chalk.blue(
-          '--tilde'
-        )}, or ${chalk.blue('--exact')})\n${chalk.gray(
-          'specify what upgrade pattern actions should use'
         )}`
     );
   else

@@ -2,6 +2,5 @@
   "label": true,
   "backup": true,
   "frozen": false,
-  "upgrade": true,
-  "pattern": "--caret"
+  "upgrade": true
 }

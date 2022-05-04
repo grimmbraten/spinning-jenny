@@ -32,10 +32,22 @@ npm update -g spinning-jenny
 
 For more information, please refer to the [npm](https://docs.npmjs.com/cli/v6/commands/npm-update) or [yarn](https://classic.yarnpkg.com/en/docs/cli/upgrade) documentation.
 
-## Use
+## Usage
+
+### Template
 
 ```bash
-spinning-jenny <command> | <action [--flags]>
+spinning-jenny <command> | <action(s) [--flag(s)]>
+```
+
+### Examples
+
+```bash
+spinning-jenny clean fix --upgrade false
+```
+
+```bash
+spinning-jenny config frozen false backup true
 ```
 
 ### Actions
@@ -102,15 +114,6 @@ restore
 </td>
 <td>
 restore saved resolutions for the current directory scope
-</td>
-</tr>
-
-<tr>
-<td>
-upgrade
-</td>
-<td>
-upgrade dependencies following pattern restriction
 </td>
 </tr>
 

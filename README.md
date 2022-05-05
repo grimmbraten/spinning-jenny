@@ -151,10 +151,10 @@ list/manage package configuration
 
 <tr>
 <td>
-help [subject]
+help
 </td>
 <td>
-learn more about how to utilize spinning-jenny
+open the documentation for spinning-jenny
 </td>
 </tr>
 
@@ -213,6 +213,18 @@ run/skip backup of resolutions in package.json before first action
 </td>
 <td>
 overwrite current working directory scope with a custom path
+</td>
+</tr>
+
+<tr>
+<td>
+--exclude
+</td>
+<td>
+-e
+</td>
+<td>
+exclue one or several modules from being upgraded or resolved
 </td>
 </tr>
 

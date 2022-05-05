@@ -21,6 +21,9 @@ const findSuccessEvent = json => {
   return `upgraded ${count} ${count === 1 ? 'dependency' : 'dependencies'}`;
 };
 
+const findWhyTree = json =>
+  formatYarnResponse(json).find(({ data }) => !!data.items)?.data?.items || [];
+
 const findAdvisories = json =>
   formatYarnResponse(json)
     .map(({ data, type }) => {
@@ -45,6 +48,7 @@ const findAdvisories = json =>
 
 module.exports = {
   reduce,
+  findWhyTree,
   parseBoolean,
   findAdvisories,
   findSuccessEvent,

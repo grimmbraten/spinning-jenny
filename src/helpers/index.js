@@ -2,6 +2,7 @@ const { prefix, timely, randomHold, randomFact, randomEndgame } = require('./out
 const { colorProperty, colorSeverity } = require('./colors');
 const {
   reduce,
+  findWhyTree,
   parseBoolean,
   findAdvisories,
   findAuditSummary,
@@ -19,6 +20,7 @@ module.exports = {
   randomEndgame,
   colorProperty,
   colorSeverity,
+  findWhyTree,
   findAdvisories,
   findAuditSummary,
   findSuccessEvent,

@@ -6,10 +6,10 @@ const { trueFalse } = require('../constants');
 const { parseBoolean, colorProperty } = require('../helpers');
 
 const properties = {
-  label: 'label',
-  backup: 'backup',
-  frozen: 'frozen',
-  upgrade: 'upgrade'
+  label: '--label',
+  backup: '--backup',
+  frozen: '--frozen',
+  upgrade: '--upgrade'
 };
 
 const list = async () => {

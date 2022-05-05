@@ -27,6 +27,7 @@ module.exports = {
     frozen: ['--frozen', '-f'],
     backup: ['--backup', '-b'],
     upgrade: ['--upgrade', '-u'],
+    exclude: ['--exclude', '-e'],
     directory: ['--directory', '-d']
   }
 };

@@ -2,5 +2,6 @@
   "label": true,
   "backup": true,
   "frozen": false,
-  "upgrade": true
+  "upgrade": true,
+  "exclude": []
 }

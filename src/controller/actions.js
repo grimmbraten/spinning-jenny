@@ -22,9 +22,20 @@ const getActions = (inputs, config) => {
   const functions = [];
 
   inputs.forEach((input, index) => {
-    if (bail || skipIndex === index) return;
+    if (bail || skipIndex >= index) return;
 
-    if (flags.label.includes(input))
+    if (flags.exclude.includes(input)) {
+      const upComingInputs = inputs.slice(index + 1, inputs.length);
+      const nextFlagIndex = upComingInputs.findIndex(val => val.includes('--'));
+
+      config.exclude = upComingInputs.slice(
+        0,
+        nextFlagIndex === -1 ? inputs.length : nextFlagIndex
+      );
+
+      if (nextFlagIndex === -1) skipIndex = inputs.length;
+      else skipIndex = index + nextFlagIndex;
+    } else if (flags.label.includes(input))
       if (inputs[index + 1] === 'true' || inputs[index + 1] === 'false') {
         skipIndex = index + 1;
         config.label = inputs[skipIndex] === 'true';

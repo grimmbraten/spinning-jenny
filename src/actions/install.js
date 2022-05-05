@@ -12,11 +12,11 @@ const install = async (hint, target, { frozen, ...config }) => {
     return 1;
   }
 
-  timeouts.push(timely(spinner, step, 'installing dependencies', randomHold(), 5000));
+  timeouts.push(timely(spinner, step, 'installing dependencies', randomHold(), 2500));
+  timeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 15000));
   timeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 30000));
-  timeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 60000));
-  timeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 90000));
-  timeouts.push(timely(spinner, step, 'installing dependencies', randomEndgame(), 1200000));
+  timeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 45000));
+  timeouts.push(timely(spinner, step, 'installing dependencies', randomEndgame(), 600000));
 
   const [success, response] = await execute(`yarn --cwd ${target} install`);
 

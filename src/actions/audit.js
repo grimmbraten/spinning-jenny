@@ -16,12 +16,14 @@ const audit = async (hint, target, config) => {
   const vulnerabilities = reduce(findAuditSummary(response).data.vulnerabilities);
 
   if (vulnerabilities === 0) {
-    spinner.succeed(step + 'all dependencies are secure' + hint);
+    spinner.succeed(
+      step + 'found no potential security vulnerabilities in your dependencies' + hint
+    );
     return 0;
   } else {
     spinner.warn(
       step +
-        `found potential security ${vulnerabilities} ${
+        `found ${vulnerabilities} potential security ${
           vulnerabilities > 1 ? 'vulnerabilities' : 'vulnerability'
         } in your dependencies` +
         hint

@@ -11,7 +11,7 @@ const {
   prefix
 } = require('../helpers');
 
-const fix = async (hint, target, { upgrade, ...config }) => {
+const fix = async (hint, target, { upgrade, exclude, ...config }) => {
   const unsolved = [];
   const upgrades = [];
   const resolutions = {};
@@ -46,42 +46,47 @@ const fix = async (hint, target, { upgrade, ...config }) => {
   const unique = [...new Set(advisories.map(advisory => advisory.module))];
   const patches = unique.map(module => advisories.find(advisory => advisory.module === module));
 
-  const promises = patches.map(async advisory => {
-    if (advisory.patchedVersions === '<0.0.0')
-      unsolved.push(`${advisory.module}@${advisory.version}`);
-    else if (dependencies.includes(advisory.module)) {
-      upgrades.push(
-        `${advisory.module}@${advisory.patchedVersions
-          .replace(/(>=|>)/g, '^')
-          .replace(/(<|<=)/g, '')}`
-      );
+  await Promise.all(
+    patches.map(async advisory => {
+      if (advisory.patchedVersions === '<0.0.0')
+        unsolved.push(`${advisory.module}@${advisory.version}`);
+      else if (
+        upgrade &&
+        !exclude.includes(advisory.module) &&
+        dependencies.includes(advisory.module)
+      ) {
+        upgrades.push(
+          `${advisory.module}@${advisory.patchedVersions
+            .replace(/(>=|>)/g, '^')
+            .replace(/(<|<=)/g, '')}`
+        );
 
-      const [success, response] = await execute(
-        `yarn --cwd ${target} why ${advisory.module} --json`
-      );
+        const [success, response] = await execute(
+          `yarn --cwd ${target} why ${advisory.module} --json`
+        );
 
-      if (!success) {
-        spinner.fail(step + `analyzing failed\n\n${response}` + hint);
-        return 2;
-      }
+        if (!success) {
+          spinner.fail(step + `analyzing failed\n\n${response}` + hint);
+          return 2;
+        }
 
-      if (response.includes(`#${advisory.module}`))
+        if (response.includes(`#${advisory.module}`))
+          resolutions[advisory.module] = advisory.patchedVersions;
+      } else if (!exclude.includes(advisory.module))
         resolutions[advisory.module] = advisory.patchedVersions;
-    } else resolutions[advisory.module] = advisory.patchedVersions;
-  });
-
-  await Promise.all(promises);
+    })
+  );
 
   const total = unsolved.length + upgrades.length + Object.keys(resolutions).length;
 
   if (upgrades.length > 0 && upgrade) {
     spinner.text = step + 'upgrading dependencies' + hint;
 
-    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomHold(), 5000));
+    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomHold(), 2500));
+    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 15000));
     upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 30000));
-    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 60000));
-    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 90000));
-    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomEndgame(), 1200000));
+    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 45000));
+    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomEndgame(), 600000));
 
     const [success, response] = await execute(`yarn --cwd ${target} upgrade ${upgrades.join(' ')}`);
 
@@ -99,13 +104,11 @@ const fix = async (hint, target, { upgrade, ...config }) => {
     // eslint-disable-next-line require-atomic-updates
     spinner.text = step + 'installing dependencies' + hint;
 
-    installTimeouts.push(timely(spinner, step, 'installing dependencies', randomHold(), 5000));
+    installTimeouts.push(timely(spinner, step, 'installing dependencies', randomHold(), 2500));
+    installTimeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 15000));
     installTimeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 30000));
-    installTimeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 60000));
-    installTimeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 90000));
-    installTimeouts.push(
-      timely(spinner, step, 'installing dependencies', randomEndgame(), 1200000)
-    );
+    installTimeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 45000));
+    installTimeouts.push(timely(spinner, step, 'installing dependencies', randomEndgame(), 600000));
 
     const [success, response] = await execute(`yarn --cwd ${target} install`);
 
@@ -118,15 +121,21 @@ const fix = async (hint, target, { upgrade, ...config }) => {
   }
 
   if (unsolved.length > 0 && total === unsolved.length)
-    spinner.fail(step + 'secured none of the known vulnerabilities' + hint);
+    spinner.fail(
+      step +
+        'failed to solve any of the potential security vulnerabilities in your dependencies' +
+        hint
+    );
   else if (unsolved.length === 0)
-    spinner.succeed(step + 'secured all known vulnerabilities' + hint);
+    spinner.succeed(
+      step + 'solved all potential security vulnerabilities in your dependencies' + hint
+    );
   else
     spinner.warn(
       step +
-        `secured ${total - unsolved.length} ${
-          total - unsolved.length === 1 ? 'known vulnerability' : 'of the known vulnerabilities'
-        }` +
+        `solved ${total - unsolved.length}/${total} potential security ${
+          total - unsolved.length === 1 ? 'vulnerability' : 'vulnerabilities'
+        } in your dependencies` +
         hint
     );
 

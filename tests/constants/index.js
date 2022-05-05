@@ -5,6 +5,7 @@ module.exports = {
     backup: false,
     frozen: false,
     upgrade: true,
+    exclude: [],
     steps: {
       completed: 0
     }

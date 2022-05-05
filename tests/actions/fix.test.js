@@ -9,7 +9,7 @@ const { read, write } = require('../../src/common/json');
 const { target, config, mockedAuditAdvisory, mockedAuditSummary } = require('../constants');
 const { reduce, findAdvisories, findAuditSummary } = require('../../src/helpers/data');
 
-const run = async () => await fix(undefined, undefined, target, config);
+const run = async () => await fix(undefined, target, config);
 
 describe('fix()', () => {
   read.mockImplementation(() => ['data']);

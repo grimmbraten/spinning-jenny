@@ -47,7 +47,7 @@ spinning-jenny clean fix --upgrade false
 ```
 
 ```bash
-spinning-jenny config frozen false backup true
+spinning-jenny config --frozen false --backup true
 ```
 
 ### Actions

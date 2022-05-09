@@ -37,7 +37,7 @@ For more information, please refer to the [npm](https://docs.npmjs.com/cli/v6/co
 ### Template
 
 ```bash
-spinning-jenny <command> | <action(s) [--flag(s)]>
+spinning-jenny <command> | <action(s)> [--flag(s)]
 ```
 
 ### Examples
@@ -67,7 +67,7 @@ Description
 audit
 </td>
 <td>
-find modules with known vulnerabilities
+find potential security vulnerabilities in your dependencies
 </td>
 </tr>
 </tr>
@@ -77,7 +77,7 @@ find modules with known vulnerabilities
 clean
 </td>
 <td>
-cleanup pre-existing resolutions
+remove resolutions from package.json
 </td>
 </tr>
 
@@ -86,7 +86,7 @@ cleanup pre-existing resolutions
 fix
 </td>
 <td>
-resolve modules with known vulnerabilities
+solve potential security vulnerabilities in your dependencies
 </td>
 </tr>
 
@@ -104,7 +104,7 @@ install dependencies
 patches
 </td>
 <td>
-find published patch information for modules with known vulnerabilities
+find published advisories for potential security vulnerabilities in your dependencies
 </td>
 </tr>
 
@@ -113,7 +113,7 @@ find published patch information for modules with known vulnerabilities
 restore
 </td>
 <td>
-restore saved resolutions for the current directory scope
+apply saved resolution backup from package.json
 </td>
 </tr>
 
@@ -136,16 +136,16 @@ Description
 alias
 </td>
 <td>
-list available package aliases
+print aliases
 </td>
 </tr>
 
 <tr>
 <td>
-config [properties values]
+config
 </td>
 <td>
-list/manage package configuration
+print/manage configuration
 </td>
 </tr>
 
@@ -154,7 +154,7 @@ list/manage package configuration
 help
 </td>
 <td>
-open the documentation for spinning-jenny
+open documentation
 </td>
 </tr>
 
@@ -163,7 +163,7 @@ open the documentation for spinning-jenny
 repository
 </td>
 <td>
-display the source code repository url
+print source code url
 </td>
 </tr>
 
@@ -172,7 +172,7 @@ display the source code repository url
 version
 </td>
 <td>
-display the installed version of spinning-jenny
+print installed version
 </td>
 </tr>
 </table>
@@ -200,7 +200,7 @@ Description
 -b
 </td>
 <td>
-run/skip backup of resolutions in package.json before first action
+create resolution backup before first action
 </td>
 </tr>
 
@@ -212,7 +212,7 @@ run/skip backup of resolutions in package.json before first action
 -d
 </td>
 <td>
-overwrite current working directory scope with a custom path
+explicit path to package.json file
 </td>
 </tr>
 
@@ -224,7 +224,7 @@ overwrite current working directory scope with a custom path
 -e
 </td>
 <td>
-exclue one or several modules from being upgraded or resolved
+exclue modules from being upgraded or resolved
 </td>
 </tr>
 
@@ -236,7 +236,7 @@ exclue one or several modules from being upgraded or resolved
 -f
 </td>
 <td>
-allow/prevent yarn.lock modifications from action executions
+prevent yarn.lock modifications
 </td>
 </tr>
 
@@ -248,7 +248,7 @@ allow/prevent yarn.lock modifications from action executions
 -l
 </td>
 <td>
-show/hide the action counter prefix for the loader message
+print action step counter prefix
 </td>
 </tr>
 
@@ -260,7 +260,7 @@ show/hide the action counter prefix for the loader message
 -u
 </td>
 <td>
-allow/disallow upgrades of dependencies
+upgrade dependencies and development dependencies
 </td>
 </tr>
 </table>

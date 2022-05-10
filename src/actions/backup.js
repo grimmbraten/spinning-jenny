@@ -1,5 +1,5 @@
 const ora = require('ora');
-const { read, write } = require('../common');
+const { read, write } = require('../services/json');
 const { prefix } = require('../helpers');
 
 const backup = async (hint, target, config) => {

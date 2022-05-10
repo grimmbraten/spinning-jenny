@@ -1,5 +1,5 @@
 const ora = require('ora');
-const { execute } = require('../common');
+const { shell } = require('../services/shelljs');
 const { prefix, timely, randomHold, randomFact, randomEndgame } = require('../helpers');
 
 const install = async (hint, target, { frozen, ...config }) => {
@@ -18,7 +18,7 @@ const install = async (hint, target, { frozen, ...config }) => {
   timeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 45000));
   timeouts.push(timely(spinner, step, 'installing dependencies', randomEndgame(), 600000));
 
-  const [success, response] = await execute(`yarn --cwd ${target} install`);
+  const [success, response] = await shell(`yarn --cwd ${target} install`);
 
   timeouts.forEach(timeout => clearTimeout(timeout));
 

@@ -1,5 +1,6 @@
 const ora = require('ora');
-const { read, write, execute } = require('../common');
+const { read, write } = require('../services/json');
+const { shell } = require('../services/shelljs');
 const {
   reduce,
   timely,
@@ -21,7 +22,7 @@ const fix = async (hint, target, { upgrade, exclude, ...config }) => {
   const step = prefix(config);
   const spinner = ora(step + 'auditing dependencies' + hint).start();
 
-  const [success, response] = await execute(`yarn --cwd ${target} audit --json`);
+  const [success, response] = await shell(`yarn --cwd ${target} audit --json`);
 
   if (!success) {
     spinner.fail(step + response + hint);
@@ -61,7 +62,7 @@ const fix = async (hint, target, { upgrade, exclude, ...config }) => {
             .replace(/(<|<=)/g, '')}`
         );
 
-        const [success, response] = await execute(
+        const [success, response] = await shell(
           `yarn --cwd ${target} why ${advisory.module} --json`
         );
 
@@ -88,7 +89,7 @@ const fix = async (hint, target, { upgrade, exclude, ...config }) => {
     upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 45000));
     upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomEndgame(), 600000));
 
-    const [success, response] = await execute(`yarn --cwd ${target} upgrade ${upgrades.join(' ')}`);
+    const [success, response] = await shell(`yarn --cwd ${target} upgrade ${upgrades.join(' ')}`);
 
     upgradeTimeouts.forEach(timeout => clearTimeout(timeout));
 
@@ -110,7 +111,7 @@ const fix = async (hint, target, { upgrade, exclude, ...config }) => {
     installTimeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 45000));
     installTimeouts.push(timely(spinner, step, 'installing dependencies', randomEndgame(), 600000));
 
-    const [success, response] = await execute(`yarn --cwd ${target} install`);
+    const [success, response] = await shell(`yarn --cwd ${target} install`);
 
     installTimeouts.forEach(timeout => clearTimeout(timeout));
 

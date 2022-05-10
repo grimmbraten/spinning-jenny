@@ -1,12 +1,12 @@
 const ora = require('ora');
-const { execute } = require('../common');
+const { shell } = require('../services/shelljs');
 const { reduce, prefix, findAuditSummary } = require('../helpers');
 
 const audit = async (hint, target, config) => {
   const step = prefix(config);
   const spinner = ora(step + 'auditing module dependencies' + hint).start();
 
-  const [success, response] = await execute(`yarn --cwd ${target} audit --json --summary`);
+  const [success, response] = await shell(`yarn --cwd ${target} audit --json --summary`);
 
   if (!success) {
     spinner.fail(step + `audit failed\n\n${response}` + hint);

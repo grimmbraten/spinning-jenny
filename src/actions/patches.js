@@ -1,9 +1,9 @@
 const ora = require('ora');
 const chalk = require('chalk');
-const { execute, read } = require('../common');
-const { prefix, colorSeverity, findAdvisories, findWhyTree } = require('../helpers');
-
-const severities = ['critical', 'high', 'moderate', 'low', 'info'];
+const { read } = require('../services/json');
+const { shell } = require('../services/shelljs');
+const { prefix, colorSeverity, findAdvisories } = require('../helpers');
+const { why } = require('../services/yarn');
 
 const patches = async (hint, target, config) => {
   let output = '';
@@ -14,7 +14,7 @@ const patches = async (hint, target, config) => {
   const modules = Object.keys(await read(target, 'package.json', 'dependencies'));
   const devModules = Object.keys(await read(target, 'package.json', 'devDependencies'));
 
-  const [success, response] = await execute(`yarn --cwd ${target} audit --json`);
+  const [success, response] = await shell(`yarn --cwd ${target} audit --json`);
 
   if (!success) {
     spinner.fail(step + `audit failed\n\n${response}` + hint);
@@ -26,20 +26,7 @@ const patches = async (hint, target, config) => {
 
   const patches = unique.map(module => advisories.find(advisory => advisory.module === module));
 
-  const parsedPatches = await Promise.all(
-    patches.map(async patch => {
-      const [success, response] = await execute(`yarn --cwd ${target} why ${patch.module} --json`);
-      if (!success) return;
-      const whyTree = findWhyTree(response);
-      return {
-        ...patch,
-        why: whyTree,
-        order: severities.indexOf(patch.severity),
-        references: patch.references.split('\n'),
-        solved: patch.patchedVersions === '<0.0.0' ? 1 : 0
-      };
-    })
-  );
+  const parsedPatches = await why(patches, target);
 
   parsedPatches.sort((a, b) => a.order - b.order);
   parsedPatches.sort((a, b) => a.solved - b.solved);

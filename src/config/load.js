@@ -1,5 +1,5 @@
 const chalk = require('chalk');
-const { read } = require('../common');
+const { read } = require('../services/json');
 
 const load = async () => {
   const config = await read(__dirname, '.properties.json');

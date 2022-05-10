@@ -1,6 +1,6 @@
 const ora = require('ora');
 const { prefix } = require('../helpers');
-const { read, remove } = require('../common');
+const { read, remove } = require('../services/json');
 
 const clean = async (hint, target, config) => {
   const step = prefix(config);

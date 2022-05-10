@@ -1,8 +1,8 @@
-const shell = require('shelljs');
+const shelljs = require('shelljs');
 
-const execute = command =>
+const shell = command =>
   new Promise((resolve, reject) => {
-    shell.exec(
+    shelljs.exec(
       command,
       {
         silent: true
@@ -15,5 +15,5 @@ const execute = command =>
   }).catch(error => [false, error]);
 
 module.exports = {
-  execute
+  shell
 };

@@ -1,7 +1,7 @@
 {
   "label": true,
-  "backup": true,
-  "frozen": false,
   "upgrade": true,
+  "backup": false,
+  "frozen": false,
   "exclude": []
 }

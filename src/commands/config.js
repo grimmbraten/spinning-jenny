@@ -2,7 +2,6 @@ const ora = require('ora');
 const chalk = require('chalk');
 
 const { load, edit } = require('../config');
-const { trueFalse } = require('../constants');
 const { parseBoolean, colorProperty } = require('../helpers');
 
 const properties = {
@@ -11,6 +10,8 @@ const properties = {
   frozen: '--frozen',
   upgrade: '--upgrade'
 };
+
+const trueFalse = `${chalk.green('true')} or ${chalk.red('false')}`;
 
 const list = async () => {
   const config = await manage();

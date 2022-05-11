@@ -1,6 +1,7 @@
 const ora = require('ora');
 const { read, write } = require('../services/json');
 const { shell } = require('../services/shelljs');
+const chalk = require('chalk');
 const {
   reduce,
   timely,
@@ -25,7 +26,8 @@ const fix = async (hint, target, { upgrade, exclude, ...config }) => {
   const [success, response] = await shell(`yarn --cwd ${target} audit --json`);
 
   if (!success) {
-    spinner.fail(step + response + hint);
+    spinner.fail(step + 'audit failed' + hint);
+    if (response[1]) console.log(chalk.red(`\n${response[1]}`));
     return 2;
   }
 
@@ -67,7 +69,8 @@ const fix = async (hint, target, { upgrade, exclude, ...config }) => {
         );
 
         if (!success) {
-          spinner.fail(step + `analyzing failed\n\n${response}` + hint);
+          spinner.fail(step + 'analyzation failed' + hint);
+          if (response[1]) console.log(chalk.red(`\n${response[1]}`));
           return 2;
         }
 
@@ -94,7 +97,8 @@ const fix = async (hint, target, { upgrade, exclude, ...config }) => {
     upgradeTimeouts.forEach(timeout => clearTimeout(timeout));
 
     if (!success) {
-      spinner.fail(step + `upgrade failed\n\n${response}` + hint);
+      spinner.fail(step + 'upgrade failed' + hint);
+      if (response[1]) console.log(chalk.red(`\n${response[1]}`));
       return 2;
     }
   }
@@ -116,7 +120,8 @@ const fix = async (hint, target, { upgrade, exclude, ...config }) => {
     installTimeouts.forEach(timeout => clearTimeout(timeout));
 
     if (!success) {
-      spinner.fail(step + `install failed\n\n${response}` + hint);
+      spinner.fail(step + 'installation failed' + hint);
+      if (response[1]) console.log(chalk.red(`\n${response[1]}`));
       return 2;
     }
   }

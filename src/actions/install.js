@@ -1,6 +1,7 @@
 const ora = require('ora');
 const { shell } = require('../services/shelljs');
 const { prefix, timely, randomHold, randomFact, randomEndgame } = require('../helpers');
+const chalk = require('chalk');
 
 const install = async (hint, target, { frozen, ...config }) => {
   const timeouts = [];
@@ -23,7 +24,8 @@ const install = async (hint, target, { frozen, ...config }) => {
   timeouts.forEach(timeout => clearTimeout(timeout));
 
   if (!success) {
-    spinner.fail(step + `installation failed\n\n${response}` + hint);
+    spinner.fail(step + 'installation failed' + hint);
+    if (response[1]) console.log(chalk.red(`\n${response[1]}`));
     return 2;
   }
 

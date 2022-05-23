@@ -1,32 +1,40 @@
-jest.mock('../../src/helpers/data');
-jest.mock('../../src/common/shell');
+const { audit } = require('../../src/actions/audit');
+const { target, config, auditSummary } = require('../mocks');
 
-const { audit } = require('../../src/actions');
-const { execute } = require('../../src/common/shell');
-const { reduce, findAuditSummary } = require('../../src/helpers/data');
-const { target, config, mockedAuditSummary } = require('../constants');
+const mockShell = jest.fn(() => [true, '']);
+jest.mock('../../src/services/shelljs', () => ({
+  shell: () => mockShell()
+}));
 
-const run = async () => await audit(undefined, target, config);
+const mockReduce = jest.fn();
+const mockPrefix = jest.fn();
+const mockFindAuditSummary = jest.fn();
+jest.mock('../../src/helpers/data', () => ({
+  reduce: () => mockReduce(),
+  prefix: () => mockPrefix(),
+  findAuditSummary: () => mockFindAuditSummary()
+}));
 
-describe('audit()', () => {
-  it('fails if audit scan is unsuccessful', async () => {
-    execute.mockImplementationOnce(() => [false]);
-    expect(await run()).toEqual(2);
+const test = async () => await audit(undefined, target, config);
+
+describe('[actions] audit', () => {
+  it('exits with status code 0 if no vulnerabilities are found', async () => {
+    mockReduce.mockReturnValueOnce(0);
+    mockFindAuditSummary.mockReturnValueOnce(auditSummary);
+
+    expect(await test()).toEqual(0);
   });
 
-  it('warns if one or more vulnerabilities are found', async () => {
-    execute.mockImplementationOnce(() => [true]);
-    findAuditSummary.mockImplementationOnce(() => mockedAuditSummary);
-    reduce.mockImplementationOnce(() => 3);
+  it('exits with status code 2 if yarn audit is unsuccessful', async () => {
+    mockShell.mockReturnValueOnce([false, '']);
 
-    expect(await run()).toEqual(1);
+    expect(await test()).toEqual(2);
   });
 
-  it('succeeds if no vulnerabilities are found', async () => {
-    execute.mockImplementationOnce(() => [true]);
-    findAuditSummary.mockImplementationOnce(() => mockedAuditSummary);
-    reduce.mockImplementationOnce(() => 0);
+  it('exits with status code 3 if one or more vulnerabilitie(s) are found', async () => {
+    mockReduce.mockReturnValueOnce(3);
+    mockFindAuditSummary.mockReturnValueOnce(auditSummary);
 
-    expect(await run()).toEqual(0);
+    expect(await test()).toEqual(1);
   });
 });

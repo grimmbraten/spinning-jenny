@@ -16,7 +16,7 @@ const clean = async (hint, target, config) => {
   const response = await remove(target, 'package.json', 'resolutions');
 
   if (!response) {
-    spinner.fail(step + `cleanup failed\n\n${response}` + hint);
+    spinner.fail(step + 'cleanup failed' + hint);
     return 2;
   }
 

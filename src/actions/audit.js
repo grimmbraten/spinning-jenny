@@ -1,4 +1,5 @@
 const ora = require('ora');
+const chalk = require('chalk');
 const { shell } = require('../services/shelljs');
 const { reduce, prefix, findAuditSummary } = require('../helpers');
 
@@ -9,7 +10,8 @@ const audit = async (hint, target, config) => {
   const [success, response] = await shell(`yarn --cwd ${target} audit --json --summary`);
 
   if (!success) {
-    spinner.fail(step + `audit failed\n\n${response}` + hint);
+    spinner.fail(step + 'audit failed' + hint);
+    if (response[1]) console.log(chalk.red(`\n${response[1]}`));
     return 2;
   }
 

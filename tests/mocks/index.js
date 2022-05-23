@@ -10,18 +10,18 @@ module.exports = {
       completed: 0
     }
   },
-  mockedResolutions: {
+  resolutions: {
     module: '^2.1.0',
     package: '^0.7.0',
     dependency: '^1.1.10'
   },
-  mockedAuditSummary: {
+  auditSummary: {
     type: 'auditSummary',
     data: {
       vulnerabilities: { info: 0, low: 1, high: 2 }
     }
   },
-  mockedAuditAdvisory: {
+  auditAdvisory: {
     title: 'injection vulnerability',
     version: '2.4.8',
     module: 'mockery',

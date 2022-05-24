@@ -1,5 +1,5 @@
 module.exports = {
-  target: 'mocked/target/directory/path',
+  target: 'target/directory/path',
   config: {
     label: false,
     backup: false,

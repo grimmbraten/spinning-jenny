@@ -7,11 +7,10 @@ jest.mock('../../src/services/shelljs', () => ({
 }));
 
 const mockReduce = jest.fn();
-const mockPrefix = jest.fn();
 const mockFindAuditSummary = jest.fn();
 jest.mock('../../src/helpers/data', () => ({
   reduce: () => mockReduce(),
-  prefix: () => mockPrefix(),
+  prefix: () => jest.fn(),
   findAuditSummary: () => mockFindAuditSummary()
 }));
 

@@ -71,7 +71,7 @@ const getActions = (inputs, config) => {
     }
   });
 
-  if (functions.length > 0) config.backup && functions.unshift(backup);
+  functions.unshift(backup);
   config.steps.total = functions.length;
 
   return { hint, bail, actions: functions.length > 0 ? functions : null, target, config };

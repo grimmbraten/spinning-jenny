@@ -23,7 +23,14 @@ it('succeeds if no vulnerabilities are found', async () => {
   expect(await action()).toEqual(0);
 });
 
-it('skips if one or more vulnerabilitie(s) are found', async () => {
+it('succeeds if one vulnerability is found', async () => {
+  mockReduce.mockReturnValueOnce(1);
+  mockFindAuditSummary.mockReturnValueOnce(auditSummary);
+
+  expect(await action()).toEqual(1);
+});
+
+it('succeeds if several vulnerabilities are found', async () => {
   mockReduce.mockReturnValueOnce(3);
   mockFindAuditSummary.mockReturnValueOnce(auditSummary);
 
@@ -31,7 +38,7 @@ it('skips if one or more vulnerabilitie(s) are found', async () => {
 });
 
 it('fails if yarn audit is unsuccessful', async () => {
-  mockShell.mockReturnValueOnce([false, '']);
+  mockShell.mockReturnValueOnce([false, ['mocked', 'response']]);
 
   expect(await action()).toEqual(2);
 });

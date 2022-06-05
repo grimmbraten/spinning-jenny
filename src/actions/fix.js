@@ -86,11 +86,11 @@ const fix = async (hint, target, { upgrade, exclude, ...config }) => {
   if (upgrades.length > 0 && upgrade) {
     spinner.text = step + 'upgrading dependencies' + hint;
 
-    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomHold(), 2500));
-    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 15000));
-    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 30000));
-    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 45000));
-    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomEndgame(), 600000));
+    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomHold(), 1000));
+    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 3500));
+    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 7500));
+    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomFact(), 12500));
+    upgradeTimeouts.push(timely(spinner, step, 'upgrading dependencies', randomEndgame(), 20000));
 
     const [success, response] = await shell(`yarn --cwd ${target} upgrade ${upgrades.join(' ')}`);
 

@@ -11,7 +11,6 @@ const restore = async (hint, target, config) => {
 
   if (!resolutions) {
     spinner.warn(step + 'skipped backup' + hint);
-
     return 1;
   }
 

@@ -32,15 +32,20 @@ const patches = async (hint, target, config) => {
   parsedPatches.sort((a, b) => a.solved - b.solved);
 
   parsedPatches.forEach((patch, index) => {
+    const why =
+      patch.why.length > 0
+        ? patch.why.pop().replace('Hoisted from ', '').replaceAll('"', '').split('#')
+        : undefined;
+
     output += `\n${index > 0 ? '\n' : ''}${patch.module} @ ${patch.version} ${colorSeverity(
       patch.severity
     )}${
-      patch.why.length > 0
-        ? chalk.gray(` ${patch.why.pop().replace('Hoisted from ', '').replaceAll('"', '')}`)
+      why
+        ? chalk.gray(` ${why.shift()} depends on ${why.pop(', ')}`)
         : devModules.includes(patch.module)
-        ? `${chalk.gray(' specified in "devDependencies"')}`
+        ? `${chalk.gray(' package.json (devDependencies)')}`
         : modules.includes(patch.module)
-        ? `${chalk.gray(' specified in "dependencies"')}`
+        ? `${chalk.gray(' package.json (dependencies)')}`
         : ''
     }\n${
       patch.recommendation !== 'none'
@@ -48,10 +53,10 @@ const patches = async (hint, target, config) => {
         : 'no recommendation available at this time'
     } ${
       patch.patchedVersions !== '<0.0.0' ? `${chalk.green('(solved)')}` : chalk.red('(unsolved)')
-    }\n${patch.references.find(reference =>
-      reference.includes('https://nvd.nist.gov/vuln/detail/')
-    )}\n${patch.references.find(reference =>
-      reference.includes('https://github.com/advisories')
+    }\n${chalk.gray(
+      patch.references.find(reference => reference.includes('https://nvd.nist.gov/vuln/detail/'))
+    )}\n${chalk.gray(
+      patch.references.find(reference => reference.includes('https://github.com/advisories'))
     )}\n${chalk.gray(
       `${patch.foundBy ? `${patch.foundBy} @ ` : ''}${patch.updated || patch.created}`
     )}`;
@@ -61,7 +66,7 @@ const patches = async (hint, target, config) => {
     step +
       `found ${patches.length} ${
         patches.length === 1 ? 'advisory' : 'advisories'
-      } for potential security vulnerabilities in your dependencies` +
+      } with potential security vulnerabilities in your dependencies` +
       hint
   );
 

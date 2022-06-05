@@ -14,26 +14,24 @@ jest.mock('../../src/helpers/data', () => ({
   findAuditSummary: () => mockFindAuditSummary()
 }));
 
-const test = async () => await audit(undefined, target, config);
+const action = async () => await audit(undefined, target, config);
 
-describe('[actions] audit', () => {
-  it('exits with status code 0 if no vulnerabilities are found', async () => {
-    mockReduce.mockReturnValueOnce(0);
-    mockFindAuditSummary.mockReturnValueOnce(auditSummary);
+it('succeeds if no vulnerabilities are found', async () => {
+  mockReduce.mockReturnValueOnce(0);
+  mockFindAuditSummary.mockReturnValueOnce(auditSummary);
 
-    expect(await test()).toEqual(0);
-  });
+  expect(await action()).toEqual(0);
+});
 
-  it('exits with status code 2 if yarn audit is unsuccessful', async () => {
-    mockShell.mockReturnValueOnce([false, '']);
+it('skips if one or more vulnerabilitie(s) are found', async () => {
+  mockReduce.mockReturnValueOnce(3);
+  mockFindAuditSummary.mockReturnValueOnce(auditSummary);
 
-    expect(await test()).toEqual(2);
-  });
+  expect(await action()).toEqual(1);
+});
 
-  it('exits with status code 3 if one or more vulnerabilitie(s) are found', async () => {
-    mockReduce.mockReturnValueOnce(3);
-    mockFindAuditSummary.mockReturnValueOnce(auditSummary);
+it('fails if yarn audit is unsuccessful', async () => {
+  mockShell.mockReturnValueOnce([false, '']);
 
-    expect(await test()).toEqual(1);
-  });
+  expect(await action()).toEqual(2);
 });

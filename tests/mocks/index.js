@@ -1,4 +1,5 @@
 module.exports = {
+  file: 'package.json',
   target: 'target/directory/path',
   config: {
     label: false,

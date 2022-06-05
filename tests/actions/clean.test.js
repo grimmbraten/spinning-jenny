@@ -1,5 +1,5 @@
 const { clean } = require('../../src/actions');
-const { target, config } = require('../mocks');
+const { file, target, config } = require('../mocks');
 
 jest.mock('../../src/helpers/output', () => ({
   prefix: () => jest.fn()
@@ -12,43 +12,38 @@ jest.mock('../../src/services/json', () => ({
   remove: (target, file, resolutions) => mockRemove(target, file, resolutions)
 }));
 
-const file = 'package.json';
-const property = 'resolutions';
+const action = async () => await clean(undefined, target, config);
 
-const run = async () => await clean(undefined, target, config);
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
-describe('[actions] clean', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+it('succeeds if resolutions could be removed', async () => {
+  mockRead.mockImplementationOnce(() => ({ resolutions: '' }));
+  mockRemove.mockImplementationOnce(() => true);
+  const response = await action();
 
-  it('exists with [StatusCode:1] if no resolutions can be found', async () => {
-    mockRead.mockImplementationOnce(() => undefined);
-    const response = await run();
+  expect(mockRead).toHaveBeenCalledTimes(1);
+  expect(mockRemove).toHaveBeenCalledTimes(1);
+  expect(response).toEqual(0);
+});
 
-    expect(mockRead).toHaveBeenCalledTimes(1);
-    expect(mockRead).toHaveBeenCalledWith(target, file, property);
-    expect(mockRemove).not.toHaveBeenCalled();
-    expect(response).toEqual(1);
-  });
+it('skips if no resolutions can be found', async () => {
+  mockRead.mockImplementationOnce(() => undefined);
+  const response = await action();
 
-  it('exists with [StatusCode:2] if remove functions returns a falsy response', async () => {
-    mockRead.mockImplementationOnce(() => ({ resolutions: '' }));
-    mockRemove.mockImplementationOnce(() => false);
-    const response = await run();
+  expect(mockRead).toHaveBeenCalledTimes(1);
+  expect(mockRead).toHaveBeenCalledWith(target, file, 'resolutions');
+  expect(mockRemove).not.toHaveBeenCalled();
+  expect(response).toEqual(1);
+});
 
-    expect(mockRemove).toHaveBeenCalledTimes(1);
-    expect(mockRemove).toHaveBeenCalledWith(target, file, property);
-    expect(response).toEqual(2);
-  });
+it('fails if remove functions returns a falsy response', async () => {
+  mockRead.mockImplementationOnce(() => ({ resolutions: '' }));
+  mockRemove.mockImplementationOnce(() => false);
+  const response = await action();
 
-  it('exists with [StatusCode:0] if resolutions could be removed', async () => {
-    mockRead.mockImplementationOnce(() => ({ resolutions: '' }));
-    mockRemove.mockImplementationOnce(() => true);
-    const response = await run();
-
-    expect(mockRead).toHaveBeenCalledTimes(1);
-    expect(mockRemove).toHaveBeenCalledTimes(1);
-    expect(response).toEqual(0);
-  });
+  expect(mockRemove).toHaveBeenCalledTimes(1);
+  expect(mockRemove).toHaveBeenCalledWith(target, file, 'resolutions');
+  expect(response).toEqual(2);
 });

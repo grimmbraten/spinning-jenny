@@ -38,9 +38,9 @@ const handler = async (hint, target, { upgrade, exclude, ...config }) => {
       'found no potential security vulnerabilities in your dependencies'
     );
 
-  const dependencies = await read(target, 'package.json', 'dependencies');
-  const devDependencies = await read(target, 'package.json', 'devDependencies');
-  const allDependencies = Object.keys(dependencies).concat(Object.keys(devDependencies));
+  const dependencies = Object.keys(await read(target, 'package.json', 'dependencies'));
+  const devDependencies = Object.keys(await read(target, 'package.json', 'devDependencies'));
+  const allDependencies = dependencies.concat(devDependencies);
 
   const advisories = findAdvisories(response);
   const unique = [...new Set(advisories.map(advisory => advisory.module))];
@@ -60,8 +60,8 @@ const handler = async (hint, target, { upgrade, exclude, ...config }) => {
           ''
         )}`;
 
-        if (devDependencies.includes(advisory.module)) devDependenciesToAdd.push(moduleVersion);
-        else dependenciesToAdd.push(moduleVersion);
+        if (dependencies.includes(advisory.module)) dependenciesToAdd.push(moduleVersion);
+        else devDependencies.push(moduleVersion);
       } else if (!exclude.includes(advisory.module))
         resolutions[advisory.module] = advisory.patchedVersions;
     })

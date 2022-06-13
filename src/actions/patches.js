@@ -24,8 +24,8 @@ const handler = async (hint, target, config) => {
   parsedPatches.sort((a, b) => a.order - b.order);
   parsedPatches.sort((a, b) => a.solved - b.solved);
 
-  const dependencies = await read(target, 'package.json', 'dependencies');
-  const devDependencies = await read(target, 'package.json', 'devDependencies');
+  const dependencies = Object.keys(await read(target, 'package.json', 'dependencies'));
+  const devDependencies = Object.keys(await read(target, 'package.json', 'devDependencies'));
 
   parsedPatches.forEach((patch, index) => {
     const why =

@@ -2,6 +2,18 @@ const severities = ['critical', 'high', 'moderate', 'low', 'info'];
 const { shell } = require('../shelljs');
 const { findWhyTree } = require('../../helpers');
 
+const add = async (target, modules, dev = false) =>
+  dev
+    ? await shell(`yarn --cwd ${target} add ${modules.join(' ')}`)
+    : await shell(`yarn --cwd ${target} add -D ${modules.join(' ')}`);
+
+const audit = async (target, summary) =>
+  summary
+    ? await shell(`yarn --cwd ${target} audit --json --summary`)
+    : await shell(`yarn --cwd ${target} audit --json`);
+
+const install = async target => await shell(`yarn --cwd ${target} install`);
+
 const why = async (patches, target) =>
   await Promise.all(
     patches.map(async patch => {
@@ -19,5 +31,8 @@ const why = async (patches, target) =>
   );
 
 module.exports = {
-  why
+  add,
+  why,
+  audit,
+  install
 };

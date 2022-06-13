@@ -44,10 +44,16 @@ const randomEndgame = () => {
   return endgame[Math.floor(Math.random() * endgame.length)];
 };
 
+const checkpoints = [
+  { time: 1000, content: randomHold() },
+  { time: 3500, content: randomFact() },
+  { time: 7500, content: randomFact() },
+  { time: 12500, content: randomFact() },
+  { time: 20000, content: randomEndgame() }
+];
+
 module.exports = {
   timely,
   prefix,
-  randomHold,
-  randomFact,
-  randomEndgame
+  checkpoints
 };

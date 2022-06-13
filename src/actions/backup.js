@@ -1,33 +1,26 @@
 const ora = require('ora');
-const { read, write } = require('../services/json');
-const { prefix } = require('../helpers');
+const { prefix } = require('~helpers');
+const { read, write } = require('~services/json');
+const { warn, succeed } = require('~services/ora');
 
-const backup = async (hint, target, { backup, ...config }) => {
+const handler = async (hint, target, { backup, ...config }) => {
   const backups = {};
   const step = prefix(config);
   const spinner = ora(step + 'collecting resolutions' + hint).start();
 
-  if (!backup) {
-    spinner.warn(step + 'skipped backup' + hint);
-    return 1;
-  }
+  if (!backup) return warn(spinner, step, hint, 'skipped backup');
 
   const resolutions = await read(target, 'package.json', 'resolutions');
 
-  if (!resolutions) {
-    spinner.warn(step + 'skipped backup' + hint);
-    return 1;
-  }
+  if (!resolutions) return warn(spinner, step, hint, 'skipped backup');
 
   const project = target.split('/').pop();
   backups[project] = { resolutions, path: target, created: new Date().toString() };
   await write(__dirname + '/../backup/', 'resolutions.json', backups);
 
-  spinner.succeed(step + 'created backup' + hint);
-
-  return 0;
+  return succeed(spinner, step, hint, 'created backup');
 };
 
 module.exports = {
-  backup
+  backup: handler
 };

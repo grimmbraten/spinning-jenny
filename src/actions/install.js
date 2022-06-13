@@ -1,38 +1,29 @@
 const ora = require('ora');
-const { shell } = require('../services/shelljs');
-const { prefix, timely, randomHold, randomFact, randomEndgame } = require('../helpers');
-const chalk = require('chalk');
+const { shell } = require('~services/shelljs');
+const { fail, warn, succeed } = require('~services/ora');
+const { prefix, timely, checkpoints } = require('~helpers');
 
-const install = async (hint, target, { frozen, ...config }) => {
+const handler = async (hint, target, { frozen, ...config }) => {
   const timeouts = [];
+
   const step = prefix(config);
   const spinner = ora(step + 'installing dependencies' + hint).start();
 
-  if (frozen) {
-    spinner.warn(step + 'skipped install' + hint);
-    return 1;
-  }
+  if (frozen) return warn(spinner, step, hint, 'skipped install');
 
-  timeouts.push(timely(spinner, step, 'installing dependencies', randomHold(), 1000));
-  timeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 3500));
-  timeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 7500));
-  timeouts.push(timely(spinner, step, 'installing dependencies', randomFact(), 12500));
-  timeouts.push(timely(spinner, step, 'installing dependencies', randomEndgame(), 20000));
+  checkpoints.forEach(({ time, content }) =>
+    timeouts.push(timely(spinner, step, 'installing dependencies', content, time))
+  );
 
   const [success, response] = await shell(`yarn --cwd ${target} install`);
 
   timeouts.forEach(timeout => clearTimeout(timeout));
 
-  if (!success) {
-    spinner.fail(step + 'installation failed' + hint);
-    if (response[1]) console.log(chalk.red(`\n${response[1]}`));
-    return 2;
-  }
+  if (!success) return fail(spinner, step, hint, 'installation failed', response);
 
-  spinner.succeed(step + 'installed dependencies' + hint);
-  return 0;
+  return succeed(spinner, step, hint, 'installed dependencies');
 };
 
 module.exports = {
-  install
+  install: handler
 };

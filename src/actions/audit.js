@@ -1,39 +1,35 @@
 const ora = require('ora');
-const chalk = require('chalk');
-const { shell } = require('../services/shelljs');
-const { reduce, prefix, findAuditSummary } = require('../helpers');
+const { audit } = require('~services/yarn');
+const { fail, warn, succeed } = require('~services/ora');
+const { reduce, prefix, findAuditSummary } = require('~helpers');
 
-const audit = async (hint, target, config) => {
+const handler = async (hint, target, config) => {
   const step = prefix(config);
-  const spinner = ora(step + 'auditing module dependencies' + hint).start();
+  const spinner = ora(step + 'auditing dependencies' + hint).start();
 
-  const [success, response] = await shell(`yarn --cwd ${target} audit --json --summary`);
-
-  if (!success) {
-    spinner.fail(step + 'audit failed' + hint);
-    if (response[1]) console.log(chalk.red(`\n${response[1]}`));
-    return 2;
-  }
+  const [success, response] = await audit(target);
+  if (!success) return fail(spinner, step, hint, 'audit failed', response);
 
   const vulnerabilities = reduce(findAuditSummary(response).data.vulnerabilities);
 
-  if (vulnerabilities === 0) {
-    spinner.succeed(
-      step + 'found no potential security vulnerabilities in your dependencies' + hint
+  if (vulnerabilities > 0)
+    return warn(
+      spinner,
+      step,
+      hint,
+      `found ${vulnerabilities} potential security ${
+        vulnerabilities > 1 ? 'vulnerabilities' : 'vulnerability'
+      } in your dependencies`
     );
-    return 0;
-  } else {
-    spinner.warn(
-      step +
-        `found ${vulnerabilities} potential security ${
-          vulnerabilities > 1 ? 'vulnerabilities' : 'vulnerability'
-        } in your dependencies` +
-        hint
-    );
-    return 1;
-  }
+
+  return succeed(
+    spinner,
+    step,
+    hint,
+    'found no potential security vulnerabilities in your dependencies'
+  );
 };
 
 module.exports = {
-  audit
+  audit: handler
 };

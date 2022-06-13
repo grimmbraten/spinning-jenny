@@ -1,35 +1,31 @@
 const ora = require('ora');
 const chalk = require('chalk');
-const { read } = require('../services/json');
-const { shell } = require('../services/shelljs');
-const { prefix, colorSeverity, findAdvisories } = require('../helpers');
-const { why } = require('../services/yarn');
+const { read } = require('~services/json');
+const { why, audit } = require('~services/yarn');
+const { fail, succeed } = require('~services/ora');
+const { prefix, colorSeverity, findAdvisories } = require('~helpers');
 
-const patches = async (hint, target, config) => {
+const handler = async (hint, target, config) => {
   let output = '';
 
   const step = prefix(config);
   const spinner = ora(step + 'analyzing vulnerabilities' + hint).start();
 
-  const modules = Object.keys(await read(target, 'package.json', 'dependencies'));
-  const devModules = Object.keys(await read(target, 'package.json', 'devDependencies'));
+  const [success, response] = await audit(target);
 
-  const [success, response] = await shell(`yarn --cwd ${target} audit --json`);
-
-  if (!success) {
-    spinner.fail(step + `audit failed\n\n${response}` + hint);
-    return 2;
-  }
+  if (!success) return fail(spinner, step, hint, 'audit failed', response);
 
   const advisories = findAdvisories(response);
   const unique = [...new Set(advisories.map(advisory => advisory.module))];
-
   const patches = unique.map(module => advisories.find(advisory => advisory.module === module));
 
   const parsedPatches = await why(patches, target);
 
   parsedPatches.sort((a, b) => a.order - b.order);
   parsedPatches.sort((a, b) => a.solved - b.solved);
+
+  const dependencies = await read(target, 'package.json', 'dependencies');
+  const devDependencies = await read(target, 'package.json', 'devDependencies');
 
   parsedPatches.forEach((patch, index) => {
     const why =
@@ -41,11 +37,17 @@ const patches = async (hint, target, config) => {
       patch.severity
     )}${
       why
-        ? chalk.gray(` ${why.shift()} depends on ${why.pop(', ')}`)
-        : devModules.includes(patch.module)
-        ? `${chalk.gray(' package.json (devDependencies)')}`
-        : modules.includes(patch.module)
-        ? `${chalk.gray(' package.json (dependencies)')}`
+        ? chalk.gray(` ${why.shift()} depends on it`)
+        : devDependencies.includes(patch.module)
+        ? `${chalk.gray(
+            ` ${devDependencies.find(
+              module => module === patch.module
+            )} depends on it (devDependencies)`
+          )}`
+        : dependencies.includes(patch.module)
+        ? `${chalk.gray(
+            ` ${dependencies.find(module => module === patch.module)} depends on it (dependencies)`
+          )}`
         : ''
     }\n${
       patch.recommendation !== 'none'
@@ -57,24 +59,20 @@ const patches = async (hint, target, config) => {
       patch.references.find(reference => reference.includes('https://nvd.nist.gov/vuln/detail/'))
     )}\n${chalk.gray(
       patch.references.find(reference => reference.includes('https://github.com/advisories'))
-    )}\n${chalk.gray(
-      `${patch.foundBy ? `${patch.foundBy} @ ` : ''}${patch.updated || patch.created}`
     )}`;
   });
 
-  spinner.succeed(
-    step +
-      `found ${patches.length} ${
-        patches.length === 1 ? 'advisory' : 'advisories'
-      } with potential security vulnerabilities in your dependencies` +
-      hint
+  return succeed(
+    spinner,
+    step,
+    hint,
+    `found ${patches.length} ${
+      patches.length === 1 ? 'advisory' : 'advisories'
+    } with potential security vulnerabilities in your dependencies`,
+    output
   );
-
-  console.log(output);
-
-  return 0;
 };
 
 module.exports = {
-  patches
+  patches: handler
 };

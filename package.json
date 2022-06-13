@@ -52,7 +52,15 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
     "jest": "^27.2.1",
+    "module-alias": "^2.2.2",
     "prettier": "^2.3.2"
+  },
+  "_moduleAliases": {
+    "~root": ".",
+    "~actions": "./src/actions",
+    "~helpers": "./src/helpers",
+    "~commands": "./src/commands",
+    "~services": "./src/services"
   },
   "resolutions": {
     "minimist": ">=1.2.6"

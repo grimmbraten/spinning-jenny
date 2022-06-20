@@ -13,7 +13,7 @@ const handler = async (hint, target, config) => {
 
   const response = await remove(target, 'package.json', 'resolutions');
 
-  if (!response) return fail(spinner, step, hint, 'cleanup failed');
+  if (!response) return fail(spinner, step, hint, 'cleanup failed', response);
 
   return succeed(spinner, step, hint, 'cleaned resolutions');
 };

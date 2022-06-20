@@ -2,7 +2,7 @@ const chalk = require('chalk');
 
 const fail = (spinner, step, hint, message, response) => {
   spinner.fail(step + message + hint);
-  if (response[1]) console.log(chalk.red(`\n${response[1]}`));
+  if (response && response[1]) console.log(chalk.red(`\n${response[1]}`));
 
   return 2;
 };

@@ -31,7 +31,7 @@ const handler = async (hint, target, { upgrade, exclude, ...config }) => {
   const vulnerabilities = reduce(data.vulnerabilities);
 
   if (vulnerabilities === 0)
-    return succeed(
+    return warn(
       spinner,
       step,
       hint,

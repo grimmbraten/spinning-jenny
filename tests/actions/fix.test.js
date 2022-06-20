@@ -1,9 +1,11 @@
 const { fix } = require('../../src/actions');
 const { target, config } = require('../mocks');
 
-const mockShell = jest.fn(() => [true, '']);
-jest.mock('../../src/services/shelljs', () => ({
-  shell: () => mockShell()
+const mockInstall = jest.fn(() => [true, '']);
+const mockAudit = jest.fn(() => [true, '']);
+jest.mock('../../src/services/yarn', () => ({
+  audit: () => mockAudit(),
+  install: () => mockInstall()
 }));
 
 const mockRead = jest.fn();
@@ -17,6 +19,7 @@ const mockReduce = jest.fn();
 const mockFindAdvisories = jest.fn();
 const mockFindAuditSummary = () => ({ data: 'mocked' });
 jest.mock('../../src/helpers', () => ({
+  checkpoints: [],
   prefix: () => jest.fn(),
   timely: () => jest.fn(),
   reduce: () => mockReduce(),
@@ -30,18 +33,18 @@ jest.mock('../../src/helpers', () => ({
 const action = async () => await fix(undefined, target, config);
 
 it('fails if yarn audit encountered an error', async () => {
-  mockShell.mockReturnValueOnce([false, ['mocked', 'response']]);
+  mockAudit.mockReturnValueOnce([false, ['mocked', 'response']]);
   expect(await action()).toEqual(2);
 });
 
-it('fails if no vulnerabilities where found', async () => {
-  mockShell.mockReturnValueOnce([true]);
+it('warn if no vulnerabilities where found', async () => {
+  mockAudit.mockReturnValueOnce([true]);
   mockReduce.mockReturnValueOnce(0);
   expect(await action()).toEqual(1);
 });
 
 it('it fails if a unsolved advisory is found', async () => {
-  mockShell.mockReturnValueOnce([true]);
+  mockAudit.mockReturnValueOnce([true]);
   mockReduce.mockReturnValueOnce(1);
   mockRead.mockReturnValue([]);
   mockFindAdvisories.mockReturnValueOnce([{ patchedVersions: '<0.0.0' }]);
@@ -50,7 +53,7 @@ it('it fails if a unsolved advisory is found', async () => {
 });
 
 it('it fails if a unsolved advisory is found', async () => {
-  mockShell.mockReturnValueOnce([true]);
+  mockAudit.mockReturnValueOnce([true]);
   mockReduce.mockReturnValueOnce(1);
   mockRead.mockReturnValue([]);
   mockFindAdvisories.mockReturnValueOnce([
@@ -62,7 +65,7 @@ it('it fails if a unsolved advisory is found', async () => {
 });
 
 it('it succeeds if a solved advisory is found and resolved', async () => {
-  mockShell.mockReturnValueOnce([true]);
+  mockAudit.mockReturnValueOnce([true]);
   mockReduce.mockReturnValueOnce(1);
   mockRead.mockReturnValue([]);
   mockFindAdvisories.mockReturnValueOnce([{ patchedVersions: '1.0.0' }]);

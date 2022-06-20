@@ -40,7 +40,7 @@ it('skips if no resolutions can be found', async () => {
 
 it('fails if remove functions returns a falsy response', async () => {
   mockRead.mockImplementationOnce(() => ({ resolutions: '' }));
-  mockRemove.mockImplementationOnce(() => false);
+  mockRemove.mockImplementationOnce(() => false, ['mocked', 'response']);
   const response = await action();
 
   expect(mockRemove).toHaveBeenCalledTimes(1);

@@ -1,9 +1,11 @@
 const { patches } = require('../../src/actions');
-const { target, config } = require('../mocks');
+const { target, config, auditAdvisory } = require('../mocks');
 
-const mockShell = jest.fn(() => [true, '']);
-jest.mock('../../src/services/shelljs', () => ({
-  shell: () => mockShell()
+const mockWhy = jest.fn(() => [{ ...auditAdvisory, why: '' }]);
+const mockAudit = jest.fn(() => [true, '']);
+jest.mock('../../src/services/yarn', () => ({
+  why: () => mockWhy(),
+  audit: () => mockAudit()
 }));
 
 const mockRead = jest.fn();
@@ -22,13 +24,13 @@ const action = async () => await patches(undefined, target, config);
 
 it('fails if yarn audit encountered an error', async () => {
   mockRead.mockReturnValue({});
-  mockShell.mockReturnValueOnce([false, ['mocked', 'response']]);
+  mockAudit.mockReturnValueOnce([false, ['mocked', 'response']]);
   expect(await action()).toEqual(2);
 });
 
-it('yes', async () => {
+it('succeeds if yarn audit can produce audit advisories', async () => {
   mockRead.mockReturnValue({});
-  mockShell.mockReturnValueOnce([true]);
+  mockAudit.mockReturnValueOnce([true]);
   mockFindAdvisories.mockReturnValueOnce([{ patchedVersions: '<0.0.0' }]);
 
   expect(await action()).toEqual(0);

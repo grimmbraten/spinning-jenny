@@ -62,13 +62,27 @@ const handler = async (hint, target, config) => {
     )}`;
   });
 
+  const total = parsedPatches.length;
+
+  if (total !== 0) {
+    const solved = parsedPatches.filter(patch => patch.patchedVersions !== '<0.0.0').length / total;
+    const unsolved =
+      parsedPatches.filter(patch => patch.patchedVersions === '<0.0.0').length / total;
+
+    output += `\n\nof the modules found with potential security vulnerabilities\n${chalk.green(
+      `${(solved * 100).toFixed(2)}%`
+    )} can be solved with a resolution or module upgrade\n${chalk.red(
+      `${(unsolved * 100).toFixed(2)}%`
+    )} are currently unsolved, no patched versions available`;
+  }
+
   return succeed(
     spinner,
     step,
     hint,
-    `found ${patches.length} ${
-      patches.length === 1 ? 'advisory' : 'advisories'
-    } with potential security vulnerabilities in your dependencies`,
+    `found ${total} potential security ${
+      total > 1 ? 'vulnerabilities' : 'vulnerability'
+    } in your dependencies`,
     output
   );
 };

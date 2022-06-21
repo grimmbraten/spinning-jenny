@@ -67,10 +67,22 @@ const colorSeverity = severity =>
     ? chalk.green(`(${severity})`)
     : chalk.blue(`(${severity})`);
 
+const emojiSeverity = severity =>
+  severity === 'critical'
+    ? '🔥'
+    : severity === 'high'
+    ? '🚨'
+    : severity === 'moderate'
+    ? '⚠️ '
+    : severity === 'low'
+    ? '📬'
+    : '📪';
+
 module.exports = {
   timely,
   prefix,
   checkpoints,
   colorProperty,
-  colorSeverity
+  colorSeverity,
+  emojiSeverity
 };

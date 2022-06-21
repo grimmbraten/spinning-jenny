@@ -17,6 +17,7 @@ const mockParseAdvisories = jest.fn();
 jest.mock('../../src/helpers', () => ({
   prefix: () => jest.fn(),
   colorSeverity: () => jest.fn(),
+  emojiSeverity: () => jest.fn(),
   parseAdvisories: () => mockParseAdvisories()
 }));
 

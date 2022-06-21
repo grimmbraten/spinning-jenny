@@ -3,7 +3,7 @@ const chalk = require('chalk');
 const { read } = require('~services/json');
 const { why, audit } = require('~services/yarn');
 const { fail, succeed } = require('~services/ora');
-const { prefix, colorSeverity, parseAdvisories } = require('~helpers');
+const { prefix, colorSeverity, emojiSeverity, parseAdvisories } = require('~helpers');
 
 const handler = async (hint, target, config) => {
   let output = '';
@@ -33,9 +33,9 @@ const handler = async (hint, target, config) => {
         ? patch.why.pop().replace('Hoisted from ', '').replaceAll('"', '').split('#')
         : undefined;
 
-    output += `\n${index > 0 ? '\n' : ''}${patch.module} @ ${patch.version} ${colorSeverity(
-      patch.severity
-    )}${
+    output += `\n${index > 0 ? '\n' : ''}${emojiSeverity(patch.severity)} ${patch.module} @ ${
+      patch.version
+    } ${colorSeverity(patch.severity)}${
       why
         ? chalk.gray(` ${why.shift()} depends on it`)
         : devDependencies.includes(patch.module)
@@ -51,14 +51,18 @@ const handler = async (hint, target, config) => {
         : ''
     }\n${
       patch.recommendation !== 'none'
-        ? patch.recommendation
-        : 'no recommendation available at this time'
+        ? `   ${patch.recommendation}`
+        : '   no recommendation available at this time'
     } ${
       patch.patchedVersions !== '<0.0.0' ? `${chalk.green('(solved)')}` : chalk.red('(unsolved)')
     }\n${chalk.gray(
-      patch.references.find(reference => reference.includes('https://nvd.nist.gov/vuln/detail/'))
+      patch.references
+        .find(reference => reference.includes('https://nvd.nist.gov/vuln/detail/'))
+        .replace('-', '- ')
     )}\n${chalk.gray(
-      patch.references.find(reference => reference.includes('https://github.com/advisories'))
+      patch.references
+        .find(reference => reference.includes('https://github.com/advisories'))
+        .replace('-', '- ')
     )}`;
   });
 

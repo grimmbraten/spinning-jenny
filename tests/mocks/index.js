@@ -35,6 +35,9 @@ module.exports = {
     updated: 'Thu, 26 Aug 2021 14:50:46 GMT',
     time: 1629989446000,
     foundBy: undefined,
-    references: ['- https://github.com/advisories/MOCK-whgm-m0ck-g3j9']
+    references: [
+      '- https://github.com/advisories/MOCK-whgm-m0ck-g3j9',
+      '- https://nvd.nist.gov/vuln/detail/MOCK-ncvm-m0ck-g33y'
+    ]
   }
 };

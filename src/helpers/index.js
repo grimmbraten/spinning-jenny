@@ -1,14 +1,6 @@
 const { prefix, timely, checkpoints } = require('./output');
 const { colorProperty, colorSeverity } = require('./colors');
-const {
-  reduce,
-  findWhyTree,
-  parseBoolean,
-  findAdvisories,
-  findAuditSummary,
-  countDependencies,
-  findSuccessEvent
-} = require('./data');
+const { reduce, findWhyTree, parseBoolean, findAdvisories, findAuditSummary } = require('./data');
 
 module.exports = {
   prefix,
@@ -20,7 +12,5 @@ module.exports = {
   colorSeverity,
   findWhyTree,
   findAdvisories,
-  findAuditSummary,
-  findSuccessEvent,
-  countDependencies
+  findAuditSummary
 };

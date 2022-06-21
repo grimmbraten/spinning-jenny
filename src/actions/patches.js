@@ -3,7 +3,7 @@ const chalk = require('chalk');
 const { read } = require('~services/json');
 const { why, audit } = require('~services/yarn');
 const { fail, succeed } = require('~services/ora');
-const { prefix, colorSeverity, findAdvisories } = require('~helpers');
+const { prefix, colorSeverity, parseAdvisories } = require('~helpers');
 
 const handler = async (hint, target, config) => {
   let output = '';
@@ -15,7 +15,7 @@ const handler = async (hint, target, config) => {
 
   if (!success) return fail(spinner, step, hint, 'audit failed', response);
 
-  const advisories = findAdvisories(response);
+  const advisories = parseAdvisories(response);
   const unique = [...new Set(advisories.map(advisory => advisory.module))];
   const patches = unique.map(module => advisories.find(advisory => advisory.module === module));
 

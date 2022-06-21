@@ -1,21 +1,19 @@
-const reduce = collection => Object.values(collection).reduce((a, b) => a + b);
-
-const findAuditSummary = json =>
-  formatYarnResponse(json).filter(data => data.type === 'auditSummary')[0];
-
-const parseBoolean = value => (value === 'true' ? true : value === 'false' ? false : undefined);
-
-const formatYarnResponse = json =>
+const parseYarnResponse = json =>
   json
     .split(/\r?\n/)
     .map(step => (step ? JSON.parse(step) : undefined))
     .filter(data => data);
 
-const findWhyTree = json =>
-  formatYarnResponse(json).find(({ data }) => !!data.items)?.data?.items || [];
+const parseWhy = json =>
+  parseYarnResponse(json).find(({ data }) => !!data.items)?.data?.items || [];
 
-const findAdvisories = json =>
-  formatYarnResponse(json)
+const parseVulnerabilities = json =>
+  Object.values(
+    parseYarnResponse(json).filter(data => data.type === 'auditSummary')[0].data.vulnerabilities
+  ).reduce((a, b) => a + b);
+
+const parseAdvisories = json =>
+  parseYarnResponse(json)
     .map(({ data, type }) => {
       if (type === 'auditAdvisory')
         return {
@@ -37,9 +35,7 @@ const findAdvisories = json =>
     .filter(data => data);
 
 module.exports = {
-  reduce,
-  findWhyTree,
-  parseBoolean,
-  findAdvisories,
-  findAuditSummary
+  parseWhy,
+  parseAdvisories,
+  parseVulnerabilities
 };

@@ -1,6 +1,6 @@
 const severities = ['critical', 'high', 'moderate', 'low', 'info'];
 const { shell } = require('../shelljs');
-const { findWhyTree } = require('../../helpers');
+const { parseWhy } = require('../../helpers');
 
 const add = async (target, modules, dev = false) =>
   dev
@@ -19,7 +19,7 @@ const why = async (patches, target) =>
     patches.map(async patch => {
       const [success, response] = await shell(`yarn --cwd ${target} why ${patch.module} --json`);
       if (!success) return;
-      const whyTree = findWhyTree(response);
+      const whyTree = parseWhy(response);
       return {
         ...patch,
         why: whyTree,

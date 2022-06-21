@@ -1,16 +1,16 @@
-const { prefix, timely, checkpoints } = require('./output');
-const { colorProperty, colorSeverity } = require('./colors');
-const { reduce, findWhyTree, parseBoolean, findAdvisories, findAuditSummary } = require('./data');
+const { parseWhy, parseAdvisories, parseVulnerabilities } = require('./yarn');
+const { prefix, timely, checkpoints, colorProperty, colorSeverity } = require('./output');
+
+const parseBoolean = value => (value === 'true' ? true : value === 'false' ? false : undefined);
 
 module.exports = {
   prefix,
   timely,
-  reduce,
   checkpoints,
   parseBoolean,
   colorProperty,
   colorSeverity,
-  findWhyTree,
-  findAdvisories,
-  findAuditSummary
+  parseWhy,
+  parseAdvisories,
+  parseVulnerabilities
 };

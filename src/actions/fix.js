@@ -2,14 +2,7 @@ const ora = require('ora');
 const { read, write } = require('~services/json');
 const { fail, warn, succeed } = require('~services/ora');
 const { add, audit, install } = require('~services/yarn');
-const {
-  reduce,
-  timely,
-  checkpoints,
-  findAuditSummary,
-  findAdvisories,
-  prefix
-} = require('~helpers');
+const { prefix, timely, checkpoints, parseVulnerabilities, parseAdvisories } = require('~helpers');
 
 const handler = async (hint, target, { upgrade, exclude, ...config }) => {
   const unsolved = [];
@@ -27,8 +20,7 @@ const handler = async (hint, target, { upgrade, exclude, ...config }) => {
 
   spinner.text = step + 'analyzing vulnerabilities' + hint;
 
-  const { data } = findAuditSummary(response);
-  const vulnerabilities = reduce(data.vulnerabilities);
+  const vulnerabilities = parseVulnerabilities(response);
 
   if (vulnerabilities === 0)
     return warn(
@@ -42,7 +34,7 @@ const handler = async (hint, target, { upgrade, exclude, ...config }) => {
   const devDependencies = Object.keys(await read(target, 'package.json', 'devDependencies'));
   const allDependencies = dependencies.concat(devDependencies);
 
-  const advisories = findAdvisories(response);
+  const advisories = parseAdvisories(response);
   const unique = [...new Set(advisories.map(advisory => advisory.module))];
   const patches = unique.map(module => advisories.find(advisory => advisory.module === module));
 

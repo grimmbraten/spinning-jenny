@@ -1,7 +1,7 @@
 const ora = require('ora');
 const { audit } = require('~services/yarn');
 const { fail, warn, succeed } = require('~services/ora');
-const { reduce, prefix, findAuditSummary } = require('~helpers');
+const { prefix, parseVulnerabilities } = require('~helpers');
 
 const handler = async (hint, target, config) => {
   const step = prefix(config);
@@ -10,7 +10,7 @@ const handler = async (hint, target, config) => {
   const [success, response] = await audit(target);
   if (!success) return fail(spinner, step, hint, 'audit failed', response);
 
-  const vulnerabilities = reduce(findAuditSummary(response).data.vulnerabilities);
+  const vulnerabilities = parseVulnerabilities(response);
 
   if (vulnerabilities > 0)
     return warn(

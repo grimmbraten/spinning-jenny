@@ -13,11 +13,11 @@ jest.mock('../../src/services/json', () => ({
   read: (target, file, resolutions) => mockRead(target, file, resolutions)
 }));
 
-const mockFindAdvisories = jest.fn();
+const mockParseAdvisories = jest.fn();
 jest.mock('../../src/helpers', () => ({
   prefix: () => jest.fn(),
   colorSeverity: () => jest.fn(),
-  findAdvisories: () => mockFindAdvisories()
+  parseAdvisories: () => mockParseAdvisories()
 }));
 
 const action = async () => await patches(undefined, target, config);
@@ -31,7 +31,7 @@ it('fails if yarn audit encountered an error', async () => {
 it('succeeds if yarn audit can produce audit advisories', async () => {
   mockRead.mockReturnValue({});
   mockAudit.mockReturnValueOnce([true]);
-  mockFindAdvisories.mockReturnValueOnce([{ patchedVersions: '<0.0.0' }]);
+  mockParseAdvisories.mockReturnValueOnce([{ patchedVersions: '<0.0.0' }]);
 
   expect(await action()).toEqual(0);
 });

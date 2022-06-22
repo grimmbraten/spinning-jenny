@@ -1,27 +1,34 @@
 const chalk = require('chalk');
 
-const hold = [
-  'this may take a while...',
-  'please hold...',
-  'running asynchronous function...',
-  'awaiting completion...'
+const joke = [
+  "February can't March, but April May",
+  'I find whiteboards quite re-markable',
+  'an explosive monkey is called a baboom',
+  "learn sign language, it's pretty handy",
+  'seven days without a pun makes one weak',
+  "my ceiling isn't the best, but it's up there",
+  'never trust an atom, they make up everything',
+  "butterflies just aren't what they used to be",
+  'getting the ability to fly would be so uplifting',
+  'to the guy who invented zero, thanks for nothing.',
+  'the guy who invented the door knocker got a no-bell prize'
 ];
 
 const facts = [
+  'a plateau is the highest form of flattery',
   'the first computer virus was created in 1986',
   'the first programming language was called FORTRAN',
-  'NASA still uses programs from the 70s in their spacecraft',
+  'there are around 700 separate programming languages',
   'the first computer “bug” was an actual real-life bug',
   'the first computer virus was not meant to be harmful',
-  'a plateau is the highest form of flattery'
+  'NASA still uses programs from the 70s in their spacecraft'
 ];
 
 const endgame = [
-  'how old did you say that this project was again?',
-  'establishing contact with Perseverance...',
-  'sweeping dust of the source code...',
-  'frighteningly looking at the latest change timestamp...',
-  'confidently took the lead of this snail race...'
+  'contenplaiting life choises',
+  'scouring Stackoverflow for aid',
+  'contacting Curiosity for assistance',
+  'navigating to the second page of Google search results'
 ];
 
 const prefix = ({ label, steps, getStep }) => {
@@ -35,18 +42,18 @@ const timely = (spinner, step, message, hint, time) =>
     spinner.text = step + message + chalk.gray(` ${hint}`);
   }, time);
 
-const randomHold = () => hold[Math.floor(Math.random() * hold.length)];
+const randomJoke = () => joke[Math.floor(Math.random() * joke.length)];
 
 const randomFact = () => `did you know that ${facts[Math.floor(Math.random() * facts.length)]}?`;
 
 const randomEndgame = () => endgame[Math.floor(Math.random() * endgame.length)];
 
 const checkpoints = [
-  { time: 1000, content: randomHold() },
-  { time: 3500, content: randomFact() },
-  { time: 7500, content: randomFact() },
-  { time: 12500, content: randomFact() },
-  { time: 20000, content: randomEndgame() }
+  { time: 750, content: randomFact() },
+  { time: 5250, content: randomJoke() },
+  { time: 10500, content: randomFact() },
+  { time: 15750, content: randomJoke() },
+  { time: 21000, content: randomEndgame() }
 ];
 
 const colorProperty = value =>

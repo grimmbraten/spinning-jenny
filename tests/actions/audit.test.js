@@ -8,6 +8,7 @@ jest.mock('../../src/services/yarn', () => ({
 
 const mockParseVulnerabilities = jest.fn();
 jest.mock('../../src/helpers', () => ({
+  checkpoints: [],
   prefix: () => jest.fn(),
   parseVulnerabilities: () => mockParseVulnerabilities()
 }));

@@ -85,11 +85,33 @@ const emojiSeverity = severity =>
     ? '📬'
     : '📪';
 
+const getPercentageEmoji = percentage =>
+  percentage >= 90
+    ? '🤩'
+    : percentage >= 80
+    ? '😁'
+    : percentage >= 70
+    ? '😄'
+    : percentage >= 60
+    ? '😇'
+    : percentage >= 50
+    ? '😌'
+    : percentage >= 40
+    ? '😕'
+    : percentage >= 30
+    ? '😔'
+    : percentage >= 20
+    ? '😦'
+    : percentage >= 10
+    ? '😨'
+    : '😱';
+
 module.exports = {
   timely,
   prefix,
   checkpoints,
   colorProperty,
   colorSeverity,
-  emojiSeverity
+  emojiSeverity,
+  getPercentageEmoji
 };

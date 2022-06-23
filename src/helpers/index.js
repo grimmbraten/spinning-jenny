@@ -5,7 +5,8 @@ const {
   checkpoints,
   colorProperty,
   colorSeverity,
-  emojiSeverity
+  emojiSeverity,
+  getPercentageEmoji
 } = require('./output');
 
 const parseBoolean = value => (value === 'true' ? true : value === 'false' ? false : undefined);
@@ -18,6 +19,7 @@ module.exports = {
   colorProperty,
   colorSeverity,
   emojiSeverity,
+  getPercentageEmoji,
   parseWhy,
   parseAdvisories,
   parseVulnerabilities

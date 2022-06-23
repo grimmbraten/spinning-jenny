@@ -15,9 +15,12 @@ jest.mock('../../src/services/json', () => ({
 
 const mockParseAdvisories = jest.fn();
 jest.mock('../../src/helpers', () => ({
+  checkpoints: [],
   prefix: () => jest.fn(),
+  timely: () => jest.fn(),
   colorSeverity: () => jest.fn(),
   emojiSeverity: () => jest.fn(),
+  getPercentageEmoji: () => jest.fn(),
   parseAdvisories: () => mockParseAdvisories()
 }));
 

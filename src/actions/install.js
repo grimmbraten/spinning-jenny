@@ -1,7 +1,7 @@
 const ora = require('ora');
-const { shell } = require('~services/shelljs');
-const { fail, warn, succeed } = require('~services/ora');
-const { prefix, timely, checkpoints } = require('~helpers');
+const { shell } = require('../services/shelljs');
+const { fail, warn, succeed } = require('../services/ora');
+const { prefix, timely, checkpoints } = require('../helpers');
 
 const handler = async (hint, target, { frozen, ...config }) => {
   const timeouts = [];

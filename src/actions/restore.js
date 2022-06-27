@@ -1,7 +1,7 @@
 const ora = require('ora');
-const { prefix } = require('~helpers');
-const { read, write } = require('~services/json');
-const { warn, succeed } = require('~services/ora');
+const { prefix } = require('../helpers');
+const { read, write } = require('../services/json');
+const { warn, succeed } = require('../services/ora');
 
 const handler = async (hint, target, config) => {
   const step = prefix(config);

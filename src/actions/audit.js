@@ -1,7 +1,7 @@
 const ora = require('ora');
-const { audit } = require('~services/yarn');
-const { fail, warn, succeed } = require('~services/ora');
-const { prefix, timely, checkpoints, parseVulnerabilities } = require('~helpers');
+const { audit } = require('../services/yarn');
+const { fail, warn, succeed } = require('../services/ora');
+const { prefix, timely, checkpoints, parseVulnerabilities } = require('../helpers');
 
 const handler = async (hint, target, config) => {
   const timeouts = [];

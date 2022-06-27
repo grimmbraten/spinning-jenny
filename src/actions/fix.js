@@ -1,8 +1,14 @@
 const ora = require('ora');
-const { read, write } = require('~services/json');
-const { fail, warn, succeed } = require('~services/ora');
-const { add, audit, install } = require('~services/yarn');
-const { prefix, timely, checkpoints, parseVulnerabilities, parseAdvisories } = require('~helpers');
+const { read, write } = require('../services/json');
+const { fail, warn, succeed } = require('../services/ora');
+const { add, audit, install } = require('../services/yarn');
+const {
+  prefix,
+  timely,
+  checkpoints,
+  parseVulnerabilities,
+  parseAdvisories
+} = require('../helpers');
 
 const handler = async (hint, target, { upgrade, exclude, ...config }) => {
   const unsolved = [];

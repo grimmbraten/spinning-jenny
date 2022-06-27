@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-require('module-alias/register');
-
 const { load } = require('./config');
 const { sequence } = require('all-aboard');
 const { interpret } = require('./controller');

@@ -1,8 +1,8 @@
 const ora = require('ora');
 const chalk = require('chalk');
-const { read } = require('~services/json');
-const { why, audit } = require('~services/yarn');
-const { fail, succeed } = require('~services/ora');
+const { read } = require('../services/json');
+const { why, audit } = require('../services/yarn');
+const { fail, succeed } = require('../services/ora');
 const {
   prefix,
   timely,
@@ -11,7 +11,7 @@ const {
   emojiSeverity,
   getPercentageEmoji,
   parseAdvisories
-} = require('~helpers');
+} = require('../helpers');
 
 const handler = async (hint, target, config) => {
   let output = '';

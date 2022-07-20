@@ -1,4 +1,4 @@
-const { patches } = require('../../src/actions');
+const { advise } = require('../../src/actions');
 const { target, config, auditAdvisory } = require('../mocks');
 
 const mockWhy = jest.fn(() => [{ ...auditAdvisory, why: '' }]);
@@ -24,7 +24,7 @@ jest.mock('../../src/helpers', () => ({
   parseAdvisories: () => mockParseAdvisories()
 }));
 
-const action = async () => await patches(undefined, target, config);
+const action = async () => await advise(undefined, target, config);
 
 it('fails if yarn audit encountered an error', async () => {
   mockRead.mockReturnValue({});

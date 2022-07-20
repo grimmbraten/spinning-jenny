@@ -8,7 +8,7 @@ const {
   install,
   fix,
   backup,
-  patches,
+  advise,
   actions,
   flags
 } = require('../actions');
@@ -61,7 +61,7 @@ const getActions = (inputs, config) => {
       hint = chalk.gray(` in ${target}`);
     } else if (actions.audit.includes(input)) functions.push(audit);
     else if (actions.clean.includes(input)) functions.push(clean);
-    else if (actions.patches.includes(input)) functions.push(patches);
+    else if (actions.advise.includes(input)) functions.push(advise);
     else if (actions.restore.includes(input)) functions.push(restore);
     else if (actions.install.includes(input)) functions.push(install);
     else if (actions.fix.includes(input)) functions.push(fix);

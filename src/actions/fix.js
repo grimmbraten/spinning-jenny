@@ -42,10 +42,10 @@ const handler = async (hint, target, { upgrade, exclude, ...config }) => {
 
   const advisories = parseAdvisories(response);
   const unique = [...new Set(advisories.map(advisory => advisory.module))];
-  const patches = unique.map(module => advisories.find(advisory => advisory.module === module));
+  const advise = unique.map(module => advisories.find(advisory => advisory.module === module));
 
   await Promise.all(
-    patches.map(advisory => {
+    advise.map(advisory => {
       if (advisory.patchedVersions === '<0.0.0')
         unsolved.push(`${advisory.module}@${advisory.version}`);
       else if (

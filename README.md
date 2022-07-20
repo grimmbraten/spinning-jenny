@@ -101,7 +101,7 @@ install dependencies
 
 <tr>
 <td>
-patches
+advise
 </td>
 <td>
 find published advisories for potential security vulnerabilities in your dependencies

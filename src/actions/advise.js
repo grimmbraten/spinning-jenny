@@ -32,17 +32,17 @@ const handler = async (hint, target, config) => {
 
   const advisories = parseAdvisories(response);
   const unique = [...new Set(advisories.map(advisory => advisory.module))];
-  const patches = unique.map(module => advisories.find(advisory => advisory.module === module));
+  const advise = unique.map(module => advisories.find(advisory => advisory.module === module));
 
-  const parsedPatches = await why(patches, target);
+  const parsedAdvise = await why(advise, target);
 
-  parsedPatches.sort((a, b) => a.order - b.order);
-  parsedPatches.sort((a, b) => a.solved - b.solved);
+  parsedAdvise.sort((a, b) => a.order - b.order);
+  parsedAdvise.sort((a, b) => a.solved - b.solved);
 
   const dependencies = Object.keys(await read(target, 'package.json', 'dependencies'));
   const devDependencies = Object.keys(await read(target, 'package.json', 'devDependencies'));
 
-  parsedPatches.forEach((patch, index) => {
+  parsedAdvise.forEach((patch, index) => {
     const why =
       patch.why.length > 0
         ? patch.why.pop().replace('Hoisted from ', '').replaceAll('"', '').split('#')
@@ -81,12 +81,12 @@ const handler = async (hint, target, config) => {
     )}`;
   });
 
-  const total = parsedPatches.length;
+  const total = parsedAdvise.length;
 
   if (total !== 0) {
-    const solved = parsedPatches.filter(patch => patch.patchedVersions !== '<0.0.0').length / total;
+    const solved = parsedAdvise.filter(patch => patch.patchedVersions !== '<0.0.0').length / total;
     const unsolved =
-      parsedPatches.filter(patch => patch.patchedVersions === '<0.0.0').length / total;
+      parsedAdvise.filter(patch => patch.patchedVersions === '<0.0.0').length / total;
 
     const solvedPercentage = solved * 100;
     const unsolvedPercentage = unsolved * 100;
@@ -112,5 +112,5 @@ const handler = async (hint, target, config) => {
 };
 
 module.exports = {
-  patches: handler
+  advise: handler
 };

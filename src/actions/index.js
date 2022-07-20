@@ -1,6 +1,6 @@
 const { backup } = require('./backup');
 const { fix } = require('./fix');
-const { patches } = require('./patches');
+const { advise } = require('./advise');
 const { audit } = require('./audit');
 const { restore } = require('./restore');
 const { clean } = require('./clean');
@@ -13,12 +13,12 @@ module.exports = {
   backup,
   restore,
   fix,
-  patches,
+  advise,
   actions: {
     fix: ['fix'],
     audit: ['audit'],
     clean: ['clean'],
-    patches: ['patches'],
+    advise: ['advise'],
     install: ['install'],
     restore: ['restore']
   },

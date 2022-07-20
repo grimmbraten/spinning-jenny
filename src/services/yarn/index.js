@@ -14,9 +14,9 @@ const audit = async (target, summary) =>
 
 const install = async target => await shell(`yarn --cwd ${target} install`);
 
-const why = async (patches, target) =>
+const why = async (advise, target) =>
   await Promise.all(
-    patches.map(async patch => {
+    advise.map(async patch => {
       const [success, response] = await shell(`yarn --cwd ${target} why ${patch.module} --json`);
       if (!success) return;
       const whyTree = parseWhy(response);
